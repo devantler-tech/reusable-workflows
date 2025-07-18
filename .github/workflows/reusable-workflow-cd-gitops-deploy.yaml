@@ -34,11 +34,12 @@ jobs:
         uses: fluxcd/flux2/action@6bf37f6a560fd84982d67f853162e4b3c2235edb # v2.6.4
 
       - name: ⚙️ Setup KSail
-        uses: devantler-tech/github-actions/composite-actions/setup-ksail-action@f378f06c871bf640a57ec20466a4f54d38d35587 # v1.8.5
+        uses: devantler-tech/composite-actions/setup-ksail-action@b2d85eefa2d5a75ee53571910e29080c5bdd271a # v1.9.0
 
       - name: 🚀 Deploy
-        uses: devantler-tech/github-actions/composite-actions/flux-gitops-deploy-action@f378f06c871bf640a57ec20466a4f54d38d35587 # v1.8.5
+        uses: devantler-tech/composite-actions/flux-gitops-deploy-action@b2d85eefa2d5a75ee53571910e29080c5bdd271a # v1.9.0
         with:
           DEPLOYMENT_ENV: ${{ inputs.DEPLOYMENT_ENV }}
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

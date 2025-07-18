@@ -40,10 +40,10 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
       - name: 🛠️ Install Cilium
-        uses: devantler-tech/github-actions/composite-actions/install-cilium-action@f378f06c871bf640a57ec20466a4f54d38d35587 # v1.8.5
+        uses: devantler-tech/composite-actions/install-cilium-action@b2d85eefa2d5a75ee53571910e29080c5bdd271a # v1.9.0
 
       - name: 🛠️ Install Flux
-        uses: devantler-tech/github-actions/composite-actions/install-flux-action@f378f06c871bf640a57ec20466a4f54d38d35587 # v1.8.5
+        uses: devantler-tech/composite-actions/install-flux-action@b2d85eefa2d5a75ee53571910e29080c5bdd271a # v1.9.0
 
       - name: 🔐 Create secret for SOPS
         uses: azure/k8s-create-secret@6e0ba8047235646753f2a3a3b359b4d0006ff218 # v5.0.1
