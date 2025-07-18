@@ -1,0 +1,6 @@
+- name: blocked
+  color: 'd93f0b'
+- name: released
+  color: 'ededed'
+- name: next
+  color: '5d3fd3'
