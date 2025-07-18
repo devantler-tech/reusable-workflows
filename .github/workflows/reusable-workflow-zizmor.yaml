@@ -13,7 +13,7 @@ jobs:
   zizmor:
     runs-on: ubuntu-latest
     # Ignore Require Workflow runs
-    if: github.repository != 'devantler-tech/github-actions'
+    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       security-events: write
       contents: read # only needed for private repos
