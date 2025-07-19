@@ -11,4 +11,7 @@ permissions:
 jobs:
   auto-merge:
     uses: ./.github/workflows/ci-auto-merge.yaml
-    
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
