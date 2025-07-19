@@ -35,7 +35,7 @@ To use this reusable workflow, you can include it in your workflow file as follo
 ```yaml
 jobs:
   bootstrap-cluster:
-    uses: devantler-tech/github-actions/.github/workflows/cd-cluster-bootstrap.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/cd-cluster-bootstrap.yaml@{ref} # ref
     secrets:
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
       SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
@@ -65,7 +65,7 @@ jobs:
 ```yaml
 jobs:
   publish-application:
-    uses: devantler-tech/github-actions/.github/workflows/cd-dotnet-application-publish.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/cd-dotnet-application-publish.yaml@{ref} # ref
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 ```
@@ -90,7 +90,7 @@ jobs:
 ```yaml
 jobs:
   publish-library:
-    uses: devantler-tech/github-actions/.github/workflows/cd-dotnet-library-publish.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/cd-dotnet-library-publish.yaml@{ref} # ref
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 ```
@@ -115,7 +115,7 @@ jobs:
 ```yaml
 jobs:
   gitops-deploy:
-    uses: devantler-tech/github-actions/.github/workflows/cd-gitops-deploy.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/cd-gitops-deploy.yaml@{ref} # ref
     secrets:
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
       SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
@@ -145,7 +145,7 @@ jobs:
 ```yaml
 jobs:
   auto-merge:
-    uses: devantler-tech/github-actions/.github/workflows/ci-auto-merge.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/ci-auto-merge.yaml@{ref} # ref
 ```
 
 </details>
@@ -162,7 +162,7 @@ jobs:
 ```yaml
 jobs:
   dotnet-test:
-    uses: devantler-tech/github-actions/.github/workflows/ci-dotnet-test.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/ci-dotnet-test.yaml@{ref} # ref
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 ```
@@ -187,7 +187,7 @@ jobs:
 ```yaml
 jobs:
   gitops-test:
-    uses: devantler-tech/github-actions/.github/workflows/ci-gitops-test.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/ci-gitops-test.yaml@{ref} # ref
     secrets:
       KSAIL_SOPS_KEY: ${{ secrets.KSAIL_SOPS_KEY }}
     with:
@@ -217,7 +217,7 @@ jobs:
 ```yaml
 jobs:
   gitops-validate:
-    uses: devantler-tech/github-actions/.github/workflows/ci-gitops-validate.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/ci-gitops-validate.yaml@{ref} # ref
 ```
 
 </details>
@@ -234,7 +234,7 @@ jobs:
 ```yaml
 jobs:
   release:
-    uses: devantler-tech/github-actions/.github/workflows/release.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/release.yaml@{ref} # ref
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
@@ -259,7 +259,7 @@ jobs:
 ```yaml
 jobs:
   sync-cluster-policies:
-    uses: devantler-tech/github-actions/.github/workflows/sync-cluster-policies.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/sync-cluster-policies.yaml@{ref} # ref
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
     with:
@@ -287,7 +287,7 @@ jobs:
 ```yaml
 jobs:
   todos:
-    uses: devantler-tech/github-actions/.github/workflows/todos.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/todos.yaml@{ref} # ref
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
@@ -312,7 +312,7 @@ jobs:
 ```yaml
 jobs:
   zizmor:
-    uses: devantler-tech/github-actions/.github/workflows/zizmor.yaml@{ref} # ref
+    uses: devantler-tech/reusable-workflows/.github/workflows/zizmor.yaml@{ref} # ref
 ```
 
 </details>
