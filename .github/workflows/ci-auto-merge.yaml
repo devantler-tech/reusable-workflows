@@ -6,9 +6,6 @@ on:
       APP_PRIVATE_KEY:
         required: true
         description: 'The private key for the GitHub App'
-      GITHUB_TOKEN:
-        required: true
-        description: 'The GitHub token for authentication'
   ### Required Workflow Triggers ###
   pull_request:
   merge_group:
