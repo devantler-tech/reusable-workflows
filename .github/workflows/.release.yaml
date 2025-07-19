@@ -10,6 +10,6 @@ permissions: {}
 
 jobs:
   release:
-    uses: ./.github/workflows/reusable-workflow-release.yaml
+    uses: ./.github/workflows/release.yaml
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
