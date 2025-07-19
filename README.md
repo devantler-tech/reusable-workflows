@@ -26,7 +26,7 @@ graph TD
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-cd-cluster-bootstrap.yaml](.github/workflows/reusable-workflow-cd-cluster-bootstrap.yaml) is a workflow used to bootstrap a cluster on the DevantlerTech platform. It installs core components like Cilium and Flux.
+[.github/workflows/cd-cluster-bootstrap.yaml](.github/workflows/cd-cluster-bootstrap.yaml) is a workflow used to bootstrap a cluster on the DevantlerTech platform. It installs core components like Cilium and Flux.
 
 #### Usage
 
@@ -35,7 +35,7 @@ To use this reusable workflow, you can include it in your workflow file as follo
 ```yaml
 jobs:
   bootstrap-cluster:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-cd-cluster-bootstrap.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/cd-cluster-bootstrap.yaml@{ref} # ref
     secrets:
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
       SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
@@ -58,14 +58,14 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-cd-dotnet-application-publish.yaml](.github/workflows/reusable-workflow-cd-dotnet-application-publish.yaml) is a workflow used to publish .NET applications.
+[.github/workflows/cd-dotnet-application-publish.yaml](.github/workflows/cd-dotnet-application-publish.yaml) is a workflow used to publish .NET applications.
 
 #### Usage
 
 ```yaml
 jobs:
   publish-application:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-cd-dotnet-application-publish.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/cd-dotnet-application-publish.yaml@{ref} # ref
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 ```
@@ -83,14 +83,14 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-cd-dotnet-library-publish.yaml](.github/workflows/reusable-workflow-cd-dotnet-library-publish.yaml) is a workflow used to publish .NET libraries to NuGet and GHCR.
+[.github/workflows/cd-dotnet-library-publish.yaml](.github/workflows/cd-dotnet-library-publish.yaml) is a workflow used to publish .NET libraries to NuGet and GHCR.
 
 #### Usage
 
 ```yaml
 jobs:
   publish-library:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-cd-dotnet-library-publish.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/cd-dotnet-library-publish.yaml@{ref} # ref
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 ```
@@ -108,14 +108,14 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-cd-gitops-deploy.yaml](.github/workflows/reusable-workflow-cd-gitops-deploy.yaml) is a workflow used to deploy applications using GitOps with Flux.
+[.github/workflows/cd-gitops-deploy.yaml](.github/workflows/cd-gitops-deploy.yaml) is a workflow used to deploy applications using GitOps with Flux.
 
 #### Usage
 
 ```yaml
 jobs:
   gitops-deploy:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-cd-gitops-deploy.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/cd-gitops-deploy.yaml@{ref} # ref
     secrets:
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
       SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
@@ -138,14 +138,14 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-ci-auto-merge.yaml](.github/workflows/reusable-workflow-ci-auto-merge.yaml) is a workflow that automatically merges pull requests from trusted bots and maintainers.
+[.github/workflows/ci-auto-merge.yaml](.github/workflows/ci-auto-merge.yaml) is a workflow that automatically merges pull requests from trusted bots and maintainers.
 
 #### Usage
 
 ```yaml
 jobs:
   auto-merge:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-ci-auto-merge.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/ci-auto-merge.yaml@{ref} # ref
 ```
 
 </details>
@@ -155,14 +155,14 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-ci-dotnet-test.yaml](.github/workflows/reusable-workflow-ci-dotnet-test.yaml) is a workflow used to test .NET solutions or projects across multiple operating systems.
+[.github/workflows/ci-dotnet-test.yaml](.github/workflows/ci-dotnet-test.yaml) is a workflow used to test .NET solutions or projects across multiple operating systems.
 
 #### Usage
 
 ```yaml
 jobs:
   dotnet-test:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-ci-dotnet-test.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/ci-dotnet-test.yaml@{ref} # ref
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 ```
@@ -180,14 +180,14 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-ci-gitops-test.yaml](.github/workflows/reusable-workflow-ci-gitops-test.yaml) is a workflow used to test GitOps configurations with Flux.
+[.github/workflows/ci-gitops-test.yaml](.github/workflows/ci-gitops-test.yaml) is a workflow used to test GitOps configurations with Flux.
 
 #### Usage
 
 ```yaml
 jobs:
   gitops-test:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-ci-gitops-test.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/ci-gitops-test.yaml@{ref} # ref
     secrets:
       KSAIL_SOPS_KEY: ${{ secrets.KSAIL_SOPS_KEY }}
     with:
@@ -210,14 +210,14 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-ci-gitops-validate.yaml](.github/workflows/reusable-workflow-ci-gitops-validate.yaml) is a workflow used to validate GitOps cluster configurations.
+[.github/workflows/ci-gitops-validate.yaml](.github/workflows/ci-gitops-validate.yaml) is a workflow used to validate GitOps cluster configurations.
 
 #### Usage
 
 ```yaml
 jobs:
   gitops-validate:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-ci-gitops-validate.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/ci-gitops-validate.yaml@{ref} # ref
 ```
 
 </details>
@@ -227,14 +227,14 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-release.yaml](.github/workflows/reusable-workflow-release.yaml) is a workflow used to create releases using semantic-release.
+[.github/workflows/release.yaml](.github/workflows/release.yaml) is a workflow used to create releases using semantic-release.
 
 #### Usage
 
 ```yaml
 jobs:
   release:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-release.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/release.yaml@{ref} # ref
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
@@ -252,14 +252,14 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-sync-cluster-policies.yaml](.github/workflows/reusable-workflow-sync-cluster-policies.yaml) is a workflow used to sync upstream Kyverno policies to a target directory.
+[.github/workflows/sync-cluster-policies.yaml](.github/workflows/sync-cluster-policies.yaml) is a workflow used to sync upstream Kyverno policies to a target directory.
 
 #### Usage
 
 ```yaml
 jobs:
   sync-cluster-policies:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-sync-cluster-policies.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/sync-cluster-policies.yaml@{ref} # ref
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
     with:
@@ -280,14 +280,14 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-todos.yaml](.github/workflows/reusable-workflow-todos.yaml) is a workflow used to scan for TODOs in code and create GitHub issues.
+[.github/workflows/todos.yaml](.github/workflows/todos.yaml) is a workflow used to scan for TODOs in code and create GitHub issues.
 
 #### Usage
 
 ```yaml
 jobs:
   todos:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-todos.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/todos.yaml@{ref} # ref
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
@@ -305,14 +305,14 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/reusable-workflow-zizmor.yaml](.github/workflows/reusable-workflow-zizmor.yaml) is a workflow used to perform static analysis on GitHub Actions workflows.
+[.github/workflows/zizmor.yaml](.github/workflows/zizmor.yaml) is a workflow used to perform static analysis on GitHub Actions workflows.
 
 #### Usage
 
 ```yaml
 jobs:
   zizmor:
-    uses: devantler-tech/github-actions/.github/workflows/reusable-workflow-zizmor.yaml@{ref} # ref
+    uses: devantler-tech/github-actions/.github/workflows/zizmor.yaml@{ref} # ref
 ```
 
 </details>
