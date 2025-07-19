@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   auto-merge:
+    if: 
     uses: ./.github/workflows/ci-auto-merge.yaml
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
