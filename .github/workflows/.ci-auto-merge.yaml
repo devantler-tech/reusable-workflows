@@ -1,0 +1,15 @@
+name: CI - Auto-merge
+
+on:
+  pull_request:
+  merge_group:
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  auto-merge:
+    uses: ./.github/workflows/release.yaml
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
