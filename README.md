@@ -5,7 +5,7 @@
 
 Welcome to the DevantlerTech GitHub Actions repository! This repository contains [reusable workflows](#reusable-workflows) designed to streamline your CI/CD processes.  These actions are used across all DevantlerTech projects, ensuring consistency and efficiency.
 
-The below diagram illustrates the relationship between workflows, reusable workflows, and different types of GitHub Actions.
+The below diagram illustrates the relationship between GitHub Workflows and GitHub Actions.
 
 ```mermaid
 graph TD
