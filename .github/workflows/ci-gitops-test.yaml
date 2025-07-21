@@ -1,4 +1,4 @@
-name: CI - GitOps Test (Flux)
+name: CI - GitOps Test
 
 on:
   workflow_call:
