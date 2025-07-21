@@ -23,6 +23,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' }}
     environment: ${{ inputs.DEPLOYMENT_ENV }}
     steps:
       - name: 📑 Checkout
