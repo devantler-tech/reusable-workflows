@@ -15,6 +15,11 @@ on:
         required: true
         default: dev
         description: "Deployment environment (dev, prod)"
+      SKIP:
+        type: boolean
+        required: false
+        default: false
+        description: "Skip deployment if true"
 
 permissions:
   contents: read
@@ -23,7 +28,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ inputs.SKIP != true }}
     environment: ${{ inputs.DEPLOYMENT_ENV }}
     steps:
       - name: 📑 Checkout
