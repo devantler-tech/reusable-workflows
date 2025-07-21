@@ -15,6 +15,11 @@ on:
         required: true
         default: dev
         description: "Deployment environment (dev, prod)"
+      SKIP:
+        type: boolean
+        required: false
+        default: false
+        description: "Skip bootstrap if true"
 
 permissions:
   contents: read
@@ -23,6 +28,7 @@ permissions:
 jobs:
   bootstrap:
     runs-on: ubuntu-latest
+    if: ${{ inputs.SKIP != true }}
     environment: ${{ inputs.DEPLOYMENT_ENV }}
     steps:
       - name: 📑 Checkout
