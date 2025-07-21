@@ -30,24 +30,22 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.DEPLOYMENT_ENV }}
     steps:
-      - name: ⏭️ Skip Deploy
-        if: ${{ inputs.SKIP == true }}
-        run: |
-          echo "Skipping deploy for environment ${{ inputs.DEPLOYMENT_ENV }}"
-          exit 0
-
       - name: 📑 Checkout
+        if: ${{ inputs.SKIP != true }}
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
 
       - name: ⚙️ Setup flux
+        if: ${{ inputs.SKIP != true }}
         uses: fluxcd/flux2/action@6bf37f6a560fd84982d67f853162e4b3c2235edb # v2.6.4
 
       - name: ⚙️ Setup KSail
+        if: ${{ inputs.SKIP != true }}
         uses: devantler-tech/composite-actions/setup-ksail-action@d4b23f9e20423712a3300a63bdbaf4ac70fee721 # v1.9.2
 
       - name: 🚀 Deploy
+        if: ${{ inputs.SKIP != true }}
         uses: devantler-tech/composite-actions/flux-gitops-deploy-action@d4b23f9e20423712a3300a63bdbaf4ac70fee721 # v1.9.2
         with:
           DEPLOYMENT_ENV: ${{ inputs.DEPLOYMENT_ENV }}

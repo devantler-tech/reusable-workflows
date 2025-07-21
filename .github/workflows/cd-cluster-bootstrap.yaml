@@ -30,33 +30,33 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.DEPLOYMENT_ENV }}
     steps:
-      - name: ⏭️ Skip Bootstrap
-        if: ${{ inputs.SKIP == true }}
-        run: |
-          echo "Skipping bootstrap for environment ${{ inputs.DEPLOYMENT_ENV }}"
-          exit 0
-
       - name: 📑 Checkout
+        if: ${{ inputs.SKIP != true }}
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
 
       - name: ⚙️ Setup flux
+        if: ${{ inputs.SKIP != true }}
         uses: fluxcd/flux2/action@6bf37f6a560fd84982d67f853162e4b3c2235edb # v2.6.4
 
       - name: ⚙️ Set kubernetes context
+        if: ${{ inputs.SKIP != true }}
         uses: azure/k8s-set-context@212a19233d93f03eceaac31ae5a1d1acf650b6ef # v4.0.1
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
       - name: 🛠️ Install Cilium
+        if: ${{ inputs.SKIP != true }}
         uses: devantler-tech/composite-actions/install-cilium-action@d4b23f9e20423712a3300a63bdbaf4ac70fee721 # v1.9.2
 
       - name: 🛠️ Install Flux
+        if: ${{ inputs.SKIP != true }}
         uses: devantler-tech/composite-actions/install-flux-action@d4b23f9e20423712a3300a63bdbaf4ac70fee721 # v1.9.2
 
       - name: 🔐 Create secret for SOPS
+        if: ${{ inputs.SKIP != true }}
         uses: azure/k8s-create-secret@6e0ba8047235646753f2a3a3b359b4d0006ff218 # v5.0.1
         with:
           secret-type: generic
@@ -65,6 +65,7 @@ jobs:
           string-data: '{ "sops.agekey": "${{ secrets.SOPS_AGE_KEY }}" }'
 
       - name: 🔁 Create OCI Source and Kustomization
+        if: ${{ inputs.SKIP != true }}
         run: |
           if ! kubectl get ocirepositories flux-system -n flux-system > /dev/null 2>&1; then
             flux create source oci flux-system \
