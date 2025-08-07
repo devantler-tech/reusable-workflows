@@ -45,9 +45,9 @@ jobs:
             done < .policyignore
       - name: Copy Cluster Policies to the target directory
         run: |
-          mkdir -p ${{ env.KYVERNO_POLICIES_DIR }}
-          rm -rf ${{ env.KYVERNO_POLICIES_DIR }}/*
-          cp -r ${{ env.KYVERNO_POLICIES_TEMP_DIR }}/* ${{ env.KYVERNO_POLICIES_DIR }} || echo "No policies found to copy."
+          mkdir -p "$KYVERNO_POLICIES_DIR"
+          rm -rf "$KYVERNO_POLICIES_DIR"/*
+          cp -r "$KYVERNO_POLICIES_TEMP_DIR"/* "$KYVERNO_POLICIES_DIR" || echo "No policies found to copy."
       - name: Create PR with changes
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
