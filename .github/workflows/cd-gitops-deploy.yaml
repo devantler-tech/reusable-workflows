@@ -42,11 +42,11 @@ jobs:
 
       - name: ⚙️ Setup KSail
         if: ${{ inputs.SKIP != true }}
-        uses: devantler-tech/composite-actions/setup-ksail-action@0df4ee9f2a1169c870bb5f8eea023674cdf4d2ea # v1.9.4
+        uses: devantler-tech/composite-actions/setup-ksail-action@005c37f8ef5e1811388cf19b3b93eb721351b6be # v1.9.5
 
       - name: 🚀 Deploy
         if: ${{ inputs.SKIP != true }}
-        uses: devantler-tech/composite-actions/flux-gitops-deploy-action@0df4ee9f2a1169c870bb5f8eea023674cdf4d2ea # v1.9.4
+        uses: devantler-tech/composite-actions/flux-gitops-deploy-action@005c37f8ef5e1811388cf19b3b93eb721351b6be # v1.9.5
         with:
           DEPLOYMENT_ENV: ${{ inputs.DEPLOYMENT_ENV }}
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
