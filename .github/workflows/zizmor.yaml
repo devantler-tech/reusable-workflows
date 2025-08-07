@@ -7,8 +7,6 @@ on:
   merge_group:
   ##################################
 
-permissions: {}
-
 jobs:
   zizmor:
     runs-on: ubuntu-latest
