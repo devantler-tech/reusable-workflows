@@ -5,6 +5,8 @@ on:
       APP_PRIVATE_KEY:
         required: true
 
+permissions: {}
+
 jobs:
   release:
     name: Release

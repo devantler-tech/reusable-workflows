@@ -8,6 +8,7 @@ on:
 
 permissions:
   issues: write
+
 jobs:
   todos:
     runs-on: ubuntu-latest
