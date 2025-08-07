@@ -1,6 +1,4 @@
 name: CI - GitOps Test
-permissions:
-  contents: read
 
 on:
   workflow_call:
