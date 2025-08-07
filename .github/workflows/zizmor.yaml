@@ -1,5 +1,7 @@
 name: 🌈 Zizmor (Static Analysis for GitHub Actions)
 
+permissions: {}
+
 on:
   workflow_call:
   ### Required Workflow Triggers ###
