@@ -35,8 +35,8 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
       - name: Download latest Cluster Policies
         run: |
-          git clone --filter=blob:none --sparse https://github.com/kyverno/policies ${{ env.KYVERNO_POLICIES_TEMP_DIR }}
-          cd ${{ env.KYVERNO_POLICIES_TEMP_DIR }}
+          git clone --filter=blob:none --sparse https://github.com/kyverno/policies "$KYVERNO_POLICIES_TEMP_DIR"
+          cd "$KYVERNO_POLICIES_TEMP_DIR"
           git sparse-checkout set --no-cone '*/' ':!.*'
       - name: Remove blacklisted policies
         run: |
