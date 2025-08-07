@@ -41,7 +41,7 @@ jobs:
       - name: Remove blacklisted policies
         run: |
           while IFS= read -r pattern; do
-          find ${{ env.KYVERNO_POLICIES_TEMP_DIR }} -path "${{ env.KYVERNO_POLICIES_TEMP_DIR }}/$pattern" -exec rm -rf {} +
+          find "$KYVERNO_POLICIES_TEMP_DIR" -path "$KYVERNO_POLICIES_TEMP_DIR/$pattern" -exec rm -rf {} +
             done < .policyignore
       - name: Copy Cluster Policies to the target directory
         run: |
