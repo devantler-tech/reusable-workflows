@@ -26,7 +26,7 @@ jobs:
         run: go get .
       - name: 🛠️ Build
         run: go build -v ./...
-  test:
+  unit-test:
     name:  🧪 Test
     runs-on: ubuntu-latest
     steps:
