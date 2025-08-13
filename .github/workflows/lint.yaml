@@ -14,6 +14,7 @@ permissions:
 
 jobs:
   lint:
+    name: 🧹 Lint
     runs-on: ubuntu-latest
     # Ignore Require Workflow runs
     if: github.repository != 'devantler-tech/reusable-workflows'
@@ -23,7 +24,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: 🧹 Super-linter
+      - name: 🧹 Lint
         uses: super-linter/super-linter@5119dcd8011e92182ce8219d9e9efc82f16fddb6 # v8.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
