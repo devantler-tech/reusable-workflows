@@ -14,10 +14,7 @@ permissions:
 
 jobs:
   lint:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     # Ignore Require Workflow runs
     if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
