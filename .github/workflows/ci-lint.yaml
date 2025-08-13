@@ -1,4 +1,4 @@
-name: 🧹 Lint
+name: CI - Lint
 
 on:
   workflow_call:

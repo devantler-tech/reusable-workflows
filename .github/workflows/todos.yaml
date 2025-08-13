@@ -1,4 +1,4 @@
-name: "TODOs"
+name: TODOs
 
 on:
   workflow_call:
