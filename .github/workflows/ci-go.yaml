@@ -1,9 +1,11 @@
 name: CI - Go
 
 on:
+  workflow_call:
+  ### Required Workflow Triggers ###
   pull_request:
   merge_group:
-  workflow_call:
+  ##################################
 
 permissions:
   contents: read
@@ -12,8 +14,12 @@ permissions:
 
 jobs:
   lint:
-    name: Lint Go Code
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    # Ignore Require Workflow runs
+    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       contents: read
       packages: read
