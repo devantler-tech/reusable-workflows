@@ -2,27 +2,6 @@ name: CI - Go
 
 on:
   workflow_call:
-    inputs:
-      GO_VERSION:
-        description: Go version to setup
-        required: false
-        default: 'stable'
-        type: string
-      SUPER_LINTER_VERSION:
-        description: Super-linter version to use
-        required: false
-        default: 'v8.0.0'
-        type: string
-      FETCH_DEPTH:
-        description: Number of commits to fetch. 0 indicates all history for all branches and tags
-        required: false
-        default: 0
-        type: number
-      ENABLE_LINTING:
-        description: Enable linting with Super-linter
-        required: false
-        default: true
-        type: boolean
   ### Required Workflow Triggers ###
   pull_request:
   merge_group:
@@ -43,8 +22,6 @@ jobs:
           persist-credentials: false
       - name: ⚙️ Setup Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
-        with:
-          go-version: ${{ inputs.GO_VERSION }}
       - name: ⬇️ Install dependencies
         run: go get .
       - name: 🛠️ Build
@@ -59,7 +36,5 @@ jobs:
           persist-credentials: false
       - name: ⚙️ Setup Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
-        with:
-          go-version: ${{ inputs.GO_VERSION }}
       - name: 🧪 Test
         run: go test
