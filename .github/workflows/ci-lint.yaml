@@ -23,6 +23,8 @@ jobs:
   lint:
     name: 🧹 Lint
     runs-on: ubuntu-latest
+    # Ignore Require Workflow runs
+    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       contents: write
       issues: write
