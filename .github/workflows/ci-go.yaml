@@ -31,6 +31,7 @@ jobs:
         uses: oxsecurity/megalinter/flavors/go@e08c2b05e3dbc40af4c23f41172ef1e068a7d651 # v8.8.0
         id: ml
         env:
+          GO_GOLANGCI_LINT_VERSION: v2.4.0
           # VALIDATE_ALL_CODEBASE: >-
           #   ${{
           #     github.event_name == 'push' &&
@@ -38,6 +39,7 @@ jobs:
           #   }}
           VALIDATE_ALL_CODEBASE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Archive production artifacts
         if: success() || failure()
