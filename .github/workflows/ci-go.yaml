@@ -113,7 +113,7 @@ jobs:
           commit_user_email: 129584137+megalinter-bot@users.noreply.github.com
 
   test:
-    name:  🧪 Test
+    name: 🧪 Test
     runs-on: ubuntu-latest
     # Ignore Require Workflow runs
     if: github.repository != 'devantler-tech/reusable-workflows'
