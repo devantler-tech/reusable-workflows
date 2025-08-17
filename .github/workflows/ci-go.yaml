@@ -130,3 +130,9 @@ jobs:
         run: go build -v ./...
       - name: 🧪 Test
         run: go test ./...
+      - name: 📄 Generate coverage
+        run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+      - name: 📄 Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
