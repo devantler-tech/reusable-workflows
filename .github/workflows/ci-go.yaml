@@ -36,11 +36,7 @@ jobs:
         uses: oxsecurity/megalinter/flavors/go@e08c2b05e3dbc40af4c23f41172ef1e068a7d651 # v8.8.0
         id: ml
         env:
-          VALIDATE_ALL_CODEBASE: >-
-            ${{
-              github.event_name == 'push' &&
-              contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref)
-            }}
+          VALIDATE_ALL_CODEBASE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Archive production artifacts
