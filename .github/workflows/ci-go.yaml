@@ -32,6 +32,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+
       - name: 🧹 Lint
         uses: oxsecurity/megalinter/flavors/go@e08c2b05e3dbc40af4c23f41172ef1e068a7d651 # v8.8.0
         id: ml
@@ -117,24 +118,54 @@ jobs:
     runs-on: ubuntu-latest
     # Ignore Require Workflow runs
     if: github.repository != 'devantler-tech/reusable-workflows'
+    permissions:
+      contents: write
     steps:
       - name: 📑 Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
+
       - name: ⚙️ Setup Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+
       - name: ⬇️ Install dependencies
-        run: go get .
+        run: |
+          go get .
+          go install go.uber.org/mock/mockgen@latest
+          export PATH=$PATH:$(go env GOPATH)/bin
+
       - name: 🛠️ Build
         run: go build -v ./...
+
+      - name: 📄 Generate mocks
+        id: mock
+        run: |
+          go generate ./...
+
+      - name: "🔍 Check for changes"
+        id: changed-files
+        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c # v46.0.5
+        with:
+          since_last_remote_commit: true
+
+      - name: "📤 Commit generated mocks"
+        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
+        with:
+          add: .
+          message: "chore: update mocks"
+          default_author: github_actions
+
       - name: 🧪 Test
         run: go test ./...
+
       - name: 👨🏻‍🔧 Enable covdata (temp) see https://github.com/golang/go/issues/75031
         run: go env -w GOTOOLCHAIN=go1.25.0+auto
+
       - name: 📄 Generate coverage
         run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+
       - name: 📄 Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v5.5.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
