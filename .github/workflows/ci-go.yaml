@@ -128,19 +128,21 @@ jobs:
       - name: ⚙️ Setup Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
 
+      - name: ⚙️ Setup Mockery
+        run: |
+          go install github.com/vektra/mockery/v3@v3.5.3
+          export PATH=$PATH:$(go env GOPATH)/bin
+
       - name: ⬇️ Install dependencies
         run: |
           go get .
-          go install go.uber.org/mock/mockgen@latest
-          export PATH=$PATH:$(go env GOPATH)/bin
 
       - name: 🛠️ Build
         run: go build -v ./...
 
       - name: 📄 Generate mocks
         id: mock
-        run: |
-          go generate ./...
+        run: mockery
 
       - name: "🔍 Check for changes"
         id: changed-files
