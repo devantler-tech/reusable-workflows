@@ -151,11 +151,9 @@ jobs:
           since_last_remote_commit: true
 
       - name: "📤 Commit generated mocks"
-        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
+        uses: stefanzweifel/git-auto-commit-action@778341af668090896ca464160c2def5d1d1a3eb0 # v6.0.1
         with:
-          add: .
-          message: "chore: update mocks"
-          default_author: github_actions
+          commit_message: "chore: update mocks"
 
       - name: 🧪 Test
         run: go test ./...
