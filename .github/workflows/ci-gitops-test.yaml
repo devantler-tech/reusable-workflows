@@ -15,6 +15,9 @@ on:
       ROOT_CA_CERT_FILE:
         required: false
         type: string
+      SKIP:
+        required: false
+        type: boolean
   ### Required Workflow Triggers ###
   pull_request:
   merge_group:
@@ -24,7 +27,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     # Ignore Require Workflow runs
-    if: github.repository != 'devantler-tech/reusable-workflows'
+    if: github.repository != 'devantler-tech/reusable-workflows' && inputs.SKIP != true
     steps:
       - name: 📑 Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
