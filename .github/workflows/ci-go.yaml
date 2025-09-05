@@ -38,8 +38,6 @@ jobs:
 
       - name: 🔧 Run golangci-lint
         uses: golangci/golangci-lint-action@a4f60bb28d35aeee14e6880718e0c85ff1882e64 # v6.0.1
-        with:
-          skip-build-cache: false
 
       - name: 🧹 Lint
         uses: oxsecurity/megalinter/flavors/go@e08c2b05e3dbc40af4c23f41172ef1e068a7d651 # v8.8.0
