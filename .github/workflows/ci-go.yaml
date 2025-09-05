@@ -40,7 +40,6 @@ jobs:
         uses: golangci/golangci-lint-action@a4f60bb28d35aeee14e6880718e0c85ff1882e64 # v6.0.1
         with:
           version: latest
-          args: ${{ hashFiles('.golangci.yml') != '' && '--config .golangci.yml' || '' }}
           only-new-issues: false
           skip-cache: false
           skip-pkg-cache: false
