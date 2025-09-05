@@ -217,6 +217,31 @@ jobs:
 
 </details>
 
+### CI - Go
+
+<details>
+<summary>Click to expand</summary>
+
+[.github/workflows/ci-go.yaml](.github/workflows/ci-go.yaml) is a workflow used to lint and test Go projects across multiple operating systems.
+
+#### Usage
+
+```yaml
+jobs:
+  go-test:
+    uses: devantler-tech/reusable-workflows/.github/workflows/ci-go.yaml@{ref} # ref
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+```
+
+#### Secrets and Inputs
+
+| Key             | Type   | Default | Required | Description   |
+| --------------- | ------ | ------- | -------- | ------------- |
+| `CODECOV_TOKEN` | Secret | -       | ❌       | Codecov token |
+
+</details>
+
 ### CI - GitOps Test
 
 <details>
