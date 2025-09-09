@@ -38,24 +38,6 @@ jobs:
         with:
           go-version: 1.25.1
 
-      - name: 📦 Install golangci-lint
-        run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin latest
-
-      - name: 🎨 Format Go code
-        run: $(go env GOPATH)/bin/golangci-lint fmt
-
-      - name: 🔍 Check for changes
-        id: changed-files
-        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c # v46.0.5
-        with:
-          since_last_remote_commit: true
-
-      - name: 📤 Commit formatting changes
-        uses: stefanzweifel/git-auto-commit-action@778341af668090896ca464160c2def5d1d1a3eb0 # v6.0.1
-        if: steps.changed-files.outputs.any_changed == 'true'
-        with:
-          commit_message: "style: apply golangci-lint fmt"
-
       - name: 🔧 Run golangci-lint
         uses: golangci/golangci-lint-action@4afd733a84b1f43292c63897423277bb7f4313a9 # v8.0.0
         with:
@@ -77,68 +59,17 @@ jobs:
             megalinter-reports
             mega-linter.log
 
-      - name: Set APPLY_FIXES_IF var
-        run: |
-          printf 'APPLY_FIXES_IF=%s\n' "${{
-            steps.ml.outputs.has_updated_sources == 1 &&
-            (
-              env.APPLY_FIXES_EVENT == 'all' ||
-              env.APPLY_FIXES_EVENT == github.event_name
-            ) &&
-            (
-              github.event_name == 'push' ||
-              github.event.pull_request.head.repo.full_name == github.repository
-            )
-          }}" >> "${GITHUB_ENV}"
-
-      - name: Set APPLY_FIXES_IF_* vars
-        run: |
-          printf 'APPLY_FIXES_IF_PR=%s\n' "${{
-            env.APPLY_FIXES_IF == 'true' &&
-            env.APPLY_FIXES_MODE == 'pull_request'
-          }}" >> "${GITHUB_ENV}"
-          printf 'APPLY_FIXES_IF_COMMIT=%s\n' "${{
-            env.APPLY_FIXES_IF == 'true' &&
-            env.APPLY_FIXES_MODE == 'commit' &&
-            (!contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref))
-          }}" >> "${GITHUB_ENV}"
-
-      - name: Create Pull Request with applied fixes
-        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
-        id: cpr
-        if: env.APPLY_FIXES_IF_PR == 'true'
+      - name: 🔍 Check for changes
+        id: changed-files
+        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c # v46.0.5
         with:
-          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
-          commit-message: "[MegaLinter] Apply linters automatic fixes"
-          title: "[MegaLinter] Apply linters automatic fixes"
-          labels: bot
+          since_last_remote_commit: true
 
-      - name: Create PR output
-        if: env.APPLY_FIXES_IF_PR == 'true'
-        run: |
-          echo "PR Number - $PR_NUMBER"
-          echo "PR URL - $PR_URL"
-        env:
-          PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
-          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
-
-      - name: Prepare commit
-        if: env.APPLY_FIXES_IF_COMMIT == 'true'
-        run: sudo chown -Rc $UID .git/
-
-      - name: Commit and push applied linter fixes
+      - name: 📤 Commit formatting and linting fixes
         uses: stefanzweifel/git-auto-commit-action@778341af668090896ca464160c2def5d1d1a3eb0 # v6.0.1
-        if: env.APPLY_FIXES_IF_COMMIT == 'true'
+        if: steps.changed-files.outputs.any_changed == 'true'
         with:
-          branch: >-
-            ${{
-              github.event.pull_request.head.ref ||
-              github.head_ref ||
-              github.ref
-            }}
-          commit_message: "[MegaLinter] Apply linters fixes"
-          commit_user_name: megalinter-bot
-          commit_user_email: 129584137+megalinter-bot@users.noreply.github.com
+          commit_message: "style: apply fmt and linting fixes"
 
   test:
     name: 🧪 Test
