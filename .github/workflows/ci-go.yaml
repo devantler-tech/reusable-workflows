@@ -43,6 +43,17 @@ jobs:
         with:
           version: latest
 
+      - name: 🔍 Check for changes after golangci-lint
+        id: changed-files-golangci
+        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c # v46.0.5
+
+      # TODO: Add signing to ci-go.yaml workflow.
+      - name: 📤 Commit golangci-lint fixes
+        uses: stefanzweifel/git-auto-commit-action@778341af668090896ca464160c2def5d1d1a3eb0 # v6.0.1
+        if: steps.changed-files-golangci.outputs.any_changed == 'true'
+        with:
+          commit_message: "style: apply golangci-lint fixes"
+
       - name: 🧹 Lint
         uses: oxsecurity/megalinter/flavors/go@e08c2b05e3dbc40af4c23f41172ef1e068a7d651 # v8.8.0
         id: ml
@@ -50,16 +61,16 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🔍 Check for changes
-        id: changed-files
+      - name: 🔍 Check for changes after megalinter
+        id: changed-files-megalinter
         uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c # v46.0.5
 
       # TODO: Add signing to ci-go.yaml workflow.
-      - name: 📤 Commit formatting and linting fixes
+      - name: 📤 Commit megalinter fixes
         uses: stefanzweifel/git-auto-commit-action@778341af668090896ca464160c2def5d1d1a3eb0 # v6.0.1
-        if: steps.changed-files.outputs.any_changed == 'true'
+        if: steps.changed-files-megalinter.outputs.any_changed == 'true'
         with:
-          commit_message: "style: apply fmt and linting fixes"
+          commit_message: "style: apply megalinter fixes"
 
   test:
     name: 🧪 Test
