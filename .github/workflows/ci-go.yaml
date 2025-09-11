@@ -17,8 +17,8 @@ permissions:
   packages: read
 
 jobs:
-  lint:
-    name: 🧹 Lint
+  lint-golangci-lint:
+    name: 🧹 Lint - golangci-lint
     runs-on: ubuntu-latest
     # Ignore Require Workflow runs
     if: github.repository != 'devantler-tech/reusable-workflows'
@@ -43,9 +43,23 @@ jobs:
         with:
           version: latest
 
+    name: 🧹 Lint - mega-linter
+    runs-on: ubuntu-latest
+    # Ignore Require Workflow runs
+    if: github.repository != 'devantler-tech/reusable-workflows'
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: 📄 Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
       - name: 🧹 Lint
         uses: oxsecurity/megalinter/flavors/go@e08c2b05e3dbc40af4c23f41172ef1e068a7d651 # v8.8.0
-        id: ml
         env:
           VALIDATE_ALL_CODEBASE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
