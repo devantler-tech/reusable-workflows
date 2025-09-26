@@ -12,7 +12,7 @@ on:
       RUNNER:
         required: false
         type: string
-        default: ubuntu-latest
+        default: linux-arm64
       HOSTS_FILE:
         required: false
         type: string
