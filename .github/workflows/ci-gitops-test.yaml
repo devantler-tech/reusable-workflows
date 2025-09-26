@@ -9,6 +9,10 @@ on:
       KSAIL_SOPS_KEY:
         required: false
     inputs:
+      RUNNER:
+        required: false
+        type: string
+        default: ubuntu-latest
       HOSTS_FILE:
         required: false
         type: string
@@ -25,9 +29,9 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.RUNNER }}
     # Ignore Require Workflow runs
-    if: github.repository != 'devantler-tech/reusable-workflows' && inputs.SKIP != true && github.event_name != 'merge_group' 
+    if: github.repository != 'devantler-tech/reusable-workflows' && inputs.SKIP != true && github.event_name != 'merge_group'
     steps:
       - name: 📑 Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
