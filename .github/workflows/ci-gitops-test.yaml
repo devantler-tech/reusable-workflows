@@ -31,7 +31,7 @@ jobs:
   test:
     runs-on:
       group: Default
-      labels: ${{ inputs.RUNNER || 'linux-arm64' }}
+      labels: ${{ inputs.RUNNER || 'linux-x64' }}
     # Ignore Require Workflow runs
     if: github.repository != 'devantler-tech/reusable-workflows' && inputs.SKIP != true && github.event_name != 'merge_group'
     steps:
