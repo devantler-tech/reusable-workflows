@@ -8,14 +8,6 @@ on:
         type: string
         default: "./"
         description: "Working directory for Go commands (e.g., 'src' if go.mod is in src/)"
-      artifact-name:
-        required: false
-        type: string
-        description: "Optional name of a pre-built ksail artifact to download"
-      artifact-checksum:
-        required: false
-        type: string
-        description: "Optional SHA256 checksum of the provided ksail artifact"
     secrets:
       CODECOV_TOKEN:
         required: false
@@ -24,10 +16,6 @@ on:
 permissions:
   contents: read
   packages: read
-
-env:
-  KSAIL_ARTIFACT_NAME: ${{ inputs.artifact-name }}
-  KSAIL_ARTIFACT_CHECKSUM: ${{ inputs.artifact-checksum }}
 
 jobs:
   lint-golangci-lint:

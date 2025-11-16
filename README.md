@@ -230,23 +230,11 @@ jobs:
 jobs:
   go-test:
     uses: devantler-tech/reusable-workflows/.github/workflows/ci-go.yaml@{ref} # ref
-    with:
-      working-directory: ./src
-      artifact-name: ${{ needs.build-artifact.outputs.artifact-name }}
-      artifact-checksum: ${{ needs.build-artifact.outputs.artifact-checksum }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 ```
 
-#### Inputs
-
-| Key                 | Type           | Default | Required | Description |
-| ------------------- | -------------- | ------- | -------- | ----------- |
-| `working-directory` | Input (string) | `./`    | ❌       | Relative directory for Go commands |
-| `artifact-name`     | Input (string) | -       | ❌       | Name of the pre-built `ksail` artifact to download |
-| `artifact-checksum` | Input (string) | -       | ❌       | SHA256 checksum used to validate the downloaded artifact |
-
-#### Secrets
+#### Secrets and Inputs
 
 | Key             | Type   | Default | Required | Description   |
 | --------------- | ------ | ------- | -------- | ------------- |
