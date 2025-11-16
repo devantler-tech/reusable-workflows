@@ -13,11 +13,6 @@ on:
         required: false
         description: "Codecov token for uploading coverage reports"
 
-  ### Required Workflow Triggers ###
-  pull_request:
-  merge_group:
-  ##################################
-
 permissions:
   contents: read
   packages: read
@@ -26,8 +21,6 @@ jobs:
   lint-golangci-lint:
     name: 🧹 Lint - golangci-lint
     runs-on: ubuntu-latest
-    # Ignore Require Workflow runs
-    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       contents: write
       issues: write
@@ -63,8 +56,6 @@ jobs:
   lint-mega-linter:
     name: 🧹 Lint - mega-linter
     runs-on: ubuntu-latest
-    # Ignore Require Workflow runs
-    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       contents: write
       issues: write
@@ -85,8 +76,6 @@ jobs:
   test:
     name: 🧪 Test
     runs-on: ubuntu-latest
-    # Ignore Require Workflow runs
-    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       contents: write
     steps:
