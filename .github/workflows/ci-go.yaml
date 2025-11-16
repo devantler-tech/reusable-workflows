@@ -113,14 +113,20 @@ jobs:
 
       - name: 🧪 Test
         working-directory: ${{ inputs.working-directory }}
-        run: go test ./...
+        run: |
+          CORES=$(nproc)
+          export GOMAXPROCS="$CORES"
+          go test -parallel "$CORES" ./...
 
       - name: 👨🏻‍🔧 Enable covdata (temp) see https://github.com/golang/go/issues/75031
         run: go env -w GOTOOLCHAIN=go1.25.0+auto
 
       - name: 📄 Generate coverage
         working-directory: ${{ inputs.working-directory }}
-        run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+        run: |
+          CORES=$(nproc)
+          export GOMAXPROCS="$CORES"
+          go test -race -parallel "$CORES" -coverprofile=coverage.txt -covermode=atomic ./...
 
       - name: 📄 Upload coverage to Codecov
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
