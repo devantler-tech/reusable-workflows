@@ -79,20 +79,20 @@ jobs:
 
       - name: Set APPLY_FIXES_IF var
         run: |
-          printf 'APPLY_FIXES_IF=%s\n' "${{
-            steps.ml.outputs.has_updated_sources == 1 &&
-            (
-              env.APPLY_FIXES_EVENT == 'all' ||
-              env.APPLY_FIXES_EVENT == github.event_name
-            ) &&
-            (
-              github.event_name == 'push' ||
-              github.event.pull_request.head.repo.full_name == github.repository
-            )
-          }}" >> "${GITHUB_ENV}"
+          if [ "$HAS_UPDATED_SOURCES" = "1" ] && \
+            { [ "$APPLY_FIXES_EVENT" = "all" ] || [ "$APPLY_FIXES_EVENT" = "$GITHUB_EVENT_NAME" ]; } && \
+            { [ "$GITHUB_EVENT_NAME" = "push" ] || [ "$PR_REPO_FULL_NAME" = "$GITHUB_REPOSITORY" ]; }
+          then
+            echo "APPLY_FIXES_IF=true" >> "$GITHUB_ENV"
+          else
+            echo "APPLY_FIXES_IF=false" >> "$GITHUB_ENV"
+          fi
         env:
           APPLY_FIXES_EVENT: all
-
+          HAS_UPDATED_SOURCES: ${{ steps.ml.outputs.has_updated_sources }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Set APPLY_FIXES_IF_COMMIT var
         run: |
           printf 'APPLY_FIXES_IF_COMMIT=%s\n' "${{
