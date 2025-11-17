@@ -65,10 +65,10 @@ jobs:
       - name: 📄 Checkout
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
-          persist-credentials: true
           fetch-depth: 0
 
       - name: 🧹 Lint
+        id: ml
         uses: oxsecurity/megalinter/flavors/go@62c799d895af9bcbca5eacfebca29d527f125a57 # v9.1.0
         env:
           VALIDATE_ALL_CODEBASE: true
@@ -76,6 +76,56 @@ jobs:
           APPLY_FIXES: all
           APPLY_FIXES_EVENT: all
           APPLY_FIXES_MODE: commit
+
+      - name: Set APPLY_FIXES_IF var
+        run: |
+          if [ "$HAS_UPDATED_SOURCES" = "1" ] && \
+            { [ "$APPLY_FIXES_EVENT" = "all" ] || [ "$APPLY_FIXES_EVENT" = "$GITHUB_EVENT_NAME" ]; } && \
+            { [ "$GITHUB_EVENT_NAME" = "push" ] || [ "$PR_REPO_FULL_NAME" = "$GITHUB_REPOSITORY" ]; }
+          then
+            echo "APPLY_FIXES_IF=true" >> "$GITHUB_ENV"
+          else
+            echo "APPLY_FIXES_IF=false" >> "$GITHUB_ENV"
+          fi
+        env:
+          APPLY_FIXES_EVENT: all
+          HAS_UPDATED_SOURCES: ${{ steps.ml.outputs.has_updated_sources }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
+      - name: Set APPLY_FIXES_IF_COMMIT var
+        run: |
+          APPLY_FIXES_IF_COMMIT=false
+          # Only set to true if APPLY_FIXES_IF and APPLY_FIXES_MODE are 'true'/'commit' and ref is NOT main/master
+          if [ "$APPLY_FIXES_IF" = "true" ] && \
+             [ "$APPLY_FIXES_MODE" = "commit" ] && \
+             [ "$GITHUB_REF" != "refs/heads/main" ] && \
+             [ "$GITHUB_REF" != "refs/heads/master" ]; then
+            APPLY_FIXES_IF_COMMIT=true
+          fi
+          echo "APPLY_FIXES_IF_COMMIT=$APPLY_FIXES_IF_COMMIT" >> "$GITHUB_ENV"
+        env:
+          APPLY_FIXES_IF: ${{ env.APPLY_FIXES_IF }}
+          APPLY_FIXES_MODE: commit
+          GITHUB_REF: ${{ github.ref }}
+
+      - name: Prepare commit
+        if: env.APPLY_FIXES_IF_COMMIT == 'true'
+        run: sudo chown -Rc $UID .git/
+
+      - name: Commit and push applied linter fixes
+        uses: stefanzweifel/git-auto-commit-action@28e16e81777b558cc906c8750092100bbb34c5e3 # v7.0.0
+        if: env.APPLY_FIXES_IF_COMMIT == 'true'
+        with:
+          branch: >-
+            ${{
+              github.event.pull_request.head.ref ||
+              github.head_ref ||
+              github.ref
+            }}
+          commit_message: "[MegaLinter] Apply linters fixes"
+          commit_user_name: megalinter-bot
+          commit_user_email: 129584137+megalinter-bot@users.noreply.github.com
 
   test:
     name: 🧪 Test
