@@ -95,13 +95,19 @@ jobs:
           PR_REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Set APPLY_FIXES_IF_COMMIT var
         run: |
-          printf 'APPLY_FIXES_IF_COMMIT=%s\n' "${{
-            env.APPLY_FIXES_IF == 'true' &&
-            env.APPLY_FIXES_MODE == 'commit' &&
-            (!contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref))
-          }}" >> "${GITHUB_ENV}"
+          APPLY_FIXES_IF_COMMIT=false
+          # Only set to true if APPLY_FIXES_IF and APPLY_FIXES_MODE are 'true'/'commit' and ref is NOT main/master
+          if [ "$APPLY_FIXES_IF" = "true" ] && \
+             [ "$APPLY_FIXES_MODE" = "commit" ] && \
+             [ "$GITHUB_REF" != "refs/heads/main" ] && \
+             [ "$GITHUB_REF" != "refs/heads/master" ]; then
+            APPLY_FIXES_IF_COMMIT=true
+          fi
+          echo "APPLY_FIXES_IF_COMMIT=$APPLY_FIXES_IF_COMMIT" >> "$GITHUB_ENV"
         env:
+          APPLY_FIXES_IF: ${{ env.APPLY_FIXES_IF }}
           APPLY_FIXES_MODE: commit
+          GITHUB_REF: ${{ github.ref }}
 
       - name: Prepare commit
         if: env.APPLY_FIXES_IF_COMMIT == 'true'
