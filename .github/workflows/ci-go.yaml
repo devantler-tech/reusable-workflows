@@ -65,7 +65,7 @@ jobs:
       - name: 📄 Checkout
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
-          persist-credentials: false
+          persist-credentials: true
           fetch-depth: 0
 
       - name: 🧹 Lint
@@ -73,6 +73,9 @@ jobs:
         env:
           VALIDATE_ALL_CODEBASE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLY_FIXES: all
+          APPLY_FIXES_EVENT: all
+          APPLY_FIXES_MODE: commit
 
   test:
     name: 🧪 Test
