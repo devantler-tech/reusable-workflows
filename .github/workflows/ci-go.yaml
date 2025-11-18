@@ -42,8 +42,16 @@ jobs:
           persist-credentials: true
           token: ${{ steps.generate-token.outputs.token }}
 
+      - name: ⚙️ Setup Go
+        uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        with:
+          go-version: 1.25.4
+
+      - name: 📄 Install mockery
+        run: go install github.com/vektra/mockery/v3@v3.6.1
+
       - name: 📄 Run mockery
-        run: docker run -v "$PWD":/src -w /src vektra/mockery:3
+        run: mockery
 
       - name: 🧹 Lint
         id: ml
