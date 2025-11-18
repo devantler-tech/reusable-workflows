@@ -88,46 +88,8 @@ jobs:
           APPLY_FIXES_EVENT: all
           APPLY_FIXES_MODE: commit
 
-      - name: Set APPLY_FIXES_IF var
-        run: |
-          if [ "$HAS_UPDATED_SOURCES" = "1" ] && \
-            { [ "$APPLY_FIXES_EVENT" = "all" ] || [ "$APPLY_FIXES_EVENT" = "$GITHUB_EVENT_NAME" ]; } && \
-            { [ "$GITHUB_EVENT_NAME" = "push" ] || [ "$PR_REPO_FULL_NAME" = "$GITHUB_REPOSITORY" ]; }
-          then
-            echo "APPLY_FIXES_IF=true" >> "$GITHUB_ENV"
-          else
-            echo "APPLY_FIXES_IF=false" >> "$GITHUB_ENV"
-          fi
-        env:
-          APPLY_FIXES_EVENT: all
-          HAS_UPDATED_SOURCES: ${{ steps.ml.outputs.has_updated_sources }}
-          GITHUB_EVENT_NAME: ${{ github.event_name }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          PR_REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
-
-      - name: Set APPLY_FIXES_IF_COMMIT var
-        run: |
-          APPLY_FIXES_IF_COMMIT=false
-          # Only set to true if APPLY_FIXES_IF and APPLY_FIXES_MODE are 'true'/'commit' and ref is NOT main/master
-          if [ "$APPLY_FIXES_IF" = "true" ] && \
-             [ "$APPLY_FIXES_MODE" = "commit" ] && \
-             [ "$GITHUB_REF" != "refs/heads/main" ] && \
-             [ "$GITHUB_REF" != "refs/heads/master" ]; then
-            APPLY_FIXES_IF_COMMIT=true
-          fi
-          echo "APPLY_FIXES_IF_COMMIT=$APPLY_FIXES_IF_COMMIT" >> "$GITHUB_ENV"
-        env:
-          APPLY_FIXES_IF: ${{ env.APPLY_FIXES_IF }}
-          APPLY_FIXES_MODE: commit
-          GITHUB_REF: ${{ github.ref }}
-
-      - name: Prepare commit
-        if: env.APPLY_FIXES_IF_COMMIT == 'true'
-        run: sudo chown -Rc $UID .git/
-
       - name: Commit and push applied linter fixes
         uses: stefanzweifel/git-auto-commit-action@28e16e81777b558cc906c8750092100bbb34c5e3 # v7.0.0
-        if: env.APPLY_FIXES_IF_COMMIT == 'true'
         with:
           branch: >-
             ${{
