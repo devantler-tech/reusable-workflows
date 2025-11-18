@@ -21,43 +21,7 @@ permissions:
   packages: read
 
 jobs:
-  lint-golangci-lint:
-    name: 🧹 Lint - golangci-lint
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-    steps:
-      - name: 📄 Checkout
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - name: ♻️ Cache Go modules
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles(format('{0}**/go.sum', inputs.working-directory)) }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
-      - name: ⚙️ Setup Go
-        uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
-        with:
-          go-version: 1.25.4
-          cache-dependency-path: ${{ inputs.working-directory }}/go.sum
-
-      - name: 🔧 Run golangci-lint
-        uses: golangci/golangci-lint-action@0a35821d5c230e903fcfe077583637dea1b27b47 # v9.0.0
-        with:
-          version: latest
-          working-directory: ${{ inputs.working-directory }}
-
-  lint-mega-linter:
+  lint:
     name: 🧹 Lint - mega-linter
     runs-on: ubuntu-latest
     permissions:
@@ -77,6 +41,9 @@ jobs:
         with:
           persist-credentials: true
           token: ${{ steps.generate-token.outputs.token }}
+
+      - name: 📄 Run mockery
+        run: docker run -v "$PWD":/src -w /src vektra/mockery:3
 
       - name: 🧹 Lint
         id: ml
