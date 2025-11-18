@@ -76,13 +76,14 @@ jobs:
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           fetch-depth: 0
+          token: ${{ steps.generate-token.outputs.token }}
 
       - name: 🧹 Lint
         id: ml
         uses: oxsecurity/megalinter/flavors/go@62c799d895af9bcbca5eacfebca29d527f125a57 # v9.1.0
         env:
           VALIDATE_ALL_CODEBASE: true
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APPLY_FIXES: all
           APPLY_FIXES_EVENT: all
           APPLY_FIXES_MODE: commit
@@ -103,6 +104,7 @@ jobs:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
+
       - name: Set APPLY_FIXES_IF_COMMIT var
         run: |
           APPLY_FIXES_IF_COMMIT=false
