@@ -43,7 +43,7 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
 
       - name: 📄 Run mockery
-        run: docker run -v "$PWD":/ vektra/mockery:3
+        run: docker run -v "$PWD":/src -w /src vektra/mockery:3
 
       - name: 🧹 Lint
         id: ml
