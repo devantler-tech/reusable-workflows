@@ -42,10 +42,25 @@ jobs:
           persist-credentials: true
           token: ${{ steps.generate-token.outputs.token }}
 
+      - name: ♻️ Cache Go modules
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles(format('{0}**/go.sum', inputs.working-directory)) }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
       - name: ⚙️ Setup Go
         uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6.1.0
         with:
           go-version: 1.25.4
+          cache-dependency-path: ${{ inputs.working-directory }}/go.sum
+
+      - name: ⬇️ Download Go modules
+        working-directory: ${{ inputs.working-directory }}
+        run: go mod download
 
       - name: 📄 Install mockery
         run: go install github.com/vektra/mockery/v3@v3.6.1
