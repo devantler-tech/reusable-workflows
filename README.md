@@ -232,13 +232,16 @@ jobs:
     uses: devantler-tech/reusable-workflows/.github/workflows/ci-go.yaml@{ref} # ref
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    with:
+      working-directory: "./" # optional
 ```
 
 #### Secrets and Inputs
 
-| Key             | Type   | Default | Required | Description   |
-| --------------- | ------ | ------- | -------- | ------------- |
-| `CODECOV_TOKEN` | Secret | -       | ❌       | Codecov token |
+| Key                  | Type           | Default | Required | Description                                                       |
+| -------------------- | -------------- | ------- | -------- | ----------------------------------------------------------------- |
+| `CODECOV_TOKEN`      | Secret         | -       | ❌       | Codecov token                                                     |
+| `working-directory`  | Input (string) | `./`    | ❌       | Working directory for Go commands (e.g., 'src' if go.mod is in src/) |
 
 </details>
 
