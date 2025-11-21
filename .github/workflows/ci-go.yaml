@@ -21,6 +21,49 @@ permissions:
   packages: read
 
 jobs:
+  golangci-lint:
+    name: 🧹 Lint - golangci-lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: 🔑 Generate GitHub App Token
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
+        id: generate-token
+        with:
+          app_id: ${{ vars.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: 📄 Checkout
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: true
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: ⚙️ Setup Go
+        uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6.1.0
+        with:
+          go-version: 1.25.4
+          cache: true
+
+      - name: ⬇️ Download Go modules
+        run: go mod download
+
+      - name: 🧹 Run golangci-lint
+        uses: golangci/golangci-lint-action@e7fa5ac41e1cf5b7d48e45e42232ce7ada589601 # v9.1.0
+        with:
+          version: v2.6.2
+          args: --fix
+
+      - name: 💾 Commit and push applied linter fixes
+        uses: stefanzweifel/git-auto-commit-action@28e16e81777b558cc906c8750092100bbb34c5e3 # v7.0.0
+        with:
+          commit_message: "chore: apply golangci-lint fixes"
+          commit_user_name: golangci-lint-bot
+          commit_user_email: golangci-lint-bot@users.noreply.github.com
+
   lint:
     name: 🧹 Lint - mega-linter
     runs-on: ubuntu-latest
@@ -72,13 +115,7 @@ jobs:
       - name: Commit and push applied linter fixes
         uses: stefanzweifel/git-auto-commit-action@28e16e81777b558cc906c8750092100bbb34c5e3 # v7.0.0
         with:
-          branch: >-
-            ${{
-              github.event.pull_request.head.ref ||
-              github.head_ref ||
-              github.ref
-            }}
-          commit_message: "[MegaLinter] Apply linters fixes"
+          commit_message: "chore: Apply megalinter fixes"
           commit_user_name: megalinter-bot
           commit_user_email: 129584137+megalinter-bot@users.noreply.github.com
 
