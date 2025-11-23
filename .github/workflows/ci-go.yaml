@@ -2,12 +2,6 @@ name: CI - Go
 
 on:
   workflow_call:
-    inputs:
-      working-directory:
-        required: false
-        type: string
-        default: "./"
-        description: "Working directory for Go commands (e.g., 'src' if go.mod is in src/)"
     secrets:
       CODECOV_TOKEN:
         required: false
@@ -15,6 +9,10 @@ on:
       APP_PRIVATE_KEY:
         description: 'GitHub App Private Key'
         required: true
+  ### Required Workflow Triggers ###
+  pull_request:
+  merge_group:
+  ##################################
 
 permissions:
   contents: read
@@ -89,17 +87,15 @@ jobs:
         uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6.1.0
         with:
           go-version: 1.25.4
-          cache-dependency-path: ${{ inputs.working-directory }}/go.sum
+          cache-dependency-path: go.sum
 
       - name: ⬇️ Download Go modules
-        working-directory: ${{ inputs.working-directory }}
         run: go mod download
 
       - name: 📄 Install mockery
         run: go install github.com/vektra/mockery/v3@v3.6.1
 
       - name: 📄 Run mockery
-        working-directory: ${{ inputs.working-directory }}
         run: mockery
 
       - name: 🧹 Lint
@@ -137,7 +133,7 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles(format('{0}**/go.sum', inputs.working-directory)) }}
+          key: ${{ runner.os }}-go-${{ hashFiles(format('{0}**/go.sum')) }}
           restore-keys: |
             ${{ runner.os }}-go-
 
@@ -145,19 +141,16 @@ jobs:
         uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6.1.0
         with:
           go-version: 1.25.4
-          cache-dependency-path: ${{ inputs.working-directory }}/go.sum
+          cache-dependency-path: go.sum
 
       - name: ⬇️ Install dependencies
-        working-directory: ${{ inputs.working-directory }}
         run: |
           go get .
 
       - name: 🛠️ Build
-        working-directory: ${{ inputs.working-directory }}
         run: go build -v ./...
 
       - name: 🧪 Test
-        working-directory: ${{ inputs.working-directory }}
         run: |
           go test -parallel 100 -p 16 ./...
 
@@ -165,7 +158,6 @@ jobs:
         run: go env -w GOTOOLCHAIN=go1.25.0+auto
 
       - name: 📄 Generate coverage
-        working-directory: ${{ inputs.working-directory }}
         run: |
           go test -race -parallel 100 -p 16 -coverprofile=coverage.txt -covermode=atomic ./...
 
