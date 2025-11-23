@@ -6,6 +6,10 @@ on:
       APP_PRIVATE_KEY:
         description: 'GitHub App Private Key'
         required: true
+  ### Required Workflow Triggers ###
+  pull_request:
+  merge_group:
+  ##################################
 
 permissions:
   contents: read
