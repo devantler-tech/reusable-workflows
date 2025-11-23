@@ -217,6 +217,31 @@ jobs:
 
 </details>
 
+### CI - Docs
+
+<details>
+<summary>Click to expand</summary>
+
+[.github/workflows/ci-docs.yaml](.github/workflows/ci-docs.yaml) is a workflow used to lint documentation files using the MegaLinter documentation flavor.
+
+#### Usage
+
+```yaml
+jobs:
+  docs-lint:
+    uses: devantler-tech/reusable-workflows/.github/workflows/ci-docs.yaml@{ref} # ref
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+```
+
+#### Secrets and Inputs
+
+| Key               | Type   | Default | Required | Description            |
+| ----------------- | ------ | ------- | -------- | ---------------------- |
+| `APP_PRIVATE_KEY` | Secret | -       | ✅       | GitHub App private key |
+
+</details>
+
 ### CI - Go
 
 <details>
