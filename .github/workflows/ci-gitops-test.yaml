@@ -43,10 +43,12 @@ jobs:
 
       - name: 🌐 Add hosts
         run: |
-          hosts_file="${{ inputs.HOSTS_FILE || vars.HOSTS_FILE }}"
+          hosts_file="$HOSTS_FILE"
           if [ -f "$hosts_file" ]; then
             sudo sh -c 'cat "$1" >> /etc/hosts' sh "$hosts_file"
           fi
+        env:
+          HOSTS_FILE: ${{ inputs.HOSTS_FILE || vars.HOSTS_FILE }}
 
       - name: 🔐 Install root CA
         run: |
