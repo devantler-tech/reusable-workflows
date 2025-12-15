@@ -43,9 +43,8 @@ jobs:
 
       - name: 🌐 Add hosts
         run: |
-          hosts_file="$HOSTS_FILE"
-          if [ -f "$hosts_file" ]; then
-            sudo sh -c 'cat "$1" >> /etc/hosts' sh "$hosts_file"
+          if [ -f "$HOSTS_FILE" ]; then
+            sudo sh -c 'cat "$1" >> /etc/hosts' sh "$HOSTS_FILE"
           fi
         env:
           HOSTS_FILE: ${{ inputs.HOSTS_FILE || vars.HOSTS_FILE }}
