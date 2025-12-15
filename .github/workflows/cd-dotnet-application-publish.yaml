@@ -6,6 +6,8 @@ on:
       NUGET_API_KEY:
         required: true
 
+permissions: {}
+
 jobs:
   publish:
     runs-on: ubuntu-latest
