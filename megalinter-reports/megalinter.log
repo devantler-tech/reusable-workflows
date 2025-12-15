@@ -12,7 +12,7 @@ The MegaLinter documentation can be found at:
 MegaLinter will analyze workspace [/github/workspace]
 GITHUB_REPOSITORY: devantler-tech/reusable-workflows
 GITHUB_REF: refs/pull/93/merge
-GITHUB_RUN_ID: 20228401164
+GITHUB_RUN_ID: 20228462146
 
 
 [Activation] ANSIBLE_ANSIBLE_LINT has been set inactive, as none of these files has been found: ['.ansible-lint', '.ansible-lint.yml', '.ansible-lint.yaml', '.config/ansible-lint.yml', '.config/ansible-lint.yaml']
@@ -83,21 +83,21 @@ To solve this problem, please either:
 +------------+--------------------------+------------------------------------------------------------------------+----------------+------------+
 ::endgroup::
 Processing linters on [4] parallel cores… (can be decreased with variable PARALLEL_PROCESS_NUMBER in case of performance issues)
-::group::[32m✅ Linted [ACTION] files with [actionlint] successfully - (0.41s)[0m (expand for details)
+::group::[32m✅ Linted [ACTION] files with [actionlint] successfully - (0.31s)[0m (expand for details)
 - Using [actionlint v1.7.7] https://megalinter.io/9.1.0/descriptors/action_actionlint
 - MegaLinter key: [ACTION_ACTIONLINT]
 - Rules config: identified by [actionlint]
 - Number of files analyzed: [17]
 - Command: [actionlint .github/workflows/.release.yaml .github/workflows/.sync-labels.yaml .github/workflows/cd-cluster-bootstrap.yaml .github/workflows/cd-dotnet-application-publish.yaml .github/workflows/cd-dotnet-library-publish.yaml .github/workflows/cd-gito...(truncated)]
 ::endgroup::
-::group::[32m✅ Linted [JSON] files with [jsonlint] successfully - (0.14s)[0m (expand for details)
+::group::[32m✅ Linted [JSON] files with [jsonlint] successfully - (0.12s)[0m (expand for details)
 - Using [jsonlint v16.0.0] https://megalinter.io/9.1.0/descriptors/json_jsonlint
 - MegaLinter key: [JSON_JSONLINT]
 - Rules config: identified by [jsonlint]
 - Number of files analyzed: [3]
 - Command: [jsonlint --quiet .cspell.json .github/renovate.json .markdownlint.json]
 ::endgroup::
-::group::[33m⚠️ Linted [MARKDOWN] files with [markdownlint]: Found 86 non blocking error(s) and 0 non blocking warning(s) - (0.71s)[0m (expand for details)
+::group::[33m⚠️ Linted [MARKDOWN] files with [markdownlint]: Found 86 non blocking error(s) and 0 non blocking warning(s) - (0.76s)[0m (expand for details)
 - Using [markdownlint v0.45.0] https://megalinter.io/9.1.0/descriptors/markdown_markdownlint
 - MegaLinter key: [MARKDOWN_MARKDOWNLINT]
 - Rules config: [/github/workspace/.markdownlint.json]
@@ -192,74 +192,74 @@ README.md:403:81 MD013/line-length Line length [Expected: 80; Actual: 137]
 README.md:410:81 MD013/line-length Line length [Expected: 80; Actual: 85]
 
 ::endgroup::
-::group::[32m✅ Linted [MARKDOWN] files with [markdown-table-formatter] successfully - (0.22s)[0m (expand for details)
-- Using [markdown-table-formatter v1.6.1] https://megalinter.io/9.1.0/descriptors/markdown_markdown_table_formatter
-- MegaLinter key: [MARKDOWN_MARKDOWN_TABLE_FORMATTER]
-- Rules config: identified by [markdown-table-formatter]
-- Number of files analyzed: [1]
-- Command: [markdown-table-formatter README.md]
-::endgroup::
-::group::[32m✅ Linted [COPYPASTE] files with [jscpd] successfully - (1.22s)[0m (expand for details)
-- Using [jscpd v4.0.5] https://megalinter.io/9.1.0/descriptors/copypaste_jscpd
-- MegaLinter key: [COPYPASTE_JSCPD]
-- Rules config: [.jscpd.json]
-- Command: [jscpd --gitignore --reporters console,html --output /github/workspace/megalinter-reports/copy-paste/ -c /action/lib/.automation/.jscpd.json .]
-::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [git_diff] successfully - (0.01s)[0m (expand for details)
-- Using [git_diff v2.49.1] https://megalinter.io/9.1.0/descriptors/repository_git_diff
-- MegaLinter key: [REPOSITORY_GIT_DIFF]
-- Rules config: identified by [git_diff]
-- Command: [git diff --check]
-::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [gitleaks] successfully - (0.11s)[0m (expand for details)
-- Using [gitleaks v8.28.0] https://megalinter.io/9.1.0/descriptors/repository_gitleaks
-- MegaLinter key: [REPOSITORY_GITLEAKS]
-- Rules config: [.gitleaks.toml]
-- Command: [gitleaks detect --redact -c /action/lib/.automation/.gitleaks.toml --verbose --source .]
-::endgroup::
-::group::[32m✅ Linted [SPELL] files with [lychee] successfully - (1.98s)[0m (expand for details)
+::group::[32m✅ Linted [SPELL] files with [lychee] successfully - (1.59s)[0m (expand for details)
 - Using [lychee v0.18.0] https://megalinter.io/9.1.0/descriptors/spell_lychee
 - MegaLinter key: [SPELL_LYCHEE]
 - Rules config: identified by [lychee]
 - Number of files analyzed: [24]
 - Command: [lychee --format detailed --no-progress .cspell.json .github/labels.yaml .github/renovate.json .github/workflows/.release.yaml .github/workflows/.sync-labels.yaml .github/workflows/cd-cluster-bootstrap.yaml .github/workflows/cd-dotnet-application-publ...(truncated)]
 ::endgroup::
-::group::[32m✅ Linted [YAML] files with [prettier] successfully - (0.55s)[0m (expand for details)
+::group::[32m✅ Linted [MARKDOWN] files with [markdown-table-formatter] successfully - (0.29s)[0m (expand for details)
+- Using [markdown-table-formatter v1.6.1] https://megalinter.io/9.1.0/descriptors/markdown_markdown_table_formatter
+- MegaLinter key: [MARKDOWN_MARKDOWN_TABLE_FORMATTER]
+- Rules config: identified by [markdown-table-formatter]
+- Number of files analyzed: [1]
+- Command: [markdown-table-formatter README.md]
+::endgroup::
+::group::[32m✅ Linted [REPOSITORY] files with [git_diff] successfully - (0.0s)[0m (expand for details)
+- Using [git_diff v2.49.1] https://megalinter.io/9.1.0/descriptors/repository_git_diff
+- MegaLinter key: [REPOSITORY_GIT_DIFF]
+- Rules config: identified by [git_diff]
+- Command: [git diff --check]
+::endgroup::
+::group::[32m✅ Linted [COPYPASTE] files with [jscpd] successfully - (1.21s)[0m (expand for details)
+- Using [jscpd v4.0.5] https://megalinter.io/9.1.0/descriptors/copypaste_jscpd
+- MegaLinter key: [COPYPASTE_JSCPD]
+- Rules config: [.jscpd.json]
+- Command: [jscpd --gitignore --reporters console,html --output /github/workspace/megalinter-reports/copy-paste/ -c /action/lib/.automation/.jscpd.json .]
+::endgroup::
+::group::[32m✅ Linted [REPOSITORY] files with [gitleaks] successfully - (0.08s)[0m (expand for details)
+- Using [gitleaks v8.28.0] https://megalinter.io/9.1.0/descriptors/repository_gitleaks
+- MegaLinter key: [REPOSITORY_GITLEAKS]
+- Rules config: [.gitleaks.toml]
+- Command: [gitleaks detect --redact -c /action/lib/.automation/.gitleaks.toml --verbose --source .]
+::endgroup::
+::group::[32m✅ Linted [YAML] files with [prettier] successfully - (0.63s)[0m (expand for details)
 - Using [prettier v3.6.2] https://megalinter.io/9.1.0/descriptors/yaml_prettier
 - MegaLinter key: [YAML_PRETTIER]
 - Rules config: identified by [prettier]
 - Number of files analyzed: [20]
 - Command: [prettier --write .github/labels.yaml .github/workflows/.release.yaml .github/workflows/.sync-labels.yaml .github/workflows/cd-cluster-bootstrap.yaml .github/workflows/cd-dotnet-application-publish.yaml .github/workflows/cd-dotnet-library-publish.yaml...(truncated)]
 ::endgroup::
-::group::[32m✅ Linted [YAML] files with [yamllint] successfully - (0.51s)[0m (expand for details)
+::group::[32m✅ Linted [YAML] files with [yamllint] successfully - (0.58s)[0m (expand for details)
 - Using [yamllint v1.37.1] https://megalinter.io/9.1.0/descriptors/yaml_yamllint
 - MegaLinter key: [YAML_YAMLLINT]
 - Rules config: [/github/workspace/.yamllint.yml]
 - Number of files analyzed: [20]
 - Command: [yamllint --format standard -c /github/workspace/.yamllint.yml .github/labels.yaml .github/workflows/.release.yaml .github/workflows/.sync-labels.yaml .github/workflows/cd-cluster-bootstrap.yaml .github/workflows/cd-dotnet-application-publish.yaml .gi...(truncated)]
 ::endgroup::
-::group::[32m✅ Linted [JSON] files with [v8r] successfully - (3.58s)[0m (expand for details)
+::group::[32m✅ Linted [JSON] files with [v8r] successfully - (3.36s)[0m (expand for details)
 - Using [v8r v5.1.0] https://megalinter.io/9.1.0/descriptors/json_v8r
 - MegaLinter key: [JSON_V8R]
 - Rules config: identified by [v8r]
 - Number of files analyzed: [3]
 - Command: [v8r --ignore-errors .cspell.json .github/renovate.json .markdownlint.json]
 ::endgroup::
-::group::[32m✅ Linted [JSON] files with [prettier] successfully - (0.32s)[0m (expand for details)
+::group::[32m✅ Linted [JSON] files with [prettier] successfully - (0.35s)[0m (expand for details)
 - Using [prettier v3.6.2] https://megalinter.io/9.1.0/descriptors/json_prettier
 - MegaLinter key: [JSON_PRETTIER]
 - Rules config: identified by [prettier]
 - Number of files analyzed: [3]
 - Command: [prettier --write .cspell.json .github/renovate.json .markdownlint.json]
 ::endgroup::
-::group::[32m✅ Linted [YAML] files with [v8r] successfully - (6.69s)[0m (expand for details)
+::group::[32m✅ Linted [YAML] files with [v8r] successfully - (6.5s)[0m (expand for details)
 - Using [v8r v5.1.0] https://megalinter.io/9.1.0/descriptors/yaml_v8r
 - MegaLinter key: [YAML_V8R]
 - Rules config: identified by [v8r]
 - Number of files analyzed: [20]
 - Command: [v8r --ignore-errors .github/labels.yaml .github/workflows/.release.yaml .github/workflows/.sync-labels.yaml .github/workflows/cd-cluster-bootstrap.yaml .github/workflows/cd-dotnet-application-publish.yaml .github/workflows/cd-dotnet-library-publish.y...(truncated)]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [grype] successfully - (27.13s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [grype] successfully - (26.92s)[0m (expand for details)
 - Using [grype v0.100.0] https://megalinter.io/9.1.0/descriptors/repository_grype
 - MegaLinter key: [REPOSITORY_GRYPE]
 - Rules config: [.grype.yaml]
@@ -271,13 +271,13 @@ README.md:410:81 MD013/line-length Line length [Expected: 80; Actual: 85]
 - Rules config: [.secretlintrc.json]
 - Command: [secretlint --secretlintrc /action/lib/.automation/.secretlintrc.json --secretlintignore .gitignore **/*]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [syft] successfully - (1.07s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [syft] successfully - (1.17s)[0m (expand for details)
 - Using [syft v1.33.0] https://megalinter.io/9.1.0/descriptors/repository_syft
 - MegaLinter key: [REPOSITORY_SYFT]
 - Rules config: identified by [syft]
 - Command: [syft scan .]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [trivy] successfully - (6.89s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [trivy] successfully - (5.18s)[0m (expand for details)
 - Using [trivy v0.67.0] https://megalinter.io/9.1.0/descriptors/repository_trivy
 - MegaLinter key: [REPOSITORY_TRIVY]
 - Rules config: identified by [trivy]
@@ -289,39 +289,39 @@ README.md:410:81 MD013/line-length Line length [Expected: 80; Actual: 85]
 - Rules config: identified by [trivy-sbom]
 - Command: [trivy fs --format cyclonedx .]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [trufflehog] successfully - (2.71s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [trufflehog] successfully - (2.25s)[0m (expand for details)
 - Using [trufflehog v3.90.8] https://megalinter.io/9.1.0/descriptors/repository_trufflehog
 - MegaLinter key: [REPOSITORY_TRUFFLEHOG]
 - Rules config: identified by [trufflehog]
 - Command: [trufflehog filesystem . --fail --only-verified --no-update --exclude-paths=/action/lib/.automation/.trufflehogignore]
 ::endgroup::
 [MARKDOWN_SUMMARY Reporter] Generated MARKDOWN_SUMMARY report: /github/workspace/megalinter-reports/megalinter-report.md
-[MARKDOWN_SUMMARY Reporter] Also appended to GITHUB_STEP_SUMMARY: /github/file_commands/step_summary_243a8c22-5b02-431c-bd3b-6f906ac3f547
+[MARKDOWN_SUMMARY Reporter] Also appended to GITHUB_STEP_SUMMARY: /github/file_commands/step_summary_73805e24-6294-40ad-82dd-617eeaf443c8
 [GitHub Comment Reporter] Posted summary as comment on devantler-tech/reusable-workflows #PR93
 [Updated Sources Reporter] copied 4 fixed source files in folder /github/workspace/megalinter-reports/updated_sources.
 
 +----SUMMARY----+--------------------------+---------------+-------+-------+--------+----------+--------------+
 | Descriptor    | Linter                   | Mode          | Files | Fixed | Errors | Warnings | Elapsed time |
 +---------------+--------------------------+---------------+-------+-------+--------+----------+--------------+
-| ✅ ACTION     | actionlint               | list_of_files |    17 |       |      0 |        0 | 0.41s        |
-| ✅ COPYPASTE  | jscpd                    | project       |   n/a |       |      0 |        0 | 1.22s        |
-| ✅ JSON       | jsonlint                 | list_of_files |     3 |       |      0 |        0 | 0.14s        |
-| ✅ JSON       | prettier                 | list_of_files |     3 |     0 |      0 |        0 | 0.32s        |
-| ✅ JSON       | v8r                      | list_of_files |     3 |       |      0 |        0 | 3.58s        |
-| ⚠️ MARKDOWN   | markdownlint             | list_of_files |     1 |     0 |     86 |        0 | 0.71s        |
-| ✅ MARKDOWN   | markdown-table-formatter | list_of_files |     1 |     0 |      0 |        0 | 0.22s        |
-| ✅ REPOSITORY | gitleaks                 | project       |   n/a |       |      0 |        0 | 0.11s        |
-| ✅ REPOSITORY | git_diff                 | project       |   n/a |       |      0 |        0 | 0.01s        |
-| ✅ REPOSITORY | grype                    | project       |   n/a |       |      0 |        0 | 27.13s       |
+| ✅ ACTION     | actionlint               | list_of_files |    17 |       |      0 |        0 | 0.31s        |
+| ✅ COPYPASTE  | jscpd                    | project       |   n/a |       |      0 |        0 | 1.21s        |
+| ✅ JSON       | jsonlint                 | list_of_files |     3 |       |      0 |        0 | 0.12s        |
+| ✅ JSON       | prettier                 | list_of_files |     3 |     0 |      0 |        0 | 0.35s        |
+| ✅ JSON       | v8r                      | list_of_files |     3 |       |      0 |        0 | 3.36s        |
+| ⚠️ MARKDOWN   | markdownlint             | list_of_files |     1 |     0 |     86 |        0 | 0.76s        |
+| ✅ MARKDOWN   | markdown-table-formatter | list_of_files |     1 |     0 |      0 |        0 | 0.29s        |
+| ✅ REPOSITORY | gitleaks                 | project       |   n/a |       |      0 |        0 | 0.08s        |
+| ✅ REPOSITORY | git_diff                 | project       |   n/a |       |      0 |        0 | 0.0s         |
+| ✅ REPOSITORY | grype                    | project       |   n/a |       |      0 |        0 | 26.92s       |
 | ✅ REPOSITORY | secretlint               | project       |   n/a |       |      0 |        0 | 0.48s        |
-| ✅ REPOSITORY | syft                     | project       |   n/a |       |      0 |        0 | 1.07s        |
-| ✅ REPOSITORY | trivy                    | project       |   n/a |       |      0 |        0 | 6.89s        |
+| ✅ REPOSITORY | syft                     | project       |   n/a |       |      0 |        0 | 1.17s        |
+| ✅ REPOSITORY | trivy                    | project       |   n/a |       |      0 |        0 | 5.18s        |
 | ✅ REPOSITORY | trivy-sbom               | project       |   n/a |       |      0 |        0 | 0.09s        |
-| ✅ REPOSITORY | trufflehog               | project       |   n/a |       |      0 |        0 | 2.71s        |
-| ✅ SPELL      | lychee                   | list_of_files |    24 |       |      0 |        0 | 1.98s        |
-| ✅ YAML       | prettier                 | list_of_files |    20 |     0 |      0 |        0 | 0.55s        |
-| ✅ YAML       | v8r                      | list_of_files |    20 |       |      0 |        0 | 6.69s        |
-| ✅ YAML       | yamllint                 | list_of_files |    20 |       |      0 |        0 | 0.51s        |
+| ✅ REPOSITORY | trufflehog               | project       |   n/a |       |      0 |        0 | 2.25s        |
+| ✅ SPELL      | lychee                   | list_of_files |    24 |       |      0 |        0 | 1.59s        |
+| ✅ YAML       | prettier                 | list_of_files |    20 |     0 |      0 |        0 | 0.63s        |
+| ✅ YAML       | v8r                      | list_of_files |    20 |       |      0 |        0 | 6.5s         |
+| ✅ YAML       | yamllint                 | list_of_files |    20 |       |      0 |        0 | 0.58s        |
 +---------------+--------------------------+---------------+-------+-------+--------+----------+--------------+
 
 [34mYour project could benefit from a custom flavor, which would allow you to run only the linters you need, and thus improve runtime performances. (Skip this info by defining `FLAVOR_SUGGESTIONS: false`)
