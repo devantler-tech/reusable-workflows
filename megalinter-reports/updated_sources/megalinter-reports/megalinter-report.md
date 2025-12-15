@@ -4,25 +4,25 @@
 
 | Descriptor  |                                               Linter                                                |Files|Fixed|Errors|Warnings|Elapsed time|
 |-------------|-----------------------------------------------------------------------------------------------------|----:|----:|-----:|-------:|-----------:|
-|✅ ACTION    |[actionlint](https://megalinter.io/9.1.0/descriptors/action_actionlint)                              |   17|     |     0|       0|       0.34s|
-|✅ COPYPASTE |[jscpd](https://megalinter.io/9.1.0/descriptors/copypaste_jscpd)                                     |  yes|     |    no|      no|       1.36s|
-|✅ JSON      |[jsonlint](https://megalinter.io/9.1.0/descriptors/json_jsonlint)                                    |    3|     |     0|       0|       0.13s|
+|✅ ACTION    |[actionlint](https://megalinter.io/9.1.0/descriptors/action_actionlint)                              |   17|     |     0|       0|       0.25s|
+|✅ COPYPASTE |[jscpd](https://megalinter.io/9.1.0/descriptors/copypaste_jscpd)                                     |  yes|     |    no|      no|       1.08s|
+|✅ JSON      |[jsonlint](https://megalinter.io/9.1.0/descriptors/json_jsonlint)                                    |    3|     |     0|       0|       0.12s|
 |✅ JSON      |[prettier](https://megalinter.io/9.1.0/descriptors/json_prettier)                                    |    3|    0|     0|       0|       0.35s|
-|✅ JSON      |[v8r](https://megalinter.io/9.1.0/descriptors/json_v8r)                                              |    3|     |     0|       0|       2.91s|
-|⚠️ MARKDOWN  |[markdownlint](https://megalinter.io/9.1.0/descriptors/markdown_markdownlint)                        |    1|    0|    86|       0|       0.72s|
-|✅ MARKDOWN  |[markdown-table-formatter](https://megalinter.io/9.1.0/descriptors/markdown_markdown_table_formatter)|    1|    0|     0|       0|       0.21s|
+|✅ JSON      |[v8r](https://megalinter.io/9.1.0/descriptors/json_v8r)                                              |    3|     |     0|       0|       3.09s|
+|⚠️ MARKDOWN  |[markdownlint](https://megalinter.io/9.1.0/descriptors/markdown_markdownlint)                        |    1|    0|    86|       0|       0.62s|
+|✅ MARKDOWN  |[markdown-table-formatter](https://megalinter.io/9.1.0/descriptors/markdown_markdown_table_formatter)|    1|    0|     0|       0|       0.22s|
 |✅ REPOSITORY|[gitleaks](https://megalinter.io/9.1.0/descriptors/repository_gitleaks)                              |  yes|     |    no|      no|        0.1s|
-|✅ REPOSITORY|[git_diff](https://megalinter.io/9.1.0/descriptors/repository_git_diff)                              |  yes|     |    no|      no|       0.01s|
-|✅ REPOSITORY|[grype](https://megalinter.io/9.1.0/descriptors/repository_grype)                                    |  yes|     |    no|      no|      27.68s|
-|✅ REPOSITORY|[secretlint](https://megalinter.io/9.1.0/descriptors/repository_secretlint)                          |  yes|     |    no|      no|        0.5s|
-|✅ REPOSITORY|[syft](https://megalinter.io/9.1.0/descriptors/repository_syft)                                      |  yes|     |    no|      no|       1.09s|
-|✅ REPOSITORY|[trivy](https://megalinter.io/9.1.0/descriptors/repository_trivy)                                    |  yes|     |    no|      no|       7.38s|
+|✅ REPOSITORY|[git_diff](https://megalinter.io/9.1.0/descriptors/repository_git_diff)                              |  yes|     |    no|      no|        0.0s|
+|✅ REPOSITORY|[grype](https://megalinter.io/9.1.0/descriptors/repository_grype)                                    |  yes|     |    no|      no|      32.49s|
+|✅ REPOSITORY|[secretlint](https://megalinter.io/9.1.0/descriptors/repository_secretlint)                          |  yes|     |    no|      no|       0.43s|
+|✅ REPOSITORY|[syft](https://megalinter.io/9.1.0/descriptors/repository_syft)                                      |  yes|     |    no|      no|       1.08s|
+|✅ REPOSITORY|[trivy](https://megalinter.io/9.1.0/descriptors/repository_trivy)                                    |  yes|     |    no|      no|       4.67s|
 |✅ REPOSITORY|[trivy-sbom](https://megalinter.io/9.1.0/descriptors/repository_trivy_sbom)                          |  yes|     |    no|      no|       0.09s|
-|✅ REPOSITORY|[trufflehog](https://megalinter.io/9.1.0/descriptors/repository_trufflehog)                          |  yes|     |    no|      no|       2.75s|
-|✅ SPELL     |[lychee](https://megalinter.io/9.1.0/descriptors/spell_lychee)                                       |   24|     |     0|       0|       1.95s|
-|✅ YAML      |[prettier](https://megalinter.io/9.1.0/descriptors/yaml_prettier)                                    |   20|    0|     0|       0|       0.77s|
-|✅ YAML      |[v8r](https://megalinter.io/9.1.0/descriptors/yaml_v8r)                                              |   20|     |     0|       0|       6.18s|
-|✅ YAML      |[yamllint](https://megalinter.io/9.1.0/descriptors/yaml_yamllint)                                    |   20|     |     0|       0|       0.49s|
+|✅ REPOSITORY|[trufflehog](https://megalinter.io/9.1.0/descriptors/repository_trufflehog)                          |  yes|     |    no|      no|       2.48s|
+|✅ SPELL     |[lychee](https://megalinter.io/9.1.0/descriptors/spell_lychee)                                       |   24|     |     0|       0|       1.44s|
+|✅ YAML      |[prettier](https://megalinter.io/9.1.0/descriptors/yaml_prettier)                                    |   20|    0|     0|       0|       0.59s|
+|✅ YAML      |[v8r](https://megalinter.io/9.1.0/descriptors/yaml_v8r)                                              |   20|     |     0|       0|       5.98s|
+|✅ YAML      |[yamllint](https://megalinter.io/9.1.0/descriptors/yaml_yamllint)                                    |   20|     |     0|       0|       0.48s|
 
 ## Detailed Issues
 
