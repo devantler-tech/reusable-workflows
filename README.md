@@ -1,7 +1,7 @@
 # DevantlerTech GitHub Reusable Workflows 🚀
 
 > [!NOTE]
-> To see DevantlerTech's Actions, please visit the [devantler-tech/actions](https://github.com/devantler-tech/actions) repository.
+> To see DevantlerTech's Actions, please visit the [devantler-tech/composite-actions](https://github.com/devantler-tech/composite-actions) repository.
 
 Welcome to the DevantlerTech GitHub Reusable Workflows repository! This repository contains [reusable workflows](#reusable-workflows) designed to streamline your CI/CD processes. These actions are used across all DevantlerTech projects, ensuring consistency and efficiency.
 
@@ -263,10 +263,10 @@ jobs:
 
 #### Secrets and Inputs
 
-| Key                  | Type           | Default | Required | Description                                                       |
-| -------------------- | -------------- | ------- | -------- | ----------------------------------------------------------------- |
-| `CODECOV_TOKEN`      | Secret         | -       | ❌       | Codecov token                                                     |
-| `working-directory`  | Input (string) | `./`    | ❌       | Working directory for Go commands (e.g., 'src' if go.mod is in src/) |
+| Key                 | Type           | Default | Required | Description                                                          |
+| ------------------- | -------------- | ------- | -------- | -------------------------------------------------------------------- |
+| `CODECOV_TOKEN`     | Secret         | -       | ❌       | Codecov token                                                        |
+| `working-directory` | Input (string) | `./`    | ❌       | Working directory for Go commands (e.g., 'src' if go.mod is in src/) |
 
 </details>
 
