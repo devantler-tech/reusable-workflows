@@ -22,6 +22,8 @@ jobs:
   tidy:
     name: 📦 Tidy
     runs-on: ubuntu-latest
+    # Ignore Require Workflow runs
+    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       contents: write
       pull-requests: write
@@ -58,6 +60,8 @@ jobs:
   golangci-lint:
     name: 🧹 Lint - golangci-lint
     runs-on: ubuntu-latest
+    # Ignore Require Workflow runs
+    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       contents: write
       pull-requests: write
@@ -97,6 +101,8 @@ jobs:
   lint:
     name: 🧹 Lint - mega-linter
     runs-on: ubuntu-latest
+    # Ignore Require Workflow runs
+    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       contents: write
       issues: write
@@ -140,6 +146,8 @@ jobs:
   build:
     name: 🏗️ Build
     runs-on: ubuntu-latest
+    # Ignore Require Workflow runs
+    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       contents: write
     steps:
@@ -160,6 +168,8 @@ jobs:
   test:
     name: 🧪 Test
     runs-on: ubuntu-latest
+    # Ignore Require Workflow runs
+    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       contents: write
     steps:
@@ -181,6 +191,8 @@ jobs:
   coverage:
     name: 📊 Code Coverage
     runs-on: ubuntu-latest
+    # Ignore Require Workflow runs
+    if: github.repository != 'devantler-tech/reusable-workflows'
     permissions:
       contents: write
     steps:
