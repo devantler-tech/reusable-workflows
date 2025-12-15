@@ -6,7 +6,7 @@ on:
       RUBY_VERSION:
         description: Ruby version to setup
         required: false
-        default: '3.3'
+        default: "3.3"
         type: string
       JEKYLL_ENV:
         description: Jekyll environment
@@ -16,7 +16,7 @@ on:
       EXTRA_BUILD_ARGS:
         description: Extra arguments appended to the Jekyll build command (before --baseurl)
         required: false
-        default: ''
+        default: ""
         type: string
     outputs:
       page_url:

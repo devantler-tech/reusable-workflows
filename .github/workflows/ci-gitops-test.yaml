@@ -43,16 +43,20 @@ jobs:
 
       - name: 🌐 Add hosts
         run: |
-          if [ -f "${{ inputs.HOSTS_FILE || vars.HOSTS_FILE }}" ]; then
-            sudo tee -a /etc/hosts < "${{ inputs.HOSTS_FILE || vars.HOSTS_FILE }}"
+          if [ -f "$HOSTS_FILE" ]; then
+            sudo sh -c 'cat "$1" >> /etc/hosts' sh "$HOSTS_FILE"
           fi
+        env:
+          HOSTS_FILE: ${{ inputs.HOSTS_FILE || vars.HOSTS_FILE }}
 
       - name: 🔐 Install root CA
         run: |
-          if [ -f "${{ inputs.ROOT_CA_CERT_FILE || vars.ROOT_CA_CERT_FILE }}" ]; then
-            sudo cp "${{ inputs.ROOT_CA_CERT_FILE || vars.ROOT_CA_CERT_FILE }}" /usr/local/share/ca-certificates/root-ca.crt
+          if [ -f "$ROOT_CA_CERT_FILE" ]; then
+            sudo cp "$ROOT_CA_CERT_FILE" /usr/local/share/ca-certificates/root-ca.crt
             sudo update-ca-certificates
           fi
+        env:
+          ROOT_CA_CERT_FILE: ${{ inputs.ROOT_CA_CERT_FILE || vars.ROOT_CA_CERT_FILE }}
 
       - name: 🔑 Import Age key
         env:

@@ -5,7 +5,7 @@ on:
     secrets:
       APP_PRIVATE_KEY:
         required: true
-        description: 'The private key for the GitHub App'
+        description: "The private key for the GitHub App"
   ### Required Workflow Triggers ###
   pull_request:
   merge_group:

@@ -1,7 +1,7 @@
 # DevantlerTech GitHub Reusable Workflows 🚀
 
 > [!NOTE]
-> To see DevantlerTech's Actions, please visit the [devantler-tech/actions](https://github.com/devantler-tech/actions) repository.
+> To see DevantlerTech's Actions, please visit the [devantler-tech/composite-actions](https://github.com/devantler-tech/composite-actions) repository.
 
 Welcome to the DevantlerTech GitHub Reusable Workflows repository! This repository contains [reusable workflows](#reusable-workflows) designed to streamline your CI/CD processes. These actions are used across all DevantlerTech projects, ensuring consistency and efficiency.
 
@@ -53,10 +53,10 @@ jobs:
 #### Secrets and Inputs
 
 | Key              | Type           | Default | Required | Description            |
-| ---------------- | -------------- | ------- | -------- | ---------------------- |
-| `KUBE_CONFIG`    | Secret         | -       | ✅       | Kubernetes config file |
-| `SOPS_AGE_KEY`   | Secret         | -       | ✅       | Age key for SOPS       |
-| `DEPLOYMENT_ENV` | Input (string) | `dev`   | ✅       | Deployment environment |
+|------------------|----------------|---------|----------|------------------------|
+| `KUBE_CONFIG`    | Secret         | -       | ✅        | Kubernetes config file |
+| `SOPS_AGE_KEY`   | Secret         | -       | ✅        | Age key for SOPS       |
+| `DEPLOYMENT_ENV` | Input (string) | `dev`   | ✅        | Deployment environment |
 
 </details>
 
@@ -80,8 +80,8 @@ jobs:
 #### Secrets and Inputs
 
 | Key             | Type   | Default | Required | Description   |
-| --------------- | ------ | ------- | -------- | ------------- |
-| `NUGET_API_KEY` | Secret | -       | ✅       | NuGet API key |
+|-----------------|--------|---------|----------|---------------|
+| `NUGET_API_KEY` | Secret | -       | ✅        | NuGet API key |
 
 </details>
 
@@ -105,8 +105,8 @@ jobs:
 #### Secrets and Inputs
 
 | Key             | Type   | Default | Required | Description   |
-| --------------- | ------ | ------- | -------- | ------------- |
-| `NUGET_API_KEY` | Secret | -       | ✅       | NuGet API key |
+|-----------------|--------|---------|----------|---------------|
+| `NUGET_API_KEY` | Secret | -       | ✅        | NuGet API key |
 
 </details>
 
@@ -133,10 +133,10 @@ jobs:
 #### Secrets and Inputs
 
 | Key              | Type           | Default | Required | Description            |
-| ---------------- | -------------- | ------- | -------- | ---------------------- |
-| `KUBE_CONFIG`    | Secret         | -       | ✅       | Kubernetes config file |
-| `SOPS_AGE_KEY`   | Secret         | -       | ✅       | Age key for SOPS       |
-| `DEPLOYMENT_ENV` | Input (string) | `dev`   | ✅       | Deployment environment |
+|------------------|----------------|---------|----------|------------------------|
+| `KUBE_CONFIG`    | Secret         | -       | ✅        | Kubernetes config file |
+| `SOPS_AGE_KEY`   | Secret         | -       | ✅        | Age key for SOPS       |
+| `DEPLOYMENT_ENV` | Input (string) | `dev`   | ✅        | Deployment environment |
 
 </details>
 
@@ -162,15 +162,15 @@ jobs:
 #### Secrets and Inputs
 
 | Key                | Type           | Default      | Required | Description                                                     |
-| ------------------ | -------------- | ------------ | -------- | --------------------------------------------------------------- |
-| `RUBY_VERSION`     | Input (string) | `3.3`        | ❌       | Ruby version to install                                         |
-| `JEKYLL_ENV`       | Input (string) | `production` | ❌       | Jekyll environment                                              |
-| `EXTRA_BUILD_ARGS` | Input (string) | `""`         | ❌       | Extra args appended before the automatically supplied --baseurl |
+|--------------------|----------------|--------------|----------|-----------------------------------------------------------------|
+| `RUBY_VERSION`     | Input (string) | `3.3`        | ❌        | Ruby version to install                                         |
+| `JEKYLL_ENV`       | Input (string) | `production` | ❌        | Jekyll environment                                              |
+| `EXTRA_BUILD_ARGS` | Input (string) | `""`         | ❌        | Extra args appended before the automatically supplied --baseurl |
 
 #### Outputs
 
 | Key        | Description             |
-| ---------- | ----------------------- |
+|------------|-------------------------|
 | `page_url` | Deployed Pages site URL |
 
 </details>
@@ -212,8 +212,8 @@ jobs:
 #### Secrets and Inputs
 
 | Key             | Type   | Default | Required | Description   |
-| --------------- | ------ | ------- | -------- | ------------- |
-| `CODECOV_TOKEN` | Secret | -       | ✅       | Codecov token |
+|-----------------|--------|---------|----------|---------------|
+| `CODECOV_TOKEN` | Secret | -       | ✅        | Codecov token |
 
 </details>
 
@@ -237,8 +237,8 @@ jobs:
 #### Secrets and Inputs
 
 | Key               | Type   | Default | Required | Description            |
-| ----------------- | ------ | ------- | -------- | ---------------------- |
-| `APP_PRIVATE_KEY` | Secret | -       | ✅       | GitHub App private key |
+|-------------------|--------|---------|----------|------------------------|
+| `APP_PRIVATE_KEY` | Secret | -       | ✅        | GitHub App private key |
 
 </details>
 
@@ -263,10 +263,10 @@ jobs:
 
 #### Secrets and Inputs
 
-| Key                  | Type           | Default | Required | Description                                                       |
-| -------------------- | -------------- | ------- | -------- | ----------------------------------------------------------------- |
-| `CODECOV_TOKEN`      | Secret         | -       | ❌       | Codecov token                                                     |
-| `working-directory`  | Input (string) | `./`    | ❌       | Working directory for Go commands (e.g., 'src' if go.mod is in src/) |
+| Key                 | Type           | Default | Required | Description                                                          |
+|---------------------|----------------|---------|----------|----------------------------------------------------------------------|
+| `CODECOV_TOKEN`     | Secret         | -       | ❌        | Codecov token                                                        |
+| `working-directory` | Input (string) | `./`    | ❌        | Working directory for Go commands (e.g., 'src' if go.mod is in src/) |
 
 </details>
 
@@ -293,10 +293,10 @@ jobs:
 #### Secrets and Inputs
 
 | Key                 | Type           | Default | Required | Description                      |
-| ------------------- | -------------- | ------- | -------- | -------------------------------- |
-| `KSAIL_SOPS_KEY`    | Secret         | -       | ❌       | SOPS Age key for KSail           |
-| `HOSTS_FILE`        | Input (string) | -       | ❌       | Path to hosts file for testing   |
-| `ROOT_CA_CERT_FILE` | Input (string) | -       | ❌       | Path to root CA certificate file |
+|---------------------|----------------|---------|----------|----------------------------------|
+| `KSAIL_SOPS_KEY`    | Secret         | -       | ❌        | SOPS Age key for KSail           |
+| `HOSTS_FILE`        | Input (string) | -       | ❌        | Path to hosts file for testing   |
+| `ROOT_CA_CERT_FILE` | Input (string) | -       | ❌        | Path to root CA certificate file |
 
 </details>
 
@@ -337,8 +337,8 @@ jobs:
 #### Secrets and Inputs
 
 | Key               | Type   | Default | Required | Description            |
-| ----------------- | ------ | ------- | -------- | ---------------------- |
-| `APP_PRIVATE_KEY` | Secret | -       | ✅       | GitHub App private key |
+|-------------------|--------|---------|----------|------------------------|
+| `APP_PRIVATE_KEY` | Secret | -       | ✅        | GitHub App private key |
 
 </details>
 
@@ -364,9 +364,9 @@ jobs:
 #### Secrets and Inputs
 
 | Key                    | Type           | Default | Required | Description                           |
-| ---------------------- | -------------- | ------- | -------- | ------------------------------------- |
-| `APP_PRIVATE_KEY`      | Secret         | -       | ✅       | GitHub App private key                |
-| `KYVERNO_POLICIES_DIR` | Input (string) | -       | ✅       | Directory to sync Kyverno policies to |
+|------------------------|----------------|---------|----------|---------------------------------------|
+| `APP_PRIVATE_KEY`      | Secret         | -       | ✅        | GitHub App private key                |
+| `KYVERNO_POLICIES_DIR` | Input (string) | -       | ✅        | Directory to sync Kyverno policies to |
 
 </details>
 
@@ -390,8 +390,8 @@ jobs:
 #### Secrets and Inputs
 
 | Key               | Type   | Default | Required | Description            |
-| ----------------- | ------ | ------- | -------- | ---------------------- |
-| `APP_PRIVATE_KEY` | Secret | -       | ✅       | GitHub App private key |
+|-------------------|--------|---------|----------|------------------------|
+| `APP_PRIVATE_KEY` | Secret | -       | ✅        | GitHub App private key |
 
 </details>
 
