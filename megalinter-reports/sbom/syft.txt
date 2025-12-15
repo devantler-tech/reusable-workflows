@@ -1,0 +1,30 @@
+[0000]  WARN no explicit name and version provided for directory source, deriving artifact ID from the given path (which is not ideal)
+NAME                                                        VERSION   TYPE                                      
+./.github/workflows/release.yaml                            UNKNOWN   github-action-workflow                    
+actions/checkout                                            v6.0.0    github-action           (+15 duplicates)  
+actions/configure-pages                                     v5.0.0    github-action                             
+actions/create-github-app-token                             v2.2.0    github-action                             
+actions/deploy-pages                                        v4.0.5    github-action                             
+actions/setup-dotnet                                        v5.0.0    github-action                             
+actions/setup-go                                            v6.1.0    github-action                             
+actions/upload-pages-artifact                               v4.0.0    github-action                             
+azure/k8s-create-secret                                     v5.0.1    github-action                             
+azure/k8s-set-context                                       v4.0.2    github-action                             
+codecov/codecov-action                                      v5.5.1    github-action                             
+devantler-tech/composite-actions/auto-merge-action          v1.9.5    github-action                             
+devantler-tech/composite-actions/dotnet-test-action         v1.9.5    github-action                             
+devantler-tech/composite-actions/flux-gitops-deploy-action  v1.9.5    github-action                             
+devantler-tech/composite-actions/install-cilium-action      v1.9.5    github-action                             
+devantler-tech/composite-actions/install-flux-action        v1.9.5    github-action                             
+devantler-tech/composite-actions/setup-ksail-action         v1.9.5    github-action           (+2 duplicates)   
+devantler-tech/composite-actions/sync-labels-action         main      github-action                             
+devantler-tech/composite-actions/todos-action               v1.9.5    github-action                             
+fluxcd/flux2/action                                         v2.7.3    github-action           (+1 duplicate)    
+golangci/golangci-lint-action                               v9.1.0    github-action                             
+oxsecurity/megalinter/flavors/documentation                 v9.1.0    github-action                             
+oxsecurity/megalinter/flavors/go                            v9.1.0    github-action                             
+peter-evans/create-pull-request                             v7.0.9    github-action                             
+ruby/setup-ruby                                             v1.268.0  github-action                             
+stefanzweifel/git-auto-commit-action                        v7.0.0    github-action           (+1 duplicate)    
+tibdex/github-app-token                                     v2.1.0    github-action           (+2 duplicates)   
+zizmorcore/zizmor-action                                    v0.3.0    github-action
