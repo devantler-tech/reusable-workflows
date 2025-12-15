@@ -49,6 +49,17 @@ jobs:
       - name: ⬇️ Download Go modules
         run: go mod download
 
+      - name: 🧹 Run go mod tidy
+        run: go mod tidy
+
+      - name: 💾 Commit go.mod and go.sum changes
+        uses: stefanzweifel/git-auto-commit-action@28e16e81777b558cc906c8750092100bbb34c5e3 # v7.0.0
+        with:
+          commit_message: "chore: run go mod tidy"
+          commit_user_name: go-mod-tidy-bot
+          commit_user_email: go-mod-tidy-bot@users.noreply.github.com
+          file_pattern: "go.mod go.sum"
+
       - name: 🧹 Run golangci-lint
         uses: golangci/golangci-lint-action@e7fa5ac41e1cf5b7d48e45e42232ce7ada589601 # v9.1.0
         with:
