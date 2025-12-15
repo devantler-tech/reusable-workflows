@@ -46,7 +46,7 @@ jobs:
       - name: Copy Cluster Policies to the target directory
         run: |
           mkdir -p "$KYVERNO_POLICIES_DIR"
-          rm -rf "$KYVERNO_POLICIES_DIR"/*
+          rm -rf "${KYVERNO_POLICIES_DIR:?}"/*
           cp -r "$KYVERNO_POLICIES_TEMP_DIR"/* "$KYVERNO_POLICIES_DIR" || echo "No policies found to copy."
       - name: Create PR with changes
         uses: peter-evans/create-pull-request@84ae59a2cdc2258d6fa0732dd66352dddae2a412 # v7.0.9
