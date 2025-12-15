@@ -13,7 +13,6 @@ on:
       DEPLOYMENT_ENV:
         type: string
         required: true
-        default: dev
         description: "Deployment environment (dev, prod)"
       SKIP:
         type: boolean
