@@ -53,8 +53,8 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@28e16e81777b558cc906c8750092100bbb34c5e3 # v7.0.0
         with:
           commit_message: "chore: tidy go modules"
-          commit_user_name: go-mod-tidy-bot
-          commit_user_email: go-mod-tidy-bot@users.noreply.github.com
+          commit_user_name: tidy-bot
+          commit_user_email: tidy-bot@users.noreply.github.com
 
   golangci-lint:
     name: 🧹 Lint - golangci-lint
