@@ -3,20 +3,25 @@ name: CD - Pages Publish
 on:
   workflow_call:
     inputs:
-      RUBY_VERSION:
+      ruby_version:
         description: Ruby version to setup
         required: false
         default: "3.3"
         type: string
-      JEKYLL_ENV:
+      jekyll_env:
         description: Jekyll environment
         required: false
         default: production
         type: string
-      EXTRA_BUILD_ARGS:
+      extra_build_args:
         description: Extra arguments appended to the Jekyll build command (before --baseurl)
         required: false
         default: ""
+        type: string
+      working_directory:
+        description: Working directory for the Jekyll site (e.g., 'docs' if the site is in a subdirectory)
+        required: false
+        default: "."
         type: string
     outputs:
       page_url:
@@ -40,19 +45,23 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@ed55d55e820a01da7d3e4863a8c51a61d73c3228 # v1.274.0
         with:
-          ruby-version: ${{ inputs.RUBY_VERSION }}
+          ruby-version: ${{ inputs.ruby_version }}
           bundler-cache: true
           cache-version: 0
+          working-directory: ${{ inputs.working_directory }}
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
       - name: Build with Jekyll
         env:
-          JEKYLL_ENV: ${{ inputs.JEKYLL_ENV }}
+          JEKYLL_ENV: ${{ inputs.jekyll_env }}
         run: |
-          bundle exec jekyll build ${{ inputs.EXTRA_BUILD_ARGS }} --baseurl "${{ steps.pages.outputs.base_path }}"
+          cd ${{ inputs.working_directory }}
+          bundle exec jekyll build ${{ inputs.extra_build_args }} --baseurl "${{ steps.pages.outputs.base_path }}"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
+        with:
+          path: ${{ inputs.working_directory }}/_site
 
   deploy:
     name: Deploy Site
