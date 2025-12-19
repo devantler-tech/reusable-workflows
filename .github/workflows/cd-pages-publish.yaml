@@ -55,9 +55,11 @@ jobs:
       - name: Build with Jekyll
         env:
           JEKYLL_ENV: ${{ inputs.jekyll-env }}
+          EXTRA_BUILD_ARGS: ${{ inputs.extra-build-args }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
         working-directory: ${{ inputs.working-directory }}
         run: |
-          bundle exec jekyll build ${{ inputs.extra-build-args }} --baseurl "${{ steps.pages.outputs.base_path }}"
+          bundle exec jekyll build $EXTRA_BUILD_ARGS --baseurl "$BASE_PATH"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
