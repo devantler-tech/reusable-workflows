@@ -162,12 +162,12 @@ jobs:
 
 #### Secrets and Inputs
 
-| Key                  | Type           | Default      | Required | Description                                                     |
-|----------------------|----------------|--------------|----------|-----------------------------------------------------------------|
-| `ruby-version`       | Input (string) | `3.3`        | ❌        | Ruby version to install                                         |
-| `jekyll-env`         | Input (string) | `production` | ❌        | Jekyll environment                                              |
-| `extra-build-args`   | Input (string) | `""`         | ❌        | Extra args appended before the automatically supplied --baseurl |
-| `working-directory`  | Input (string) | `"."`        | ❌        | Working directory for the Jekyll site (e.g., 'docs')            |
+| Key                 | Type           | Default      | Required | Description                                                     |
+|---------------------|----------------|--------------|----------|-----------------------------------------------------------------|
+| `ruby-version`      | Input (string) | `3.3`        | ❌        | Ruby version to install                                         |
+| `jekyll-env`        | Input (string) | `production` | ❌        | Jekyll environment                                              |
+| `extra-build-args`  | Input (string) | `""`         | ❌        | Extra args appended before the automatically supplied --baseurl |
+| `working-directory` | Input (string) | `"."`        | ❌        | Working directory for the Jekyll site (e.g., 'docs')            |
 
 #### Outputs
 
