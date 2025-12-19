@@ -154,20 +154,20 @@ jobs:
   pages:
     uses: devantler-tech/reusable-workflows/.github/workflows/cd-pages-publish.yaml@{ref} # ref
     with:
-      ruby_version: "3.3" # optional
-      jekyll_env: production # optional
-      extra_build_args: "" # optional, e.g. '--future'
-      working_directory: "." # optional, e.g. 'docs' if Jekyll site is in a subdirectory
+      ruby-version: "3.3" # optional
+      jekyll-env: production # optional
+      extra-build-args: "" # optional, e.g. '--future'
+      working-directory: "." # optional, e.g. 'docs' if Jekyll site is in a subdirectory
 ```
 
 #### Secrets and Inputs
 
 | Key                  | Type           | Default      | Required | Description                                                     |
 |----------------------|----------------|--------------|----------|-----------------------------------------------------------------|
-| `ruby_version`       | Input (string) | `3.3`        | ❌        | Ruby version to install                                         |
-| `jekyll_env`         | Input (string) | `production` | ❌        | Jekyll environment                                              |
-| `extra_build_args`   | Input (string) | `""`         | ❌        | Extra args appended before the automatically supplied --baseurl |
-| `working_directory`  | Input (string) | `"."`        | ❌        | Working directory for the Jekyll site (e.g., 'docs')            |
+| `ruby-version`       | Input (string) | `3.3`        | ❌        | Ruby version to install                                         |
+| `jekyll-env`         | Input (string) | `production` | ❌        | Jekyll environment                                              |
+| `extra-build-args`   | Input (string) | `""`         | ❌        | Extra args appended before the automatically supplied --baseurl |
+| `working-directory`  | Input (string) | `"."`        | ❌        | Working directory for the Jekyll site (e.g., 'docs')            |
 
 #### Outputs
 
