@@ -107,7 +107,7 @@ jobs:
               console.log('Not a pull request context, skipping comment creation');
               return;
             }
-            
+
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -172,7 +172,7 @@ jobs:
               console.log('Not a pull request context, skipping comment creation');
               return;
             }
-            
+
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
