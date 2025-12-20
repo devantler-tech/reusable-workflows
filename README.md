@@ -255,7 +255,7 @@ jobs:
 
 - **Automated Linting**: Runs `golangci-lint` and `mega-linter` to ensure code quality
 - **Auto-fix**: Automatically applies linter fixes and commits them
-- **Copilot Integration**: When linting fails, automatically creates a GitHub issue assigned to the Copilot coding agent to fix the remaining issues
+- **Copilot Integration**: When linting fails, automatically prompts Copilot on the PR to fix the remaining issues
 
 #### Usage
 

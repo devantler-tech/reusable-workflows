@@ -64,7 +64,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      issues: write
     steps:
       - name: 🔑 Generate GitHub App Token
         uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
@@ -97,43 +96,25 @@ jobs:
           commit_user_name: golangci-lint-bot
           commit_user_email: golangci-lint-bot@users.noreply.github.com
 
-      - name: 🤖 Create issue for Copilot to fix remaining lint errors
+      - name: 🤖 Prompt Copilot to fix remaining lint errors
         if: failure()
         uses: actions/github-script@v7
         with:
           github-token: ${{ steps.generate-token.outputs.token }}
           script: |
-            // Only create issue if running in a pull request context
+            // Only create comment if running in a pull request context
             if (!context.payload.pull_request) {
-              console.log('Not a pull request context, skipping issue creation');
+              console.log('Not a pull request context, skipping comment creation');
               return;
             }
             
-            const issue = await github.rest.issues.create({
+            await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Fix golangci-lint errors in PR #${context.payload.pull_request.number}`,
-              body: `## 🧹 golangci-lint Errors Detected
-            
-            Automated linting has detected issues that need to be fixed.
-            
-            **Pull Request:** #${context.payload.pull_request.number}
-            **Workflow Run:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
-            
-            ### Task
-            Please fix the golangci-lint errors found in this pull request. Review the workflow logs for specific error details and apply the necessary fixes.
-            
-            ### Instructions
-            1. Review the golangci-lint output in the workflow logs
-            2. Fix the reported linting issues
-            3. Ensure all fixes follow Go best practices
-            4. Run \`golangci-lint run --fix\` locally to verify
-            5. Commit the fixes to the pull request branch
-            
-            @copilot please fix these linting issues`,
-              assignees: ['copilot']  // Copilot coding agent - requires Copilot to be enabled for the repo
+              issue_number: context.payload.pull_request.number,
+              body: `@copilot fix all golangci-lint issues`
             });
-            console.log('Created issue:', issue.data.number);
+            console.log('Posted comment to prompt Copilot');
 
   lint:
     name: 🧹 Lint - mega-linter
@@ -180,42 +161,25 @@ jobs:
           commit_user_name: megalinter-bot
           commit_user_email: 129584137+megalinter-bot@users.noreply.github.com
 
-      - name: 🤖 Create issue for Copilot to fix remaining mega-linter errors
+      - name: 🤖 Prompt Copilot to fix remaining mega-linter errors
         if: failure()
         uses: actions/github-script@v7
         with:
           github-token: ${{ steps.generate-token.outputs.token }}
           script: |
-            // Only create issue if running in a pull request context
+            // Only create comment if running in a pull request context
             if (!context.payload.pull_request) {
-              console.log('Not a pull request context, skipping issue creation');
+              console.log('Not a pull request context, skipping comment creation');
               return;
             }
             
-            const issue = await github.rest.issues.create({
+            await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Fix mega-linter errors in PR #${context.payload.pull_request.number}`,
-              body: `## 🧹 mega-linter Errors Detected
-            
-            Automated linting has detected issues that need to be fixed.
-            
-            **Pull Request:** #${context.payload.pull_request.number}
-            **Workflow Run:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
-            
-            ### Task
-            Please fix the mega-linter errors found in this pull request. Review the workflow logs for specific error details and apply the necessary fixes.
-            
-            ### Instructions
-            1. Review the mega-linter output in the workflow logs
-            2. Fix the reported linting issues
-            3. Ensure all fixes follow the project's coding standards
-            4. Commit the fixes to the pull request branch
-            
-            @copilot please fix these linting issues`,
-              assignees: ['copilot']  // Copilot coding agent - requires Copilot to be enabled for the repo
+              issue_number: context.payload.pull_request.number,
+              body: `@copilot fix all mega-linter issues`
             });
-            console.log('Created issue:', issue.data.number);
+            console.log('Posted comment to prompt Copilot');
 
   build:
     name: 🏗️ Build
