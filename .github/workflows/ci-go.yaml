@@ -84,6 +84,7 @@ jobs:
           go-version: 1.25.5
 
       - name: 🧹 Run golangci-lint
+        id: golangci-lint
         uses: golangci/golangci-lint-action@1e7e51e771db61008b38414a730f564565cf7c20 # v9.2.0
         with:
           version: v2.6.2
@@ -95,6 +96,52 @@ jobs:
           commit_message: "chore: apply golangci-lint fixes"
           commit_user_name: golangci-lint-bot
           commit_user_email: golangci-lint-bot@users.noreply.github.com
+
+      - name: 🤖 Prompt Copilot to fix remaining lint errors
+        if: failure() && steps.golangci-lint.outcome == 'failure'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          github-token: ${{ steps.generate-token.outputs.token }}
+          script: |
+            // Only create comment if running in a pull request context
+            if (!context.payload.pull_request) {
+              console.log('Not a pull request context, skipping comment creation');
+              return;
+            }
+
+            const copilotPromptBody = '@copilot fix all golangci-lint issues';
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issueNumber = context.payload.pull_request.number;
+
+            // Check for an existing Copilot prompt comment to avoid duplicates
+            const { data: comments } = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number: issueNumber,
+              per_page: 100,
+            });
+
+            const existingPrompt = comments.find((comment) => {
+              if (!comment || !comment.body) {
+                return false;
+              }
+              // Match on exact body; adjust if the prompt format changes
+              return comment.body.trim() === copilotPromptBody;
+            });
+
+            if (existingPrompt) {
+              console.log('Copilot prompt comment already exists, skipping creation');
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: issueNumber,
+              body: copilotPromptBody,
+            });
+            console.log('Posted comment to prompt Copilot');
 
   lint:
     name: 🧹 Lint - mega-linter
@@ -140,6 +187,50 @@ jobs:
           commit_message: "chore: Apply megalinter fixes"
           commit_user_name: megalinter-bot
           commit_user_email: 129584137+megalinter-bot@users.noreply.github.com
+
+      - name: 🤖 Prompt Copilot to fix remaining mega-linter errors
+        if: failure() && steps.ml.outcome == 'failure'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          github-token: ${{ steps.generate-token.outputs.token }}
+          script: |
+            // Only create comment if running in a pull request context
+            if (!context.payload.pull_request) {
+              console.log('Not a pull request context, skipping comment creation');
+              return;
+            }
+
+            const issueNumber = context.payload.pull_request.number;
+            const copilotPromptBody = '@copilot fix all mega-linter issues';
+
+            // Check for an existing Copilot prompt comment to avoid duplicates
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              per_page: 100,
+            });
+
+            const existingPrompt = comments.find((comment) => {
+              if (!comment || !comment.body) {
+                return false;
+              }
+              // Match on exact body; adjust if the prompt format changes
+              return comment.body.trim() === copilotPromptBody;
+            });
+
+            if (existingPrompt) {
+              console.log('Copilot prompt comment already exists on this pull request, skipping creation');
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: copilotPromptBody,
+            });
+            console.log('Posted comment to prompt Copilot');
 
   build:
     name: 🏗️ Build

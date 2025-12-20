@@ -251,6 +251,12 @@ jobs:
 
 [.github/workflows/ci-go.yaml](.github/workflows/ci-go.yaml) is a workflow used to lint and test Go projects across multiple operating systems.
 
+#### Features
+
+- **Automated Linting**: Runs `golangci-lint` and `mega-linter` to ensure code quality
+- **Auto-fix**: Automatically applies linter fixes and commits them
+- **Copilot Integration**: When linting fails, automatically prompts Copilot on the PR to fix the remaining issues
+
 #### Usage
 
 ```yaml
@@ -259,6 +265,7 @@ jobs:
     uses: devantler-tech/reusable-workflows/.github/workflows/ci-go.yaml@{ref} # ref
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
     with:
       working-directory: "./" # optional
 ```
@@ -268,6 +275,7 @@ jobs:
 | Key                 | Type           | Default | Required | Description                                                          |
 |---------------------|----------------|---------|----------|----------------------------------------------------------------------|
 | `CODECOV_TOKEN`     | Secret         | -       | ❌        | Codecov token                                                        |
+| `APP_PRIVATE_KEY`   | Secret         | -       | ✅        | GitHub App private key for authenticating the workflow               |
 | `working-directory` | Input (string) | `./`    | ❌        | Working directory for Go commands (e.g., 'src' if go.mod is in src/) |
 
 </details>
