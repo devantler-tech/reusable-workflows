@@ -103,15 +103,21 @@ jobs:
         with:
           github-token: ${{ steps.generate-token.outputs.token }}
           script: |
+            // Only create issue if running in a pull request context
+            if (!context.payload.pull_request) {
+              console.log('Not a pull request context, skipping issue creation');
+              return;
+            }
+            
             const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Fix golangci-lint errors in PR #${context.payload.pull_request?.number || 'unknown'}`,
+              title: `Fix golangci-lint errors in PR #${context.payload.pull_request.number}`,
               body: `## 🧹 golangci-lint Errors Detected
 
             Automated linting has detected issues that need to be fixed.
 
-            **Pull Request:** #${context.payload.pull_request?.number || 'unknown'}
+            **Pull Request:** #${context.payload.pull_request.number}
             **Workflow Run:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
 
             ### Task
@@ -125,7 +131,7 @@ jobs:
             5. Commit the fixes to the pull request branch
 
             @copilot please fix these linting issues`,
-              assignees: ['copilot']
+              assignees: ['copilot']  // Copilot coding agent - requires Copilot to be enabled for the repo
             });
             console.log('Created issue:', issue.data.number);
 
@@ -180,15 +186,21 @@ jobs:
         with:
           github-token: ${{ steps.generate-token.outputs.token }}
           script: |
+            // Only create issue if running in a pull request context
+            if (!context.payload.pull_request) {
+              console.log('Not a pull request context, skipping issue creation');
+              return;
+            }
+            
             const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Fix mega-linter errors in PR #${context.payload.pull_request?.number || 'unknown'}`,
+              title: `Fix mega-linter errors in PR #${context.payload.pull_request.number}`,
               body: `## 🧹 mega-linter Errors Detected
 
             Automated linting has detected issues that need to be fixed.
 
-            **Pull Request:** #${context.payload.pull_request?.number || 'unknown'}
+            **Pull Request:** #${context.payload.pull_request.number}
             **Workflow Run:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
 
             ### Task
@@ -201,7 +213,7 @@ jobs:
             4. Commit the fixes to the pull request branch
 
             @copilot please fix these linting issues`,
-              assignees: ['copilot']
+              assignees: ['copilot']  // Copilot coding agent - requires Copilot to be enabled for the repo
             });
             console.log('Created issue:', issue.data.number);
 
