@@ -275,7 +275,7 @@ jobs:
 | Key                 | Type           | Default | Required | Description                                                          |
 |---------------------|----------------|---------|----------|----------------------------------------------------------------------|
 | `CODECOV_TOKEN`     | Secret         | -       | ❌        | Codecov token                                                        |
-| `APP_PRIVATE_KEY`   | Secret         | -       | ✅        | GitHub App private key for issue creation                            |
+| `APP_PRIVATE_KEY`   | Secret         | -       | ✅        | GitHub App private key for authenticating the workflow               |
 | `working-directory` | Input (string) | `./`    | ❌        | Working directory for Go commands (e.g., 'src' if go.mod is in src/) |
 
 </details>
