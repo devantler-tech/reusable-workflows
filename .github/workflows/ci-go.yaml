@@ -122,11 +122,15 @@ jobs:
               per_page: 100,
             });
 
-            const hasExistingPrompt = comments.some(
-              (comment) => comment.body && comment.body.includes(copilotPromptBody)
-            );
+            const existingPrompt = comments.find((comment) => {
+              if (!comment || !comment.body) {
+                return false;
+              }
+              // Match on exact body; adjust if the prompt format changes
+              return comment.body.trim() === copilotPromptBody;
+            });
 
-            if (hasExistingPrompt) {
+            if (existingPrompt) {
               console.log('Copilot prompt comment already exists, skipping creation');
               return;
             }
