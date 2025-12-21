@@ -2,6 +2,11 @@ name: CI - Go
 
 on:
   workflow_call:
+    inputs:
+      pr_owner:
+        required: false
+        type: string
+        description: "Pull request author login (used to disable auto-commit for bot PRs)"
     secrets:
       CODECOV_TOKEN:
         required: false
@@ -34,7 +39,6 @@ jobs:
         with:
           app_id: ${{ vars.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
-
       - name: 📄 Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
@@ -50,6 +54,9 @@ jobs:
         run: go mod tidy
 
       - name: 💾 Commit and push applied linter fixes
+        if: |
+          !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), github.event.pull_request.user.login)
+          && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), inputs.pr_owner)
         uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
         with:
           commit_message: "chore: tidy go modules"
@@ -91,6 +98,9 @@ jobs:
           args: --fix
 
       - name: 💾 Commit and push applied linter fixes
+        if: |
+          !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), github.event.pull_request.user.login)
+          && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), inputs.pr_owner)
         uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
         with:
           commit_message: "chore: apply golangci-lint fixes"
@@ -182,6 +192,9 @@ jobs:
           APPLY_FIXES_MODE: commit
 
       - name: Commit and push applied linter fixes
+        if: |
+          !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), github.event.pull_request.user.login)
+          && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), inputs.pr_owner)
         uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
         with:
           commit_message: "chore: Apply megalinter fixes"
