@@ -62,12 +62,12 @@ jobs:
         env:
           KSAIL_SOPS_KEY: ${{ secrets.KSAIL_SOPS_KEY }}
         if: ${{ env.KSAIL_SOPS_KEY != '' }}
-        run: ksail secrets import "${{ secrets.KSAIL_SOPS_KEY }}"
+        run: ksail cipher import "${{ secrets.KSAIL_SOPS_KEY }}"
 
-      - name: 🚀 Provision cluster
+      - name: 🚀 Create cluster
         run: |
-          ksail up
+          ksail cluster create
 
-      - name: 🔥 Teardown cluster
+      - name: 🔥 Delete cluster
         if: always()
-        run: ksail down
+        run: ksail cluster delete
