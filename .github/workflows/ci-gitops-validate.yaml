@@ -26,4 +26,4 @@ jobs:
 
       - name: 🧹 Validate GitOps cluster configuration
         run: |
-          ksail validate
+          ksail workload validate
