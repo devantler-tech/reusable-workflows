@@ -19,6 +19,10 @@ on:
   merge_group:
   ##################################
 
+concurrency:
+  group: "ci-go-${{ github.repository }}-${{ github.ref }}"
+  cancel-in-progress: true
+
 permissions:
   contents: read
   packages: read
