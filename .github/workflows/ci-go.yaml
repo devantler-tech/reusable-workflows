@@ -32,7 +32,10 @@ jobs:
     name: 📦 Tidy
     runs-on: ubuntu-latest
     # Ignore Require Workflow runs
-    if: github.repository != 'devantler-tech/reusable-workflows'
+    if: |
+      github.repository != 'devantler-tech/reusable-workflows'
+      && github.ref != 'refs/heads/main'
+      && github.ref != 'refs/heads/master'
     permissions:
       contents: write
       pull-requests: write
