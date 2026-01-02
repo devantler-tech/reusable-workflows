@@ -22,7 +22,7 @@ jobs:
           persist-credentials: false
 
       - name: ⚙️ Setup KSail
-        uses: devantler-tech/composite-actions/setup-ksail-action@6d18f29330dd5818cf03c8508fb125cc05441fad # v1.9.6
+        uses: devantler-tech/actions/setup-ksail-action@6d18f29330dd5818cf03c8508fb125cc05441fad # v1.9.6
 
       - name: 🧹 Validate GitOps cluster configuration
         run: |

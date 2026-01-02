@@ -17,4 +17,4 @@ jobs:
         with:
           persist-credentials: false
       - name: 🔄 Sync labels
-        uses: devantler-tech/composite-actions/sync-labels-action@main # Needs to be main to avoid circular dependency
+        uses: devantler-tech/actions/sync-labels-action@main # Needs to be main to avoid circular dependency
