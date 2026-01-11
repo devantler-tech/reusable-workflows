@@ -22,5 +22,16 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: 🔍 Check for zizmor config
+        id: config
+        run: |
+          if [ -f "zizmor.yml" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: 🌈 Zizmor
         uses: zizmorcore/zizmor-action@e639db99335bc9038abc0e066dfcd72e23d26fb4 # v0.3.0
+        with:
+          config: ${{ steps.config.outputs.exists == 'true' && 'zizmor.yml' || '' }}
