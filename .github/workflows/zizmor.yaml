@@ -6,11 +6,13 @@ on:
   workflow_call:
   ### Required Workflow Triggers ###
   pull_request:
+  merge_group:
   ##################################
 
 jobs:
   zizmor:
     runs-on: ubuntu-latest
+    if: github.event_name != 'merge_group'
     permissions:
       security-events: write
       contents: read # only needed for private repos
