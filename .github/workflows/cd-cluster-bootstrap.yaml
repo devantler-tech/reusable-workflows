@@ -48,11 +48,11 @@ jobs:
 
       - name: 🛠️ Install Cilium
         if: ${{ inputs.SKIP != true }}
-        uses: devantler-tech/actions/install-cilium-action@6d18f29330dd5818cf03c8508fb125cc05441fad # v1.9.6
+        uses: devantler-tech/actions/install-cilium-action@884a9b7321e269351d5fc006d95e0b50b2ddedf6 # v1.9.7
 
       - name: 🛠️ Install Flux
         if: ${{ inputs.SKIP != true }}
-        uses: devantler-tech/actions/install-flux-action@6d18f29330dd5818cf03c8508fb125cc05441fad # v1.9.6
+        uses: devantler-tech/actions/install-flux-action@884a9b7321e269351d5fc006d95e0b50b2ddedf6 # v1.9.7
 
       - name: 🔐 Create secret for SOPS
         if: ${{ inputs.SKIP != true }}
