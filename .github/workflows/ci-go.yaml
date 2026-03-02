@@ -277,6 +277,7 @@ jobs:
         uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
         with:
           go-version: 1.26.0
+          cache: true
 
       - name: 🛠️ Build
         run: go build -v ./...
@@ -301,6 +302,7 @@ jobs:
         uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
         with:
           go-version: 1.26.0
+          cache: true
 
       - name: 🧪 Test
         run: |
@@ -326,6 +328,7 @@ jobs:
         uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
         with:
           go-version: 1.26.0
+          cache: true
 
       - name: 👨🏻‍🔧 Enable covdata (temp) see https://github.com/golang/go/issues/75031
         run: go env -w GOTOOLCHAIN=go1.25.0+auto
