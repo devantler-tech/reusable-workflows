@@ -142,7 +142,7 @@ jobs:
       - name: ⚙️ Setup Go
         uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
         with:
-          go-version: 1.26.0
+          go-version: 1.26.1
 
       - name: 🧹 go mod tidy
         run: go mod tidy
@@ -185,7 +185,7 @@ jobs:
       - name: ⚙️ Setup Go
         uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
         with:
-          go-version: 1.26.0
+          go-version: 1.26.1
 
       - name: 🧹 Run golangci-lint
         id: golangci-lint
@@ -234,7 +234,7 @@ jobs:
       - name: ⚙️ Setup Go
         uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
         with:
-          go-version: 1.26.0
+          go-version: 1.26.1
 
       - name: 🧹 Lint
         id: ml
@@ -276,7 +276,7 @@ jobs:
       - name: ⚙️ Setup Go
         uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
         with:
-          go-version: 1.26.0
+          go-version: 1.26.1
           cache: true
 
       - name: 🛠️ Build
@@ -301,7 +301,7 @@ jobs:
       - name: ⚙️ Setup Go
         uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
         with:
-          go-version: 1.26.0
+          go-version: 1.26.1
           cache: true
 
       - name: 🧪 Test
@@ -327,7 +327,7 @@ jobs:
       - name: ⚙️ Setup Go
         uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
         with:
-          go-version: 1.26.0
+          go-version: 1.26.1
           cache: true
 
       - name: 👨🏻‍🔧 Enable covdata (temp) see https://github.com/golang/go/issues/75031
