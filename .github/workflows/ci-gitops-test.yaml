@@ -68,6 +68,21 @@ jobs:
         run: |
           ksail cluster create
 
+      - name: 🔐 Create SOPS Age secret in cluster
+        env:
+          KSAIL_SOPS_KEY: ${{ secrets.KSAIL_SOPS_KEY }}
+        if: ${{ env.KSAIL_SOPS_KEY != '' }}
+        run: |
+          kubectl create secret generic sops-age \
+            --namespace=flux-system \
+            --from-literal=sops.agekey="$KSAIL_SOPS_KEY"
+
+      - name: 📦 Push manifests
+        run: ksail workload push
+
+      - name: 🔁 Reconcile workloads
+        run: ksail workload reconcile
+
       - name: 🔥 Delete cluster
         if: always()
         run: ksail cluster delete
