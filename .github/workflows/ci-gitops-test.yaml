@@ -47,7 +47,7 @@ jobs:
           persist-credentials: false
 
       - name: 🧪 Run GitOps test
-        uses: devantler-tech/ksail/.github/actions/ksail-cluster@ef1dc3941cf25ec00d99a955861445227ddc0d25 # feat/ksail-cluster-end-user-support
+        uses: devantler-tech/ksail/.github/actions/ksail-cluster@855d481a60a0d4221446d961954c9453b9342f85 # feat/ksail-cluster-end-user-support
         with:
           distribution: ${{ inputs.DISTRIBUTION || 'Talos' }}
           provider: ${{ inputs.PROVIDER || 'Docker' }}
