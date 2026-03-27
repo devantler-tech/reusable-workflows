@@ -49,7 +49,7 @@ jobs:
 
 | Key             | Type   | Default | Required | Description   |
 |-----------------|--------|---------|----------|---------------|
-| `NUGET_API_KEY` | Secret | -       | ✅        | NuGet API key |
+| `NUGET_API_KEY` | Secret | -       | Yes      | NuGet API key |
 
 </details>
 
@@ -77,10 +77,10 @@ jobs:
 
 | Key                 | Type           | Default      | Required | Description                                                     |
 |---------------------|----------------|--------------|----------|-----------------------------------------------------------------|
-| `ruby-version`      | Input (string) | `3.3`        | ❌        | Ruby version to install                                         |
-| `jekyll-env`        | Input (string) | `production` | ❌        | Jekyll environment                                              |
-| `extra-build-args`  | Input (string) | `""`         | ❌        | Extra args appended before the automatically supplied --baseurl |
-| `working-directory` | Input (string) | `"."`        | ❌        | Working directory for the Jekyll site (e.g., 'docs')            |
+| `ruby-version`      | Input (string) | `3.3`        | No       | Ruby version to install                                         |
+| `jekyll-env`        | Input (string) | `production` | No       | Jekyll environment                                              |
+| `extra-build-args`  | Input (string) | `""`         | No       | Extra args appended before the automatically supplied --baseurl |
+| `working-directory` | Input (string) | `"."`        | No       | Working directory for the Jekyll site (e.g., 'docs')            |
 
 #### Outputs
 
@@ -128,7 +128,7 @@ jobs:
 
 | Key             | Type   | Default | Required | Description   |
 |-----------------|--------|---------|----------|---------------|
-| `CODECOV_TOKEN` | Secret | -       | ✅        | Codecov token |
+| `CODECOV_TOKEN` | Secret | -       | Yes      | Codecov token |
 
 </details>
 
@@ -153,7 +153,7 @@ jobs:
 
 | Key               | Type   | Default | Required | Description            |
 |-------------------|--------|---------|----------|------------------------|
-| `APP_PRIVATE_KEY` | Secret | -       | ✅        | GitHub App private key |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
@@ -187,56 +187,9 @@ jobs:
 
 | Key                 | Type           | Default | Required | Description                                                          |
 |---------------------|----------------|---------|----------|----------------------------------------------------------------------|
-| `CODECOV_TOKEN`     | Secret         | -       | ❌        | Codecov token                                                        |
-| `APP_PRIVATE_KEY`   | Secret         | -       | ✅        | GitHub App private key for authenticating the workflow               |
-| `working-directory` | Input (string) | `./`    | ❌        | Working directory for Go commands (e.g., 'src' if go.mod is in src/) |
-
-</details>
-
-### CI - GitOps Test
-
-<details>
-<summary>Click to expand</summary>
-
-[.github/workflows/ci-gitops-test.yaml](.github/workflows/ci-gitops-test.yaml) is a workflow used to test GitOps configurations with Flux.
-
-#### Usage
-
-```yaml
-jobs:
-  gitops-test:
-    uses: devantler-tech/reusable-workflows/.github/workflows/ci-gitops-test.yaml@{ref} # ref
-    secrets:
-      KSAIL_SOPS_KEY: ${{ secrets.KSAIL_SOPS_KEY }}
-    with:
-      HOSTS_FILE: hosts
-      ROOT_CA_CERT_FILE: root-ca.crt
-```
-
-#### Secrets and Inputs
-
-| Key                 | Type           | Default | Required | Description                      |
-|---------------------|----------------|---------|----------|----------------------------------|
-| `KSAIL_SOPS_KEY`    | Secret         | -       | ❌        | SOPS Age key for KSail           |
-| `HOSTS_FILE`        | Input (string) | -       | ❌        | Path to hosts file for testing   |
-| `ROOT_CA_CERT_FILE` | Input (string) | -       | ❌        | Path to root CA certificate file |
-
-</details>
-
-### CI - GitOps Validate
-
-<details>
-<summary>Click to expand</summary>
-
-[.github/workflows/ci-gitops-validate.yaml](.github/workflows/ci-gitops-validate.yaml) is a workflow used to validate GitOps cluster configurations.
-
-#### Usage
-
-```yaml
-jobs:
-  gitops-validate:
-    uses: devantler-tech/reusable-workflows/.github/workflows/ci-gitops-validate.yaml@{ref} # ref
-```
+| `CODECOV_TOKEN`     | Secret         | -       | No       | Codecov token                                                        |
+| `APP_PRIVATE_KEY`   | Secret         | -       | Yes      | GitHub App private key for authenticating the workflow               |
+| `working-directory` | Input (string) | `./`    | No       | Working directory for Go commands (e.g., 'src' if go.mod is in src/) |
 
 </details>
 
@@ -261,7 +214,7 @@ jobs:
 
 | Key               | Type   | Default | Required | Description            |
 |-------------------|--------|---------|----------|------------------------|
-| `APP_PRIVATE_KEY` | Secret | -       | ✅        | GitHub App private key |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
@@ -288,8 +241,8 @@ jobs:
 
 | Key                    | Type           | Default | Required | Description                           |
 |------------------------|----------------|---------|----------|---------------------------------------|
-| `APP_PRIVATE_KEY`      | Secret         | -       | ✅        | GitHub App private key                |
-| `KYVERNO_POLICIES_DIR` | Input (string) | -       | ✅        | Directory to sync Kyverno policies to |
+| `APP_PRIVATE_KEY`      | Secret         | -       | Yes      | GitHub App private key                |
+| `KYVERNO_POLICIES_DIR` | Input (string) | -       | Yes      | Directory to sync Kyverno policies to |
 
 </details>
 
@@ -314,7 +267,7 @@ jobs:
 
 | Key               | Type   | Default | Required | Description            |
 |-------------------|--------|---------|----------|------------------------|
-| `APP_PRIVATE_KEY` | Secret | -       | ✅        | GitHub App private key |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
