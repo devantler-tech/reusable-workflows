@@ -28,63 +28,6 @@ flowchart TD
 
 [Reusable workflows](https://docs.github.com/en/actions/how-tos/sharing-automations/reuse-workflows#creating-a-reusable-workflow) are designed to encapsulate common CI/CD patterns that can be shared across multiple repositories. They allow you to define a workflow once and reuse it in the job-scope of other workflows. This reduces duplication and enables building generic workflows for common tasks.
 
-### CD - Cluster Bootstrap
-
-<details>
-<summary>Click to expand</summary>
-
-[.github/workflows/cd-cluster-bootstrap.yaml](.github/workflows/cd-cluster-bootstrap.yaml) is a workflow used to bootstrap a cluster on the DevantlerTech platform. It installs core components like Cilium and Flux.
-
-#### Usage
-
-To use this reusable workflow, you can include it in your workflow file as follows:
-
-```yaml
-jobs:
-  bootstrap-cluster:
-    uses: devantler-tech/reusable-workflows/.github/workflows/cd-cluster-bootstrap.yaml@{ref} # ref
-    secrets:
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
-    with:
-      DEPLOYMENT_ENV: dev
-```
-
-#### Secrets and Inputs
-
-| Key              | Type           | Default | Required | Description            |
-|------------------|----------------|---------|----------|------------------------|
-| `KUBE_CONFIG`    | Secret         | -       | ✅        | Kubernetes config file |
-| `SOPS_AGE_KEY`   | Secret         | -       | ✅        | Age key for SOPS       |
-| `DEPLOYMENT_ENV` | Input (string) | `dev`   | ✅        | Deployment environment |
-
-</details>
-
-### CD - .NET Application Publish
-
-<details>
-<summary>Click to expand</summary>
-
-[.github/workflows/cd-dotnet-application-publish.yaml](.github/workflows/cd-dotnet-application-publish.yaml) is a workflow used to publish .NET applications.
-
-#### Usage
-
-```yaml
-jobs:
-  publish-application:
-    uses: devantler-tech/reusable-workflows/.github/workflows/cd-dotnet-application-publish.yaml@{ref} # ref
-    secrets:
-      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-```
-
-#### Secrets and Inputs
-
-| Key             | Type   | Default | Required | Description   |
-|-----------------|--------|---------|----------|---------------|
-| `NUGET_API_KEY` | Secret | -       | ✅        | NuGet API key |
-
-</details>
-
 ### CD - .NET Library Publish
 
 <details>
@@ -107,36 +50,6 @@ jobs:
 | Key             | Type   | Default | Required | Description   |
 |-----------------|--------|---------|----------|---------------|
 | `NUGET_API_KEY` | Secret | -       | ✅        | NuGet API key |
-
-</details>
-
-### CD - GitOps Deploy
-
-<details>
-<summary>Click to expand</summary>
-
-[.github/workflows/cd-gitops-deploy.yaml](.github/workflows/cd-gitops-deploy.yaml) is a workflow used to deploy applications using GitOps with Flux.
-
-#### Usage
-
-```yaml
-jobs:
-  gitops-deploy:
-    uses: devantler-tech/reusable-workflows/.github/workflows/cd-gitops-deploy.yaml@{ref} # ref
-    secrets:
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
-    with:
-      DEPLOYMENT_ENV: dev
-```
-
-#### Secrets and Inputs
-
-| Key              | Type           | Default | Required | Description            |
-|------------------|----------------|---------|----------|------------------------|
-| `KUBE_CONFIG`    | Secret         | -       | ✅        | Kubernetes config file |
-| `SOPS_AGE_KEY`   | Secret         | -       | ✅        | Age key for SOPS       |
-| `DEPLOYMENT_ENV` | Input (string) | `dev`   | ✅        | Deployment environment |
 
 </details>
 
