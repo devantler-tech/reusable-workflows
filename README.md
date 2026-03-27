@@ -28,63 +28,6 @@ flowchart TD
 
 [Reusable workflows](https://docs.github.com/en/actions/how-tos/sharing-automations/reuse-workflows#creating-a-reusable-workflow) are designed to encapsulate common CI/CD patterns that can be shared across multiple repositories. They allow you to define a workflow once and reuse it in the job-scope of other workflows. This reduces duplication and enables building generic workflows for common tasks.
 
-### CD - Cluster Bootstrap
-
-<details>
-<summary>Click to expand</summary>
-
-[.github/workflows/cd-cluster-bootstrap.yaml](.github/workflows/cd-cluster-bootstrap.yaml) is a workflow used to bootstrap a cluster on the DevantlerTech platform. It installs core components like Cilium and Flux.
-
-#### Usage
-
-To use this reusable workflow, you can include it in your workflow file as follows:
-
-```yaml
-jobs:
-  bootstrap-cluster:
-    uses: devantler-tech/reusable-workflows/.github/workflows/cd-cluster-bootstrap.yaml@{ref} # ref
-    secrets:
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
-    with:
-      DEPLOYMENT_ENV: dev
-```
-
-#### Secrets and Inputs
-
-| Key              | Type           | Default | Required | Description            |
-|------------------|----------------|---------|----------|------------------------|
-| `KUBE_CONFIG`    | Secret         | -       | ✅        | Kubernetes config file |
-| `SOPS_AGE_KEY`   | Secret         | -       | ✅        | Age key for SOPS       |
-| `DEPLOYMENT_ENV` | Input (string) | `dev`   | ✅        | Deployment environment |
-
-</details>
-
-### CD - .NET Application Publish
-
-<details>
-<summary>Click to expand</summary>
-
-[.github/workflows/cd-dotnet-application-publish.yaml](.github/workflows/cd-dotnet-application-publish.yaml) is a workflow used to publish .NET applications.
-
-#### Usage
-
-```yaml
-jobs:
-  publish-application:
-    uses: devantler-tech/reusable-workflows/.github/workflows/cd-dotnet-application-publish.yaml@{ref} # ref
-    secrets:
-      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-```
-
-#### Secrets and Inputs
-
-| Key             | Type   | Default | Required | Description   |
-|-----------------|--------|---------|----------|---------------|
-| `NUGET_API_KEY` | Secret | -       | ✅        | NuGet API key |
-
-</details>
-
 ### CD - .NET Library Publish
 
 <details>
@@ -106,37 +49,7 @@ jobs:
 
 | Key             | Type   | Default | Required | Description   |
 |-----------------|--------|---------|----------|---------------|
-| `NUGET_API_KEY` | Secret | -       | ✅        | NuGet API key |
-
-</details>
-
-### CD - GitOps Deploy
-
-<details>
-<summary>Click to expand</summary>
-
-[.github/workflows/cd-gitops-deploy.yaml](.github/workflows/cd-gitops-deploy.yaml) is a workflow used to deploy applications using GitOps with Flux.
-
-#### Usage
-
-```yaml
-jobs:
-  gitops-deploy:
-    uses: devantler-tech/reusable-workflows/.github/workflows/cd-gitops-deploy.yaml@{ref} # ref
-    secrets:
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
-    with:
-      DEPLOYMENT_ENV: dev
-```
-
-#### Secrets and Inputs
-
-| Key              | Type           | Default | Required | Description            |
-|------------------|----------------|---------|----------|------------------------|
-| `KUBE_CONFIG`    | Secret         | -       | ✅        | Kubernetes config file |
-| `SOPS_AGE_KEY`   | Secret         | -       | ✅        | Age key for SOPS       |
-| `DEPLOYMENT_ENV` | Input (string) | `dev`   | ✅        | Deployment environment |
+| `NUGET_API_KEY` | Secret | -       | Yes      | NuGet API key |
 
 </details>
 
@@ -164,10 +77,10 @@ jobs:
 
 | Key                 | Type           | Default      | Required | Description                                                     |
 |---------------------|----------------|--------------|----------|-----------------------------------------------------------------|
-| `ruby-version`      | Input (string) | `3.3`        | ❌        | Ruby version to install                                         |
-| `jekyll-env`        | Input (string) | `production` | ❌        | Jekyll environment                                              |
-| `extra-build-args`  | Input (string) | `""`         | ❌        | Extra args appended before the automatically supplied --baseurl |
-| `working-directory` | Input (string) | `"."`        | ❌        | Working directory for the Jekyll site (e.g., 'docs')            |
+| `ruby-version`      | Input (string) | `3.3`        | No       | Ruby version to install                                         |
+| `jekyll-env`        | Input (string) | `production` | No       | Jekyll environment                                              |
+| `extra-build-args`  | Input (string) | `""`         | No       | Extra args appended before the automatically supplied --baseurl |
+| `working-directory` | Input (string) | `"."`        | No       | Working directory for the Jekyll site (e.g., 'docs')            |
 
 #### Outputs
 
@@ -215,7 +128,7 @@ jobs:
 
 | Key             | Type   | Default | Required | Description   |
 |-----------------|--------|---------|----------|---------------|
-| `CODECOV_TOKEN` | Secret | -       | ✅        | Codecov token |
+| `CODECOV_TOKEN` | Secret | -       | Yes      | Codecov token |
 
 </details>
 
@@ -240,7 +153,7 @@ jobs:
 
 | Key               | Type   | Default | Required | Description            |
 |-------------------|--------|---------|----------|------------------------|
-| `APP_PRIVATE_KEY` | Secret | -       | ✅        | GitHub App private key |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
@@ -274,56 +187,9 @@ jobs:
 
 | Key                 | Type           | Default | Required | Description                                                          |
 |---------------------|----------------|---------|----------|----------------------------------------------------------------------|
-| `CODECOV_TOKEN`     | Secret         | -       | ❌        | Codecov token                                                        |
-| `APP_PRIVATE_KEY`   | Secret         | -       | ✅        | GitHub App private key for authenticating the workflow               |
-| `working-directory` | Input (string) | `./`    | ❌        | Working directory for Go commands (e.g., 'src' if go.mod is in src/) |
-
-</details>
-
-### CI - GitOps Test
-
-<details>
-<summary>Click to expand</summary>
-
-[.github/workflows/ci-gitops-test.yaml](.github/workflows/ci-gitops-test.yaml) is a workflow used to test GitOps configurations with Flux.
-
-#### Usage
-
-```yaml
-jobs:
-  gitops-test:
-    uses: devantler-tech/reusable-workflows/.github/workflows/ci-gitops-test.yaml@{ref} # ref
-    secrets:
-      KSAIL_SOPS_KEY: ${{ secrets.KSAIL_SOPS_KEY }}
-    with:
-      HOSTS_FILE: hosts
-      ROOT_CA_CERT_FILE: root-ca.crt
-```
-
-#### Secrets and Inputs
-
-| Key                 | Type           | Default | Required | Description                      |
-|---------------------|----------------|---------|----------|----------------------------------|
-| `KSAIL_SOPS_KEY`    | Secret         | -       | ❌        | SOPS Age key for KSail           |
-| `HOSTS_FILE`        | Input (string) | -       | ❌        | Path to hosts file for testing   |
-| `ROOT_CA_CERT_FILE` | Input (string) | -       | ❌        | Path to root CA certificate file |
-
-</details>
-
-### CI - GitOps Validate
-
-<details>
-<summary>Click to expand</summary>
-
-[.github/workflows/ci-gitops-validate.yaml](.github/workflows/ci-gitops-validate.yaml) is a workflow used to validate GitOps cluster configurations.
-
-#### Usage
-
-```yaml
-jobs:
-  gitops-validate:
-    uses: devantler-tech/reusable-workflows/.github/workflows/ci-gitops-validate.yaml@{ref} # ref
-```
+| `CODECOV_TOKEN`     | Secret         | -       | No       | Codecov token                                                        |
+| `APP_PRIVATE_KEY`   | Secret         | -       | Yes      | GitHub App private key for authenticating the workflow               |
+| `working-directory` | Input (string) | `./`    | No       | Working directory for Go commands (e.g., 'src' if go.mod is in src/) |
 
 </details>
 
@@ -348,7 +214,7 @@ jobs:
 
 | Key               | Type   | Default | Required | Description            |
 |-------------------|--------|---------|----------|------------------------|
-| `APP_PRIVATE_KEY` | Secret | -       | ✅        | GitHub App private key |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
@@ -375,8 +241,8 @@ jobs:
 
 | Key                    | Type           | Default | Required | Description                           |
 |------------------------|----------------|---------|----------|---------------------------------------|
-| `APP_PRIVATE_KEY`      | Secret         | -       | ✅        | GitHub App private key                |
-| `KYVERNO_POLICIES_DIR` | Input (string) | -       | ✅        | Directory to sync Kyverno policies to |
+| `APP_PRIVATE_KEY`      | Secret         | -       | Yes      | GitHub App private key                |
+| `KYVERNO_POLICIES_DIR` | Input (string) | -       | Yes      | Directory to sync Kyverno policies to |
 
 </details>
 
@@ -401,7 +267,7 @@ jobs:
 
 | Key               | Type   | Default | Required | Description            |
 |-------------------|--------|---------|----------|------------------------|
-| `APP_PRIVATE_KEY` | Secret | -       | ✅        | GitHub App private key |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
