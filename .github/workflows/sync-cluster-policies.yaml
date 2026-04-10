@@ -22,6 +22,11 @@ jobs:
       KYVERNO_POLICIES_TEMP_DIR: /tmp/cluster-policies
 
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+
       - name: Generate GitHub App Token
         uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
         id: generate-token
