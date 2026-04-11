@@ -26,10 +26,7 @@ jobs:
   test-zizmor-status:
     name: "[Test] Zizmor - Status"
     runs-on: ubuntu-latest
-    needs:
-      [
-        test-zizmor,
-      ]
+    needs: [test-zizmor]
     permissions: {}
     if: ${{ !cancelled() }}
     steps:

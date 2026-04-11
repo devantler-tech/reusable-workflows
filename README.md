@@ -292,15 +292,15 @@ jobs:
 
 #### Secrets and Inputs
 
-| Key                                | Type            | Default               | Required | Description                                          |
-|------------------------------------|-----------------|-----------------------|----------|------------------------------------------------------|
-| `repository`                       | Input (string)  | Calling repo          | No       | Repository to target for workflow run deletion       |
-| `days`                             | Input (number)  | `30`                  | No       | Days-worth of runs to keep for each workflow         |
-| `minimum_runs`                     | Input (number)  | `6`                   | No       | Minimum runs to keep for each workflow               |
-| `delete_workflow_pattern`          | Input (string)  | -                     | No       | Name or filename of the workflow to target           |
-| `delete_workflow_by_state_pattern` | Input (string)  | `ALL`                 | No       | Filter workflows by state (comma-separated)          |
-| `delete_run_by_conclusion_pattern` | Input (string)  | `ALL`                 | No       | Remove runs based on conclusion (comma-separated)    |
-| `dry_run`                          | Input (boolean) | `true`                | No       | Logs simulated changes, no deletions are performed   |
+| Key                                | Type            | Default      | Required | Description                                        |
+|------------------------------------|-----------------|--------------|----------|----------------------------------------------------|
+| `repository`                       | Input (string)  | Calling repo | No       | Repository to target for workflow run deletion     |
+| `days`                             | Input (number)  | `30`         | No       | Days-worth of runs to keep for each workflow       |
+| `minimum_runs`                     | Input (number)  | `6`          | No       | Minimum runs to keep for each workflow             |
+| `delete_workflow_pattern`          | Input (string)  | -            | No       | Name or filename of the workflow to target         |
+| `delete_workflow_by_state_pattern` | Input (string)  | `ALL`        | No       | Filter workflows by state (comma-separated)        |
+| `delete_run_by_conclusion_pattern` | Input (string)  | `ALL`        | No       | Remove runs based on conclusion (comma-separated)  |
+| `dry_run`                          | Input (boolean) | `true`       | No       | Logs simulated changes, no deletions are performed |
 
 > **Note:** The calling workflow must grant `actions: write` and `contents: read` permissions.
 

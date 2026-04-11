@@ -28,14 +28,14 @@
 
 ## Key Configuration Files
 
-| File                 | Purpose                                    |
-|----------------------|--------------------------------------------|
-| `.releaserc`         | semantic-release config (main branch)      |
-| `.mega-linter.yml`   | MegaLinter config (disables SPELL_CSPELL)  |
-| `.yamllint.yml`      | YAML linting rules                         |
-| `.cspell.json`       | Spell-checker config and custom words      |
-| `.markdownlint.json` | Markdown linting rules                     |
-| `zizmor.yml`         | Zizmor security scanner pinning policies   |
+| File                 | Purpose                                   |
+|----------------------|-------------------------------------------|
+| `.releaserc`         | semantic-release config (main branch)     |
+| `.mega-linter.yml`   | MegaLinter config (disables SPELL_CSPELL) |
+| `.yamllint.yml`      | YAML linting rules                        |
+| `.cspell.json`       | Spell-checker config and custom words     |
+| `.markdownlint.json` | Markdown linting rules                    |
+| `zizmor.yml`         | Zizmor security scanner pinning policies  |
 
 ## Workflow Development Rules
 
@@ -101,5 +101,6 @@ This repository uses **GitHub App tokens** (not `GITHUB_TOKEN`) for operations t
 ```
 
 The app credentials are:
+
 - `APP_ID` — stored as a repository/org variable
 - `APP_PRIVATE_KEY` — stored as a repository/org secret
