@@ -11,6 +11,7 @@ permissions: {}
 jobs:
   publish:
     permissions:
+      contents: read
       packages: write
     runs-on: ubuntu-latest
     steps:

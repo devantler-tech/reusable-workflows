@@ -284,6 +284,9 @@ jobs:
 jobs:
   delete-runs:
     uses: devantler-tech/reusable-workflows/.github/workflows/delete-workflow-runs.yaml@{ref} # ref
+    permissions:
+      actions: write
+      contents: read
     with:
       days: 30 # optional
       minimum_runs: 6 # optional

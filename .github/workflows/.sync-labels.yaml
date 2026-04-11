@@ -9,6 +9,7 @@ permissions: {}
 jobs:
   sync:
     permissions:
+      contents: read
       issues: write
     name: Run EndBug/label-sync
     runs-on: ubuntu-latest

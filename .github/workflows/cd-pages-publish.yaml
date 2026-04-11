@@ -36,7 +36,6 @@ jobs:
     permissions:
       contents: read
       pages: write
-      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
