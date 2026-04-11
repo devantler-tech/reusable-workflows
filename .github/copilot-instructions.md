@@ -28,14 +28,14 @@
 
 ## Key Configuration Files
 
-| File                | Purpose                                 |
-|---------------------|-----------------------------------------|
-| `.releaserc`        | semantic-release config (main branch)   |
-| `.mega-linter.yml`  | MegaLinter config (disables SPELL_CSPELL) |
-| `.yamllint.yml`     | YAML linting rules                      |
-| `.cspell.json`      | Spell-checker config and custom words   |
-| `.markdownlint.json`| Markdown linting rules                  |
-| `zizmor.yml`        | Zizmor security scanner pinning policies|
+| File                 | Purpose                                    |
+|----------------------|--------------------------------------------|
+| `.releaserc`         | semantic-release config (main branch)      |
+| `.mega-linter.yml`   | MegaLinter config (disables SPELL_CSPELL)  |
+| `.yamllint.yml`      | YAML linting rules                         |
+| `.cspell.json`       | Spell-checker config and custom words      |
+| `.markdownlint.json` | Markdown linting rules                     |
+| `zizmor.yml`         | Zizmor security scanner pinning policies   |
 
 ## Workflow Development Rules
 
@@ -51,7 +51,7 @@
 
 ### Required Workflow Triggers
 
-Workflows used as [organization-level required workflows](https://docs.github.com/en/organizations/managing-organization-settings/managing-required-workflows) must also include `pull_request` and `merge_group` triggers:
+Workflows used as [organization-level repository rulesets](https://docs.github.com/en/organizations/managing-organization-settings/managing-rulesets-for-repositories-in-your-organization) must also include `pull_request` and `merge_group` triggers:
 
 ```yaml
 on:
