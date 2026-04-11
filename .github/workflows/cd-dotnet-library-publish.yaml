@@ -6,11 +6,13 @@ on:
       NUGET_API_KEY:
         required: true
 
-permissions:
-  packages: write
+permissions: {}
 
 jobs:
   publish:
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)

@@ -11,8 +11,7 @@ on:
   merge_group:
   ##################################
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   lint:

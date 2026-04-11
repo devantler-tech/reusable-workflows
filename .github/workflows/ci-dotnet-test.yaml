@@ -1,6 +1,7 @@
 name: CI - Test .NET solution or project
-permissions:
-  packages: read
+
+permissions: {}
+
 on:
   workflow_call:
     secrets:
@@ -15,6 +16,9 @@ on:
 
 jobs:
   test:
+    permissions:
+      contents: read
+      packages: read
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
