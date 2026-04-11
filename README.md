@@ -271,6 +271,39 @@ jobs:
 
 </details>
 
+### Delete Workflow Runs
+
+<details>
+<summary>Click to expand</summary>
+
+[.github/workflows/delete-workflow-runs.yaml](.github/workflows/delete-workflow-runs.yaml) is a workflow used to clean up old workflow runs from a repository.
+
+#### Usage
+
+```yaml
+jobs:
+  delete-runs:
+    uses: devantler-tech/reusable-workflows/.github/workflows/delete-workflow-runs.yaml@{ref} # ref
+    with:
+      days: 30 # optional
+      minimum_runs: 6 # optional
+      dry_run: false # optional
+```
+
+#### Secrets and Inputs
+
+| Key                                | Type            | Default               | Required | Description                                          |
+|------------------------------------|-----------------|-----------------------|----------|------------------------------------------------------|
+| `repository`                       | Input (string)  | `${{ github.repository }}` | No  | Repository to target for workflow run deletion       |
+| `days`                             | Input (number)  | `30`                  | No       | Days-worth of runs to keep for each workflow         |
+| `minimum_runs`                     | Input (number)  | `6`                   | No       | Minimum runs to keep for each workflow               |
+| `delete_workflow_pattern`          | Input (string)  | -                     | No       | Name or filename of the workflow to target           |
+| `delete_workflow_by_state_pattern` | Input (string)  | `ALL`                 | No       | Filter workflows by state (comma-separated)          |
+| `delete_run_by_conclusion_pattern` | Input (string)  | `ALL`                 | No       | Remove runs based on conclusion (comma-separated)    |
+| `dry_run`                          | Input (boolean) | -                     | No       | Logs simulated changes, no deletions are performed   |
+
+</details>
+
 ### Zizmor
 
 <details>
