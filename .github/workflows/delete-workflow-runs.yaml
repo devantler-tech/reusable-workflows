@@ -4,9 +4,8 @@ on:
   workflow_call:
     inputs:
       repository:
-        description: "Repository to target for workflow run deletion"
+        description: "Repository to target for workflow run deletion (defaults to the calling repository)"
         required: false
-        default: ${{ github.repository }}
         type: string
       days:
         description: "Days-worth of runs to keep for each workflow"
@@ -41,6 +40,7 @@ on:
       dry_run:
         description: "Logs simulated changes, no deletions are performed"
         required: false
+        default: true
         type: boolean
 
 permissions: {}
@@ -59,10 +59,10 @@ jobs:
           egress-policy: audit
 
       - name: 🗑️ Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@5bf9a1dac5c4d041c029f0a8370ddf0c5cb5aeb7 # v2.1.0
+        uses: Mattraks/delete-workflow-runs@b3018382ca039b53d238908238bd35d1fb14f8ee # v2.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ inputs.repository }}
+          repository: ${{ inputs.repository || github.repository }}
           retain_days: ${{ inputs.days }}
           keep_minimum_runs: ${{ inputs.minimum_runs }}
           delete_workflow_pattern: ${{ inputs.delete_workflow_pattern }}
