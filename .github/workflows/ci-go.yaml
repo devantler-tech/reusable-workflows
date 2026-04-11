@@ -23,9 +23,7 @@ concurrency:
   group: "ci-go-${{ github.repository }}-${{ github.ref }}"
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  packages: read
+permissions: {}
 
 jobs:
   # Detect if Go files changed to conditionally skip jobs for non-Go changes

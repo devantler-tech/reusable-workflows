@@ -6,11 +6,12 @@ on:
       APP_PRIVATE_KEY:
         required: true
 
-permissions:
-  issues: write
+permissions: {}
 
 jobs:
   todos:
+    permissions:
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)

@@ -4,11 +4,12 @@ on:
   schedule:
     - cron: "0 0 * * *" # Every day at midnight
 
-permissions:
-  issues: write
+permissions: {}
 
 jobs:
   sync:
+    permissions:
+      issues: write
     name: Run EndBug/label-sync
     runs-on: ubuntu-latest
     steps:
