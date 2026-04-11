@@ -20,6 +20,7 @@
     ├── delete-workflow-runs.yaml      # Reusable: clean up old workflow runs
     ├── release.yaml                   # Reusable: semantic-release automation
     ├── sync-cluster-policies.yaml     # Reusable: sync Kyverno policies from upstream
+    ├── test-delete-workflow-runs.yaml # Test: exercises delete-workflow-runs.yaml with dry-run
     ├── test-zizmor.yaml               # Test: exercises zizmor.yaml with fixtures
     ├── todos.yaml                     # Reusable: scan TODOs and create GitHub issues
     └── zizmor.yaml                    # Reusable: GitHub Actions security analysis
