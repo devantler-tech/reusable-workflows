@@ -7,8 +7,17 @@ rules:
         devantler-tech/*: ref-pin
         "*": hash-pin
   secrets-outside-env:
-    config:
-      allow:
-        - APP_PRIVATE_KEY
-        - NUGET_API_KEY
-        - CODECOV_TOKEN
+    ignore:
+      # Reusable workflows cannot rely on environment secrets consistently.
+      - create-release.yaml:25
+      - enable-auto-merge.yaml:33
+      - lint-documentation.yaml:35
+      - publish-dotnet-library.yaml:40
+      - run-dotnet-tests.yaml:43
+      - run-dotnet-tests.yaml:45
+      - scan-for-todo-comments.yaml:32
+      - sync-cluster-policies.yaml:35
+      - validate-go-project.yaml:147
+      - validate-go-project.yaml:212
+      - validate-go-project.yaml:328
+      - validate-go-project.yaml:476
