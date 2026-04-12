@@ -37,9 +37,9 @@ jobs:
           persist-credentials: false
 
       - name: 🧪 Test .NET solution or project
-        uses: devantler-tech/actions/run-dotnet-tests@4235593b654b467bb57c2d2f492b1461eab37cba # v2.1.0
+        uses: devantler-tech/actions/run-dotnet-tests@961f62f4a771b31e48acaae4a619cef6c7fe2195 # v2.1.1
         with:
           app-id: ${{ vars.APP_ID }}
-          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
