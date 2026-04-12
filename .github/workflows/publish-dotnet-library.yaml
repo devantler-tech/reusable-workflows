@@ -1,4 +1,4 @@
-name: CD - Publish .NET library
+name: 📦 Publish .NET Library
 
 on:
   workflow_call:

@@ -1,4 +1,4 @@
-name: Delete Workflow Runs
+name: 🗑️ Delete Workflow Runs
 
 on:
   workflow_call:
@@ -12,16 +12,16 @@ on:
         required: false
         default: 30
         type: number
-      minimum_runs:
+      minimum-runs:
         description: "Minimum runs to keep for each workflow"
         required: false
         default: 6
         type: number
-      delete_workflow_pattern:
+      delete-workflow-pattern:
         description: "Name or filename of the workflow (if not set, all workflows are targeted)"
         required: false
         type: string
-      delete_workflow_by_state_pattern:
+      delete-workflow-by-state-pattern:
         description: |
           Filter workflows by state:
             - ALL, active, deleted, disabled_fork, disabled_inactivity, disabled_manually
@@ -29,7 +29,7 @@ on:
         required: false
         default: "ALL"
         type: string
-      delete_run_by_conclusion_pattern:
+      delete-run-by-conclusion-pattern:
         description: |
           Remove runs based on conclusion:
             - ALL, action_required, cancelled, failure, skipped, success
@@ -37,7 +37,7 @@ on:
         required: false
         default: "ALL"
         type: string
-      dry_run:
+      dry-run:
         description: "Logs simulated changes, no deletions are performed"
         required: false
         default: true
@@ -64,8 +64,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ inputs.repository || github.repository }}
           retain_days: ${{ inputs.days }}
-          keep_minimum_runs: ${{ inputs.minimum_runs }}
-          delete_workflow_pattern: ${{ inputs.delete_workflow_pattern }}
-          delete_workflow_by_state_pattern: ${{ inputs.delete_workflow_by_state_pattern }}
-          delete_run_by_conclusion_pattern: ${{ inputs.delete_run_by_conclusion_pattern }}
-          dry_run: ${{ inputs.dry_run }}
+          keep_minimum_runs: ${{ inputs.minimum-runs }}
+          delete_workflow_pattern: ${{ inputs.delete-workflow-pattern }}
+          delete_workflow_by_state_pattern: ${{ inputs.delete-workflow-by-state-pattern }}
+          delete_run_by_conclusion_pattern: ${{ inputs.delete-run-by-conclusion-pattern }}
+          dry_run: ${{ inputs.dry-run }}

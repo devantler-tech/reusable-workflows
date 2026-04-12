@@ -1,4 +1,4 @@
-name: CI - Docs
+name: 🧹 Lint Documentation
 
 on:
   workflow_call:

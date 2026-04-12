@@ -1,4 +1,4 @@
-name: "[Test] Zizmor"
+name: "🧪 [Test] Scan for Workflow Vulnerabilities"
 
 on:
   pull_request:
@@ -17,7 +17,7 @@ permissions: {}
 jobs:
   test-zizmor:
     name: "[Test] Zizmor - Default Settings"
-    uses: ./.github/workflows/zizmor.yaml
+    uses: ./.github/workflows/scan-for-workflow-vulnerabilities.yaml
     permissions:
       security-events: write
       contents: read

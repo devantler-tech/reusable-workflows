@@ -1,4 +1,4 @@
-name: CD - Pages Publish
+name: 🚀 Deploy GitHub Pages
 
 on:
   workflow_call:
@@ -24,9 +24,9 @@ on:
         default: "."
         type: string
     outputs:
-      page_url:
+      page-url:
         description: Deployed GitHub Pages URL
-        value: ${{ jobs.deploy.outputs.page_url }}
+        value: ${{ jobs.deploy.outputs.page-url }}
 
 permissions: {}
 
@@ -79,7 +79,7 @@ jobs:
       pages: write
       id-token: write
     outputs:
-      page_url: ${{ steps.deployment.outputs.page_url }}
+      page-url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0

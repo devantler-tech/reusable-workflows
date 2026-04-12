@@ -1,4 +1,4 @@
-name: "[Test] Delete Workflow Runs"
+name: "🧪 [Test] Delete Workflow Runs"
 
 on:
   pull_request:
@@ -20,10 +20,10 @@ jobs:
     uses: ./.github/workflows/delete-workflow-runs.yaml
     with:
       days: 30
-      minimum_runs: 6
-      delete_workflow_by_state_pattern: "ALL"
-      delete_run_by_conclusion_pattern: "ALL"
-      dry_run: true
+      minimum-runs: 6
+      delete-workflow-by-state-pattern: "ALL"
+      delete-run-by-conclusion-pattern: "ALL"
+      dry-run: true
     permissions:
       actions: write
       contents: read
@@ -33,10 +33,10 @@ jobs:
     uses: ./.github/workflows/delete-workflow-runs.yaml
     with:
       days: 7
-      minimum_runs: 3
-      delete_workflow_pattern: "test-delete-workflow-runs.yaml"
-      delete_run_by_conclusion_pattern: "cancelled,failure"
-      dry_run: true
+      minimum-runs: 3
+      delete-workflow-pattern: "test-delete-workflow-runs.yaml"
+      delete-run-by-conclusion-pattern: "cancelled,failure"
+      dry-run: true
     permissions:
       actions: write
       contents: read
@@ -45,7 +45,7 @@ jobs:
     name: "[Test] Delete Workflow Runs - Minimal Parameters"
     uses: ./.github/workflows/delete-workflow-runs.yaml
     with:
-      dry_run: true
+      dry-run: true
     permissions:
       actions: write
       contents: read

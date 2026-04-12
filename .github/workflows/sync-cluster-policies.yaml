@@ -1,4 +1,4 @@
-name: Sync Cluster Policies
+name: 🔄 Sync Cluster Policies
 
 on:
   workflow_call:
@@ -7,7 +7,7 @@ on:
         description: "GitHub App Private Key"
         required: true
     inputs:
-      KYVERNO_POLICIES_DIR:
+      kyverno-policies-dir:
         description: "Directory to sync Kyverno policies to"
         required: true
         type: string
@@ -18,7 +18,7 @@ jobs:
   sync-policies:
     runs-on: ubuntu-latest
     env:
-      KYVERNO_POLICIES_DIR: ${{ inputs.KYVERNO_POLICIES_DIR }}
+      KYVERNO_POLICIES_DIR: ${{ inputs.kyverno-policies-dir }}
       KYVERNO_POLICIES_TEMP_DIR: /tmp/cluster-policies
 
     steps:

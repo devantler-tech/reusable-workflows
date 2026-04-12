@@ -1,4 +1,4 @@
-name: 🎉 Release
+name: 🎉 Create Release
 
 on:
   push:
@@ -9,6 +9,6 @@ permissions: {}
 
 jobs:
   release:
-    uses: ./.github/workflows/release.yaml
+    uses: ./.github/workflows/create-release.yaml
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
