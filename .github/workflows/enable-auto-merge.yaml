@@ -27,13 +27,13 @@ jobs:
           egress-policy: audit
 
       - name: ✅ Approve PR
-        uses: devantler-tech/actions/approve-pr@961f62f4a771b31e48acaae4a619cef6c7fe2195 # v2.1.1
+        uses: devantler-tech/actions/approve-pr@v2.1.1
         with:
           app-id: ${{ vars.APP_ID }}
           app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
           pr-number: ${{ github.event.pull_request.number }}
 
       - name: 🔀 Enable Auto-Merge
-        uses: devantler-tech/actions/enable-auto-merge-on-pr@961f62f4a771b31e48acaae4a619cef6c7fe2195 # v2.1.1
+        uses: devantler-tech/actions/enable-auto-merge-on-pr@v2.1.1
         with:
           pr-number: ${{ github.event.pull_request.number }}
