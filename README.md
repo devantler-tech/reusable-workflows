@@ -133,7 +133,7 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/enable-auto-merge.yaml](.github/workflows/enable-auto-merge.yaml) is a workflow that enables auto-merge on pull requests from trusted bots and maintainers.
+[.github/workflows/enable-auto-merge.yaml](.github/workflows/enable-auto-merge.yaml) is a workflow that approves and enables auto-merge on pull requests from trusted bots and maintainers.
 
 #### Usage
 
