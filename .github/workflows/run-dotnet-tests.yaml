@@ -5,9 +5,9 @@ permissions: {}
 on:
   workflow_call:
     secrets:
-      CODECOV_TOKEN:
+      codecov-token:
         required: true
-      APP_PRIVATE_KEY:
+      app-private-key:
         required: true
   ### Required Workflow Triggers ###
   pull_request:
@@ -40,6 +40,6 @@ jobs:
         uses: devantler-tech/actions/run-dotnet-tests@a7a2ace351e0d666607f4b8c4d59c875244bc21b # pending release
         with:
           app-id: ${{ vars.APP_ID }}
-          app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          app-private-key: ${{ secrets.app-private-key }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          codecov-token: ${{ secrets.codecov-token }}
