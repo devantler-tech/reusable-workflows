@@ -1,9 +1,9 @@
-name: TODOs
+name: 📝 Scan for TODO Comments
 
 on:
   workflow_call:
     secrets:
-      APP_PRIVATE_KEY:
+      app-private-key:
         required: true
 
 permissions: {}
@@ -29,5 +29,5 @@ jobs:
         uses: devantler-tech/actions/todos-action@884a9b7321e269351d5fc006d95e0b50b2ddedf6 # v1.9.7
         with:
           APP_ID: ${{ vars.APP_ID }}
-          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+          APP_PRIVATE_KEY: ${{ secrets.app-private-key }}
           PROJECT: organization/devantler-tech/5

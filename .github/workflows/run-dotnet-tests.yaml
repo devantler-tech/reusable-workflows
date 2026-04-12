@@ -1,13 +1,13 @@
-name: CI - Test .NET solution or project
+name: 🧪 Run .NET Tests
 
 permissions: {}
 
 on:
   workflow_call:
     secrets:
-      CODECOV_TOKEN:
+      codecov-token:
         required: true
-      APP_PRIVATE_KEY:
+      app-private-key:
         required: true
   ### Required Workflow Triggers ###
   pull_request:
@@ -40,6 +40,6 @@ jobs:
         uses: devantler-tech/actions/dotnet-test-action@884a9b7321e269351d5fc006d95e0b50b2ddedf6 # v1.9.7
         with:
           app_id: ${{ vars.APP_ID }}
-          app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          app_private_key: ${{ secrets.app-private-key }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          codecov-token: ${{ secrets.codecov-token }}

@@ -1,13 +1,13 @@
-name: Sync Cluster Policies
+name: 🔄 Sync Cluster Policies
 
 on:
   workflow_call:
     secrets:
-      APP_PRIVATE_KEY:
+      app-private-key:
         description: "GitHub App Private Key"
         required: true
     inputs:
-      KYVERNO_POLICIES_DIR:
+      kyverno-policies-dir:
         description: "Directory to sync Kyverno policies to"
         required: true
         type: string
@@ -18,7 +18,7 @@ jobs:
   sync-policies:
     runs-on: ubuntu-latest
     env:
-      KYVERNO_POLICIES_DIR: ${{ inputs.KYVERNO_POLICIES_DIR }}
+      KYVERNO_POLICIES_DIR: ${{ inputs.kyverno-policies-dir }}
       KYVERNO_POLICIES_TEMP_DIR: /tmp/cluster-policies
 
     steps:
@@ -32,7 +32,7 @@ jobs:
         id: generate-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          private-key: ${{ secrets.app-private-key }}
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
