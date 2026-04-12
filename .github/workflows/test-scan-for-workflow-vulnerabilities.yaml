@@ -24,7 +24,7 @@ jobs:
       actions: read
 
   test-zizmor-status:
-    name: "[Test] Zizmor - Status"
+    name: status-check
     runs-on: ubuntu-latest
     needs: [test-zizmor]
     permissions: {}

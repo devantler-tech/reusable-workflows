@@ -51,7 +51,7 @@ jobs:
       contents: read
 
   test-delete-workflow-runs-status:
-    name: "[Test] Delete Workflow Runs - Status"
+    name: status-check
     runs-on: ubuntu-latest
     needs:
       [
