@@ -25,9 +25,9 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: 🧪 Run todos-action
-        uses: devantler-tech/actions/todos-action@884a9b7321e269351d5fc006d95e0b50b2ddedf6 # v1.9.7
+      - name: 📝 Create issues from TODOs
+        uses: devantler-tech/actions/create-issues-from-todos@a7a2ace351e0d666607f4b8c4d59c875244bc21b # pending release
         with:
-          APP_ID: ${{ vars.APP_ID }}
-          APP_PRIVATE_KEY: ${{ secrets.app-private-key }}
-          PROJECT: organization/devantler-tech/5
+          app-id: ${{ vars.APP_ID }}
+          app-private-key: ${{ secrets.app-private-key }}
+          project: organization/devantler-tech/5
