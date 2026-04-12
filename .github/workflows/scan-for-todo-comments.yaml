@@ -3,7 +3,7 @@ name: 📝 Scan for TODO Comments
 on:
   workflow_call:
     secrets:
-      app-private-key:
+      APP_PRIVATE_KEY:
         required: true
 
 permissions: {}
@@ -29,5 +29,5 @@ jobs:
         uses: devantler-tech/actions/create-issues-from-todos@a7a2ace351e0d666607f4b8c4d59c875244bc21b # pending release
         with:
           app-id: ${{ vars.APP_ID }}
-          app-private-key: ${{ secrets.app-private-key }}
+          app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
           project: organization/devantler-tech/5
