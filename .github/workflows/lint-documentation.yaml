@@ -51,7 +51,7 @@ jobs:
           APPLY_FIXES_MODE: commit
 
       - name: 💾 Commit and push applied linter fixes
-        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
+        uses: step-security/git-auto-commit-action@905c3cd6e9ed2b67b4d46ff401fdb6d745d0ff9d # v7.1.0
         with:
           commit_message: "chore: Apply megalinter fixes"
           commit_user_name: megalinter-bot
