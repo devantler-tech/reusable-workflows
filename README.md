@@ -328,10 +328,10 @@ jobs:
 
 #### Secrets and Inputs
 
-| Key               | Type           | Default | Required | Description                                                        |
-|-------------------|----------------|---------|----------|--------------------------------------------------------------------|
-| `CODECOV_TOKEN`   | Secret         | -       | No       | Codecov token for uploading coverage reports                       |
+| Key               | Type           | Default | Required | Description                                                         |
+|-------------------|----------------|---------|----------|---------------------------------------------------------------------|
+| `CODECOV_TOKEN`   | Secret         | -       | No       | Codecov token for uploading coverage reports                        |
 | `APP_PRIVATE_KEY` | Secret         | -       | No       | GitHub App private key for authenticating the workflow              |
-| `pr-owner`        | Input (string) | -       | No       | Pull request author login (used to disable auto-commit for bot PRs)|
+| `pr-owner`        | Input (string) | -       | No       | Pull request author login (used to disable auto-commit for bot PRs) |
 
 </details>
