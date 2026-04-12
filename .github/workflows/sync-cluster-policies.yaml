@@ -3,7 +3,7 @@ name: 🔄 Sync Cluster Policies
 on:
   workflow_call:
     secrets:
-      app-private-key:
+      APP_PRIVATE_KEY:
         description: "GitHub App Private Key"
         required: true
     inputs:
@@ -32,7 +32,7 @@ jobs:
         id: generate-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.app-private-key }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:

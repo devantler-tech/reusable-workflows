@@ -11,4 +11,4 @@ jobs:
   release:
     uses: ./.github/workflows/create-release.yaml
     secrets:
-      app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}

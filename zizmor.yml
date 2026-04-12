@@ -9,6 +9,6 @@ rules:
   secrets-outside-env:
     config:
       allow:
-        - app-private-key
-        - nuget-api-key
-        - codecov-token
+        - APP_PRIVATE_KEY
+        - NUGET_API_KEY
+        - CODECOV_TOKEN

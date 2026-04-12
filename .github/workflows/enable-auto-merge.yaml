@@ -3,7 +3,7 @@ name: 🔀 Enable Auto-Merge
 on:
   workflow_call:
     secrets:
-      app-private-key:
+      APP_PRIVATE_KEY:
         required: true
         description: "The private key for the GitHub App"
   ### Required Workflow Triggers ###
@@ -26,14 +26,14 @@ jobs:
         with:
           egress-policy: audit
 
-      - name: ✅ Approve PR
-        uses: devantler-tech/actions/approve-pr@ba492559ea1bd82fdb0755e3e936dfa6db83be8f # pending release
+      - name: 📑 Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: 🔀 Auto-merge
+        uses: devantler-tech/actions/enable-auto-merge-on-pr@a7a2ace351e0d666607f4b8c4d59c875244bc21b # pending release
         with:
           app-id: ${{ vars.APP_ID }}
-          app-private-key: ${{ secrets.app-private-key }}
-          pr-number: ${{ github.event.pull_request.number }}
-
-      - name: 🔀 Enable Auto-Merge
-        uses: devantler-tech/actions/enable-auto-merge-on-pr@ba492559ea1bd82fdb0755e3e936dfa6db83be8f # pending release
-        with:
-          pr-number: ${{ github.event.pull_request.number }}
+          app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}

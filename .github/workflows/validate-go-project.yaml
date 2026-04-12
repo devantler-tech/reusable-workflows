@@ -8,10 +8,10 @@ on:
         type: string
         description: "Pull request author login (used to disable auto-commit for bot PRs)"
     secrets:
-      codecov-token:
+      CODECOV_TOKEN:
         required: false
         description: "Codecov token for uploading coverage reports"
-      app-private-key:
+      APP_PRIVATE_KEY:
         description: "GitHub App Private Key"
         required: false
   ### Required Workflow Triggers ###
@@ -144,7 +144,7 @@ jobs:
         id: generate-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.app-private-key }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: 📄 Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -209,7 +209,7 @@ jobs:
         id: generate-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.app-private-key }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: 📄 Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -325,7 +325,7 @@ jobs:
         id: generate-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.app-private-key }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: 📄 Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -473,4 +473,4 @@ jobs:
       - name: 📄 Upload coverage to Codecov
         uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
         with:
-          token: ${{ secrets.codecov-token }}
+          token: ${{ secrets.CODECOV_TOKEN }}

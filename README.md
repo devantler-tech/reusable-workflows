@@ -42,14 +42,14 @@ jobs:
   release:
     uses: devantler-tech/reusable-workflows/.github/workflows/create-release.yaml@{ref} # ref
     secrets:
-      app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
 #### Secrets and Inputs
 
 | Key               | Type   | Default | Required | Description            |
 |-------------------|--------|---------|----------|------------------------|
-| `app-private-key` | Secret | -       | Yes      | GitHub App private key |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
@@ -133,7 +133,7 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/enable-auto-merge.yaml](.github/workflows/enable-auto-merge.yaml) is a workflow that approves and enables auto-merge on pull requests from trusted bots and maintainers.
+[.github/workflows/enable-auto-merge.yaml](.github/workflows/enable-auto-merge.yaml) is a workflow that enables auto-merge on pull requests from trusted bots and maintainers.
 
 #### Usage
 
@@ -142,14 +142,14 @@ jobs:
   auto-merge:
     uses: devantler-tech/reusable-workflows/.github/workflows/enable-auto-merge.yaml@{ref} # ref
     secrets:
-      app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
 #### Secrets and Inputs
 
 | Key               | Type   | Default | Required | Description            |
 |-------------------|--------|---------|----------|------------------------|
-| `app-private-key` | Secret | -       | Yes      | GitHub App private key |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
@@ -167,14 +167,14 @@ jobs:
   docs-lint:
     uses: devantler-tech/reusable-workflows/.github/workflows/lint-documentation.yaml@{ref} # ref
     secrets:
-      app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
 #### Secrets and Inputs
 
 | Key               | Type   | Default | Required | Description            |
 |-------------------|--------|---------|----------|------------------------|
-| `app-private-key` | Secret | -       | Yes      | GitHub App private key |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
@@ -192,14 +192,14 @@ jobs:
   publish-library:
     uses: devantler-tech/reusable-workflows/.github/workflows/publish-dotnet-library.yaml@{ref} # ref
     secrets:
-      nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 ```
 
 #### Secrets and Inputs
 
 | Key             | Type   | Default | Required | Description   |
 |-----------------|--------|---------|----------|---------------|
-| `nuget-api-key` | Secret | -       | Yes      | NuGet API key |
+| `NUGET_API_KEY` | Secret | -       | Yes      | NuGet API key |
 
 </details>
 
@@ -217,16 +217,16 @@ jobs:
   dotnet-test:
     uses: devantler-tech/reusable-workflows/.github/workflows/run-dotnet-tests.yaml@{ref} # ref
     secrets:
-      codecov-token: ${{ secrets.CODECOV_TOKEN }}
-      app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
 #### Secrets and Inputs
 
 | Key               | Type   | Default | Required | Description            |
 |-------------------|--------|---------|----------|------------------------|
-| `codecov-token`   | Secret | -       | Yes      | Codecov token          |
-| `app-private-key` | Secret | -       | Yes      | GitHub App private key |
+| `CODECOV_TOKEN`   | Secret | -       | Yes      | Codecov token          |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
@@ -244,14 +244,14 @@ jobs:
   todos:
     uses: devantler-tech/reusable-workflows/.github/workflows/scan-for-todo-comments.yaml@{ref} # ref
     secrets:
-      app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
 #### Secrets and Inputs
 
 | Key               | Type   | Default | Required | Description            |
 |-------------------|--------|---------|----------|------------------------|
-| `app-private-key` | Secret | -       | Yes      | GitHub App private key |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
@@ -286,7 +286,7 @@ jobs:
   sync-cluster-policies:
     uses: devantler-tech/reusable-workflows/.github/workflows/sync-cluster-policies.yaml@{ref} # ref
     secrets:
-      app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
     with:
       kyverno-policies-dir: policies/kyverno
 ```
@@ -295,7 +295,7 @@ jobs:
 
 | Key                    | Type           | Default | Required | Description                           |
 |------------------------|----------------|---------|----------|---------------------------------------|
-| `app-private-key`      | Secret         | -       | Yes      | GitHub App private key                |
+| `APP_PRIVATE_KEY`      | Secret         | -       | Yes      | GitHub App private key                |
 | `kyverno-policies-dir` | Input (string) | -       | Yes      | Directory to sync Kyverno policies to |
 
 </details>
@@ -320,8 +320,8 @@ jobs:
   go-test:
     uses: devantler-tech/reusable-workflows/.github/workflows/validate-go-project.yaml@{ref} # ref
     secrets:
-      codecov-token: ${{ secrets.CODECOV_TOKEN }}
-      app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
     with:
       pr-owner: ${{ github.event.pull_request.user.login }} # optional
 ```
@@ -330,8 +330,8 @@ jobs:
 
 | Key               | Type           | Default | Required | Description                                                         |
 |-------------------|----------------|---------|----------|---------------------------------------------------------------------|
-| `codecov-token`   | Secret         | -       | No       | Codecov token for uploading coverage reports                        |
-| `app-private-key` | Secret         | -       | No       | GitHub App private key for authenticating the workflow              |
+| `CODECOV_TOKEN`   | Secret         | -       | No       | Codecov token for uploading coverage reports                        |
+| `APP_PRIVATE_KEY` | Secret         | -       | No       | GitHub App private key for authenticating the workflow              |
 | `pr-owner`        | Input (string) | -       | No       | Pull request author login (used to disable auto-commit for bot PRs) |
 
 </details>
