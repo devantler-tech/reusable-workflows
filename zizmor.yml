@@ -6,3 +6,9 @@ rules:
         github/*: ref-pin
         devantler-tech/*: ref-pin
         "*": hash-pin
+  secrets-outside-env:
+    config:
+      allow:
+        - APP_PRIVATE_KEY
+        - NUGET_API_KEY
+        - CODECOV_TOKEN
