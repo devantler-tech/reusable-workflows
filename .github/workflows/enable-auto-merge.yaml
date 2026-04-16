@@ -1,4 +1,5 @@
-name: 
+name: 🔀 Enable Auto-Merge
+
 on:
   workflow_call:
     secrets:
@@ -19,19 +20,21 @@ jobs:
       contents: write
       workflows: write
     runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft && (github.event.pull_request.user.login == 'dependabot[bot]' || github.event.pull_request.user.login == 'renovate[bot]' || github.event.pull_request.user.login == 'botantler[bot]' || github.event.pull_request.user.login == 'devantler' || github.event.pull_request.user.login == 'Copilot') }}
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
         with:
           egress-policy: audit
 
-      - name Approve PR: 
+      - name: ✅ Approve PR
         uses: devantler-tech/actions/approve-pr@961f62f4a771b31e48acaae4a619cef6c7fe2195 # v2.1.1
         with:
           app-id: ${{ vars.APP_ID }}
           app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
           pr-number: ${{ github.event.pull_request.number }}
 
-        uses: devantler-tech/actions/enable-auto-merge-on-pr@961f62f4a771b31e48acaae4a619cef6c7fe2195 # v2.1.1      - name: 
+      - name: 🔀 Enable Auto-Merge
+        uses: devantler-tech/actions/enable-auto-merge-on-pr@961f62f4a771b31e48acaae4a619cef6c7fe2195 # v2.1.1
         with:
           pr-number: ${{ github.event.pull_request.number }}
