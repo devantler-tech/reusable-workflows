@@ -300,6 +300,58 @@ jobs:
 
 </details>
 
+### 🔄 Update Copilot Skills
+
+<details>
+<summary>Click to expand</summary>
+
+[.github/workflows/update-copilot-skills.yaml](.github/workflows/update-copilot-skills.yaml) is a workflow used to install and update Copilot / agent skills from a `skills-lock.json` manifest via [`gh skill`](https://github.com/cli/cli), opening a PR with any changes. It works with any `gh skill`-compatible skills repo (e.g. [`devantler-tech/skills`](https://github.com/devantler-tech/skills)).
+
+#### Usage
+
+```yaml
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-copilot-skills:
+    uses: devantler-tech/reusable-workflows/.github/workflows/update-copilot-skills.yaml@{ref} # ref
+    permissions:
+      contents: write
+      pull-requests: write
+```
+
+A `skills-lock.json` at the repository root is expected by default:
+
+```json
+{
+  "version": 1,
+  "skills": {
+    "git-commit": { "source": "devantler-tech/skills", "sourceType": "github" }
+  }
+}
+```
+
+#### Secrets and Inputs
+
+| Key                 | Type           | Default                                | Required | Description                                                  |
+|---------------------|----------------|----------------------------------------|----------|--------------------------------------------------------------|
+| `skills-lock`       | Input (string) | `skills-lock.json`                     | No       | Path to the skills-lock.json manifest                        |
+| `agent`             | Input (string) | `github-copilot`                       | No       | Value passed to `gh skill install --agent`                   |
+| `scope`             | Input (string) | `user`                                 | No       | Value passed to `gh skill install --scope` (`user` or `repo`) |
+| `gh-version`        | Input (string) | `2.90.0`                               | No       | Minimum required `gh` version (must support `gh skill`)      |
+| `pr-branch`         | Input (string) | `deps/copilot-skills-update`           | No       | Branch the update PR is opened from                          |
+| `pr-title`          | Input (string) | `chore(deps): update copilot skills`   | No       | Title of the update PR                                       |
+| `pr-labels`         | Input (string) | `dependencies,automation`              | No       | Comma-separated labels for the update PR                     |
+| `commit-message`    | Input (string) | `chore(deps): update copilot skills`   | No       | Commit message for the update PR                             |
+| `setup-action-ref`  | Input (string) | `main`                                 | No       | Ref of `devantler-tech/actions/setup-copilot-skills` to use  |
+
+> **Note:** The calling workflow must grant `contents: write` and `pull-requests: write` permissions.
+
+</details>
+
 ### ✅ Validate Go Project
 
 <details>
