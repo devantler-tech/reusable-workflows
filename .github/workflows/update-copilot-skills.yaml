@@ -65,7 +65,7 @@ jobs:
           persist-credentials: true
 
       - name: 📦 Install skills
-        uses: devantler-tech/actions/setup-copilot-skills@main # pin by SHA after initial release
+        uses: devantler-tech/actions/setup-copilot-skills@538d7103ed24531647941b3a460393b5ac7ed756 # v2.2.0
         with:
           skills-lock: ${{ inputs.skills-lock }}
           agent: ${{ inputs.agent }}
