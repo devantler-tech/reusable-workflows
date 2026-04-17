@@ -336,16 +336,16 @@ A `skills-lock.json` at the repository root is expected by default:
 
 #### Secrets and Inputs
 
-| Key                 | Type           | Default                                | Required | Description                                                  |
-|---------------------|----------------|----------------------------------------|----------|--------------------------------------------------------------|
-| `skills-lock`       | Input (string) | `skills-lock.json`                     | No       | Path to the skills-lock.json manifest                        |
-| `agent`             | Input (string) | `github-copilot`                       | No       | Value passed to `gh skill install --agent`                   |
-| `scope`             | Input (string) | `user`                                 | No       | Value passed to `gh skill install --scope` (`user` or `repo`) |
-| `gh-version`        | Input (string) | `2.90.0`                               | No       | Minimum required `gh` version (must support `gh skill`)      |
-| `pr-branch`         | Input (string) | `deps/copilot-skills-update`           | No       | Branch the update PR is opened from                          |
-| `pr-title`          | Input (string) | `chore(deps): update copilot skills`   | No       | Title of the update PR                                       |
-| `pr-labels`         | Input (string) | `dependencies,automation`              | No       | Comma-separated labels for the update PR                     |
-| `commit-message`    | Input (string) | `chore(deps): update copilot skills`   | No       | Commit message for the update PR                             |
+| Key              | Type           | Default                              | Required | Description                                                   |
+|------------------|----------------|--------------------------------------|----------|---------------------------------------------------------------|
+| `skills-lock`    | Input (string) | `skills-lock.json`                   | No       | Path to the skills-lock.json manifest                         |
+| `agent`          | Input (string) | `github-copilot`                     | No       | Value passed to `gh skill install --agent`                    |
+| `scope`          | Input (string) | `user`                               | No       | Value passed to `gh skill install --scope` (`user` or `repo`) |
+| `gh-version`     | Input (string) | `2.90.0`                             | No       | Minimum required `gh` version (must support `gh skill`)       |
+| `pr-branch`      | Input (string) | `deps/copilot-skills-update`         | No       | Branch the update PR is opened from                           |
+| `pr-title`       | Input (string) | `chore(deps): update copilot skills` | No       | Title of the update PR                                        |
+| `pr-labels`      | Input (string) | `dependencies,automation`            | No       | Comma-separated labels for the update PR                      |
+| `commit-message` | Input (string) | `chore(deps): update copilot skills` | No       | Commit message for the update PR                              |
 
 > **Note:** The calling workflow must grant `contents: write` and `pull-requests: write` permissions.
 
