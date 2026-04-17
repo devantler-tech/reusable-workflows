@@ -346,7 +346,6 @@ A `skills-lock.json` at the repository root is expected by default:
 | `pr-title`          | Input (string) | `chore(deps): update copilot skills`   | No       | Title of the update PR                                       |
 | `pr-labels`         | Input (string) | `dependencies,automation`              | No       | Comma-separated labels for the update PR                     |
 | `commit-message`    | Input (string) | `chore(deps): update copilot skills`   | No       | Commit message for the update PR                             |
-| `setup-action-ref`  | Input (string) | `main`                                 | No       | Ref of `devantler-tech/actions/setup-copilot-skills` to use  |
 
 > **Note:** The calling workflow must grant `contents: write` and `pull-requests: write` permissions.
 

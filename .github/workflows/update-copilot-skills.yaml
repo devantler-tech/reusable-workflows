@@ -43,11 +43,6 @@ on:
         required: false
         type: string
         default: "chore(deps): update copilot skills"
-      setup-action-ref:
-        description: Ref of `devantler-tech/actions/setup-copilot-skills` to use
-        required: false
-        type: string
-        default: main
 
 permissions: {}
 
@@ -70,7 +65,7 @@ jobs:
           persist-credentials: true
 
       - name: 📦 Install skills
-        uses: devantler-tech/actions/setup-copilot-skills@${{ inputs.setup-action-ref }}
+        uses: devantler-tech/actions/setup-copilot-skills@main # pin by SHA after initial release
         with:
           skills-lock: ${{ inputs.skills-lock }}
           agent: ${{ inputs.agent }}
