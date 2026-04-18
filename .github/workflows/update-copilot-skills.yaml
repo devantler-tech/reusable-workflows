@@ -17,7 +17,7 @@ on:
         description: Value passed to `gh skill install --scope` (`project` or `user`)
         required: false
         type: string
-        default: user
+        default: repo
       gh-version:
         description: Minimum required `gh` version (must support `gh skill`)
         required: false
