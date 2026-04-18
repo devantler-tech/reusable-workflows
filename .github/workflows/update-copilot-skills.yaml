@@ -14,7 +14,7 @@ on:
         type: string
         default: github-copilot
       scope:
-        description: Value passed to `gh skill install --scope` (`user` or `repo`)
+        description: Value passed to `gh skill install --scope` (`project` or `user`)
         required: false
         type: string
         default: user
@@ -64,8 +64,14 @@ jobs:
         with:
           persist-credentials: true
 
+      - name: 🔄 Resolve and pin latest skill refs
+        uses: devantler-tech/actions/update-copilot-skills@bf04cc00fffcc37b573cdf045556f3f26fe9fe8c # main @ 2026-04-18
+        with:
+          skills-lock: ${{ inputs.skills-lock }}
+          gh-version: ${{ inputs.gh-version }}
+
       - name: 📦 Install skills
-        uses: devantler-tech/actions/setup-copilot-skills@538d7103ed24531647941b3a460393b5ac7ed756 # v2.2.0
+        uses: devantler-tech/actions/setup-copilot-skills@bf04cc00fffcc37b573cdf045556f3f26fe9fe8c # main @ 2026-04-18
         with:
           skills-lock: ${{ inputs.skills-lock }}
           agent: ${{ inputs.agent }}
