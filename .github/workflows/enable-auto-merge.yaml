@@ -39,8 +39,11 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           REPOSITORY: ${{ github.repository }}
         run: |
-          gh pr review "$PR_NUMBER" --approve --repo "$REPOSITORY"
-          echo "✅ PR #${PR_NUMBER} approved"
+          if ! gh pr review "$PR_NUMBER" --approve --repo "$REPOSITORY" 2>&1; then
+            echo "::warning::Could not approve PR #${PR_NUMBER} (self-authored PRs cannot be self-approved). Skipping approval."
+          else
+            echo "✅ PR #${PR_NUMBER} approved"
+          fi
 
       - name: 🔀 Enable Auto-Merge
         env:
