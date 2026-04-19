@@ -3,21 +3,16 @@ name: 🔄 Update Copilot Skills
 on:
   workflow_call:
     inputs:
-      skills-lock:
-        description: Path to the skills-lock.json manifest
+      dir:
+        description: Directory to scan for installed skills (passed to `gh skill update --dir`)
         required: false
         type: string
-        default: skills-lock.json
-      agent:
-        description: Value passed to `gh skill install --agent`
+        default: "."
+      unpin:
+        description: When `true`, pass `--unpin` to `gh skill update` (clear pins and include pinned skills)
         required: false
-        type: string
-        default: github-copilot
-      scope:
-        description: Value passed to `gh skill install --scope` (`project` or `user`)
-        required: false
-        type: string
-        default: repo
+        type: boolean
+        default: false
       gh-version:
         description: Minimum required `gh` version (must support `gh skill`)
         required: false
@@ -64,21 +59,16 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: 🔄 Resolve and pin latest skill refs
-        uses: devantler-tech/actions/update-copilot-skills@bf04cc00fffcc37b573cdf045556f3f26fe9fe8c # main @ 2026-04-18
+      - name: 🔄 Update installed skills
+        id: update
+        uses: devantler-tech/actions/update-copilot-skills@d7625bdcc0333002ae3916284239511cf30b4837 # main @ 2026-04-19
         with:
-          skills-lock: ${{ inputs.skills-lock }}
-          gh-version: ${{ inputs.gh-version }}
-
-      - name: 📦 Install skills
-        uses: devantler-tech/actions/setup-copilot-skills@bf04cc00fffcc37b573cdf045556f3f26fe9fe8c # main @ 2026-04-18
-        with:
-          skills-lock: ${{ inputs.skills-lock }}
-          agent: ${{ inputs.agent }}
-          scope: ${{ inputs.scope }}
+          dir: ${{ inputs.dir }}
+          unpin: ${{ inputs.unpin }}
           gh-version: ${{ inputs.gh-version }}
 
       - name: 📦 Create pull request
+        if: steps.update.outputs.changed == 'true'
         uses: step-security/create-pull-request@e604d57b37b404d8bb34d152fa905e45d003a895 # v8.1.0
         with:
           commit-message: ${{ inputs.commit-message }}
@@ -86,9 +76,11 @@ jobs:
           body: |
             Automated update of Copilot skills to their latest versions.
 
-            Updated files:
-            - `${{ inputs.skills-lock }}`
-            - `.agents/skills/`
+            Updated files under `${{ inputs.dir }}`:
+
+            ```
+            ${{ steps.update.outputs.updated-skills }}
+            ```
           branch: ${{ inputs.pr-branch }}
           labels: ${{ inputs.pr-labels }}
           delete-branch: true
