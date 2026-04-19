@@ -305,7 +305,7 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/update-copilot-skills.yaml](.github/workflows/update-copilot-skills.yaml) is a workflow used to install and update Copilot / agent skills from a `skills-lock.json` manifest via [`gh skill`](https://github.com/cli/cli), opening a PR with any changes. It works with any `gh skill`-compatible skills repo (e.g. [`devantler-tech/skills`](https://github.com/devantler-tech/skills)).
+[.github/workflows/update-copilot-skills.yaml](.github/workflows/update-copilot-skills.yaml) is a workflow used to keep installed Copilot / agent skills up-to-date via [`gh skill update --all`](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/), opening a PR with any changes. Each installed `SKILL.md`'s `metadata.github-*` frontmatter is the source of truth — no lockfile is required. Works with any mix of `gh skill`-compatible upstreams.
 
 #### Usage
 
@@ -321,31 +321,23 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    with:
+      dir: .agents/skills
 ```
 
-A `skills-lock.json` at the repository root is expected by default:
-
-```json
-{
-  "version": 1,
-  "skills": {
-    "git-commit": { "source": "devantler-tech/skills", "sourceType": "github" }
-  }
-}
-```
+The workflow assumes skills were previously installed with [`devantler-tech/actions/setup-copilot-skills`](https://github.com/devantler-tech/actions/tree/main/setup-copilot-skills) (or `gh skill install` directly) — the committed `SKILL.md` files carry the upstream pointers.
 
 #### Secrets and Inputs
 
-| Key              | Type           | Default                              | Required | Description                                                   |
-|------------------|----------------|--------------------------------------|----------|---------------------------------------------------------------|
-| `skills-lock`    | Input (string) | `skills-lock.json`                   | No       | Path to the skills-lock.json manifest                         |
-| `agent`          | Input (string) | `github-copilot`                     | No       | Value passed to `gh skill install --agent`                    |
-| `scope`          | Input (string) | `user`                               | No       | Value passed to `gh skill install --scope` (`user` or `repo`) |
-| `gh-version`     | Input (string) | `2.90.0`                             | No       | Minimum required `gh` version (must support `gh skill`)       |
-| `pr-branch`      | Input (string) | `deps/copilot-skills-update`         | No       | Branch the update PR is opened from                           |
-| `pr-title`       | Input (string) | `chore(deps): update copilot skills` | No       | Title of the update PR                                        |
-| `pr-labels`      | Input (string) | `dependencies,automation`            | No       | Comma-separated labels for the update PR                      |
-| `commit-message` | Input (string) | `chore(deps): update copilot skills` | No       | Commit message for the update PR                              |
+| Key              | Type            | Default                              | Required | Description                                                            |
+|------------------|-----------------|--------------------------------------|----------|------------------------------------------------------------------------|
+| `dir`            | Input (string)  | `.`                                  | No       | Directory to scan for installed skills (passed to `gh skill update --dir`) |
+| `unpin`          | Input (boolean) | `false`                              | No       | When `true`, pass `--unpin` (clear pinned versions)                    |
+| `gh-version`     | Input (string)  | `2.90.0`                             | No       | Minimum required `gh` version (must support `gh skill`)                |
+| `pr-branch`      | Input (string)  | `deps/copilot-skills-update`         | No       | Branch the update PR is opened from                                    |
+| `pr-title`       | Input (string)  | `chore(deps): update copilot skills` | No       | Title of the update PR                                                 |
+| `pr-labels`      | Input (string)  | `dependencies,automation`            | No       | Comma-separated labels for the update PR                               |
+| `commit-message` | Input (string)  | `chore(deps): update copilot skills` | No       | Commit message for the update PR                                       |
 
 > **Note:** The calling workflow must grant `contents: write` and `pull-requests: write` permissions.
 
