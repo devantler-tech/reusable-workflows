@@ -62,7 +62,9 @@ jobs:
     name: "[Test] Validate Go Project"
     uses: ./.github/workflows/validate-go-project.yaml
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
+      issues: write
 
   test-run-dotnet-tests:
     name: "[Test] Run .NET Tests"
