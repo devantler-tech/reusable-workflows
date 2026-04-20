@@ -2,14 +2,21 @@ name: 📦 Publish .NET Library
 
 on:
   workflow_call:
+    inputs:
+      dry-run:
+        description: "Skip publish (validate workflow interface only)"
+        required: false
+        default: false
+        type: boolean
     secrets:
       NUGET_API_KEY:
-        required: true
+        required: false
 
 permissions: {}
 
 jobs:
   publish:
+    if: ${{ !inputs.dry-run }}
     permissions:
       contents: read
       packages: write

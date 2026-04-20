@@ -7,6 +7,11 @@ on:
         description: "GitHub App Private Key"
         required: true
     inputs:
+      dry-run:
+        description: "Skip sync and PR creation (validate workflow interface only)"
+        required: false
+        default: false
+        type: boolean
       kyverno-policies-dir:
         description: "Directory to sync Kyverno policies to"
         required: true
@@ -16,6 +21,7 @@ permissions: {}
 
 jobs:
   sync-policies:
+    if: ${{ !inputs.dry-run }}
     runs-on: ubuntu-latest
     env:
       KYVERNO_POLICIES_DIR: ${{ inputs.kyverno-policies-dir }}

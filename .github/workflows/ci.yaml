@@ -1,0 +1,166 @@
+name: "🧪 CI"
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: "ci-${{ github.event.number || github.sha }}"
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  test-zizmor:
+    name: "[Test] Zizmor - Default Settings"
+    uses: ./.github/workflows/scan-for-workflow-vulnerabilities.yaml
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+
+  test-delete-workflow-runs-all:
+    name: "[Test] Delete Workflow Runs - All Workflows"
+    uses: ./.github/workflows/delete-workflow-runs.yaml
+    with:
+      days: 30
+      minimum-runs: 6
+      delete-workflow-by-state-pattern: "ALL"
+      delete-run-by-conclusion-pattern: "ALL"
+      dry-run: true
+    permissions:
+      actions: write
+      contents: read
+
+  test-delete-workflow-runs-specific:
+    name: "[Test] Delete Workflow Runs - Specific Pattern"
+    uses: ./.github/workflows/delete-workflow-runs.yaml
+    with:
+      days: 7
+      minimum-runs: 3
+      delete-workflow-pattern: "test-delete-workflow-runs.yaml"
+      delete-run-by-conclusion-pattern: "cancelled,failure"
+      dry-run: true
+    permissions:
+      actions: write
+      contents: read
+
+  test-delete-workflow-runs-minimal:
+    name: "[Test] Delete Workflow Runs - Minimal Parameters"
+    uses: ./.github/workflows/delete-workflow-runs.yaml
+    with:
+      dry-run: true
+    permissions:
+      actions: write
+      contents: read
+
+  test-validate-go-project:
+    name: "[Test] Validate Go Project"
+    uses: ./.github/workflows/validate-go-project.yaml
+    permissions:
+      contents: read
+
+  test-run-dotnet-tests:
+    name: "[Test] Run .NET Tests"
+    uses: ./.github/workflows/run-dotnet-tests.yaml
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+
+  test-enable-auto-merge:
+    name: "[Test] Enable Auto-Merge"
+    uses: ./.github/workflows/enable-auto-merge.yaml
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+
+  test-create-release:
+    name: "[Test] Create Release - Dry Run"
+    uses: ./.github/workflows/create-release.yaml
+    with:
+      dry-run: true
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+
+  test-deploy-github-pages:
+    name: "[Test] Deploy GitHub Pages - Dry Run"
+    uses: ./.github/workflows/deploy-github-pages.yaml
+    with:
+      dry-run: true
+
+  test-publish-dotnet-library:
+    name: "[Test] Publish .NET Library - Dry Run"
+    uses: ./.github/workflows/publish-dotnet-library.yaml
+    with:
+      dry-run: true
+
+  test-scan-for-todo-comments:
+    name: "[Test] Scan for TODO Comments - Dry Run"
+    uses: ./.github/workflows/scan-for-todo-comments.yaml
+    with:
+      dry-run: true
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+
+  test-sync-cluster-policies:
+    name: "[Test] Sync Cluster Policies - Dry Run"
+    uses: ./.github/workflows/sync-cluster-policies.yaml
+    with:
+      kyverno-policies-dir: /tmp/test-policies
+      dry-run: true
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+
+  test-update-copilot-skills:
+    name: "[Test] Update Copilot Skills - Dry Run"
+    uses: ./.github/workflows/update-copilot-skills.yaml
+    with:
+      dry-run: true
+
+  ci-required-checks:
+    name: "CI - Required Checks"
+    runs-on: ubuntu-latest
+    needs:
+      [
+        test-zizmor,
+        test-delete-workflow-runs-all,
+        test-delete-workflow-runs-specific,
+        test-delete-workflow-runs-minimal,
+        test-validate-go-project,
+        test-run-dotnet-tests,
+        test-enable-auto-merge,
+        test-create-release,
+        test-deploy-github-pages,
+        test-publish-dotnet-library,
+        test-scan-for-todo-comments,
+        test-sync-cluster-policies,
+        test-update-copilot-skills,
+      ]
+    permissions: {}
+    if: ${{ always() }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+
+      - name: 📊 Require all CI checks to pass
+        uses: devantler-tech/actions/require-checks-in-pr@1f66c91d45d374ceac9fe830a783444ebc9be958 # v3.2.0
+        with:
+          job-results: >-
+            ${{ needs.test-zizmor.result }}
+            ${{ needs.test-delete-workflow-runs-all.result }}
+            ${{ needs.test-delete-workflow-runs-specific.result }}
+            ${{ needs.test-delete-workflow-runs-minimal.result }}
+            ${{ needs.test-validate-go-project.result }}
+            ${{ needs.test-run-dotnet-tests.result }}
+            ${{ needs.test-enable-auto-merge.result }}
+            ${{ needs.test-create-release.result }}
+            ${{ needs.test-deploy-github-pages.result }}
+            ${{ needs.test-publish-dotnet-library.result }}
+            ${{ needs.test-scan-for-todo-comments.result }}
+            ${{ needs.test-sync-cluster-policies.result }}
+            ${{ needs.test-update-copilot-skills.result }}
