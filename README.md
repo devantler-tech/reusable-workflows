@@ -47,9 +47,10 @@ jobs:
 
 #### Secrets and Inputs
 
-| Key               | Type   | Default | Required | Description            |
-|-------------------|--------|---------|----------|------------------------|
-| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
+| Key               | Type            | Default | Required | Description                                                  |
+|-------------------|-----------------|---------|----------|--------------------------------------------------------------|
+| `APP_PRIVATE_KEY` | Secret          | -       | Yes      | GitHub App private key                                       |
+| `dry-run`         | Input (boolean) | `false` | No       | Run semantic-release in dry-run mode (no tags or publishes)  |
 
 </details>
 
@@ -113,12 +114,13 @@ jobs:
 
 #### Secrets and Inputs
 
-| Key                 | Type           | Default      | Required | Description                                                     |
-|---------------------|----------------|--------------|----------|-----------------------------------------------------------------|
-| `ruby-version`      | Input (string) | `3.3`        | No       | Ruby version to install                                         |
-| `jekyll-env`        | Input (string) | `production` | No       | Jekyll environment                                              |
-| `extra-build-args`  | Input (string) | `""`         | No       | Extra args appended before the automatically supplied --baseurl |
-| `working-directory` | Input (string) | `"."`        | No       | Working directory for the Jekyll site (e.g., 'docs')            |
+| Key                 | Type            | Default      | Required | Description                                                     |
+|---------------------|-----------------|--------------|----------|-----------------------------------------------------------------|
+| `dry-run`           | Input (boolean) | `false`      | No       | Skip build and deploy (validate workflow interface only)        |
+| `ruby-version`      | Input (string)  | `3.3`        | No       | Ruby version to install                                         |
+| `jekyll-env`        | Input (string)  | `production` | No       | Jekyll environment                                              |
+| `extra-build-args`  | Input (string)  | `""`         | No       | Extra args appended before the automatically supplied --baseurl |
+| `working-directory` | Input (string)  | `"."`        | No       | Working directory for the Jekyll site (e.g., 'docs')            |
 
 #### Outputs
 
@@ -197,9 +199,10 @@ jobs:
 
 #### Secrets and Inputs
 
-| Key             | Type   | Default | Required | Description   |
-|-----------------|--------|---------|----------|---------------|
-| `NUGET_API_KEY` | Secret | -       | Yes      | NuGet API key |
+| Key             | Type            | Default | Required | Description                                          |
+|-----------------|-----------------|---------|----------|------------------------------------------------------|
+| `NUGET_API_KEY` | Secret          | -       | No       | NuGet API key (required when `dry-run` is `false`)   |
+| `dry-run`       | Input (boolean) | `false` | No       | Skip publish (validate workflow interface only)      |
 
 </details>
 
@@ -249,9 +252,10 @@ jobs:
 
 #### Secrets and Inputs
 
-| Key               | Type   | Default | Required | Description            |
-|-------------------|--------|---------|----------|------------------------|
-| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
+| Key               | Type            | Default | Required | Description                                                |
+|-------------------|-----------------|---------|----------|------------------------------------------------------------|
+| `APP_PRIVATE_KEY` | Secret          | -       | Yes      | GitHub App private key                                     |
+| `dry-run`         | Input (boolean) | `false` | No       | Skip issue creation (validate workflow interface only)     |
 
 </details>
 
@@ -293,10 +297,11 @@ jobs:
 
 #### Secrets and Inputs
 
-| Key                    | Type           | Default | Required | Description                           |
-|------------------------|----------------|---------|----------|---------------------------------------|
-| `APP_PRIVATE_KEY`      | Secret         | -       | Yes      | GitHub App private key                |
-| `kyverno-policies-dir` | Input (string) | -       | Yes      | Directory to sync Kyverno policies to |
+| Key                    | Type            | Default | Required | Description                                              |
+|------------------------|-----------------|---------|----------|----------------------------------------------------------|
+| `APP_PRIVATE_KEY`      | Secret          | -       | Yes      | GitHub App private key                                   |
+| `kyverno-policies-dir` | Input (string)  | -       | Yes      | Directory to sync Kyverno policies to                    |
+| `dry-run`              | Input (boolean) | `false` | No       | Skip sync and PR creation (validate workflow interface only) |
 
 </details>
 
@@ -338,6 +343,7 @@ The workflow assumes skills were previously installed with [`devantler-tech/acti
 | `pr-title`       | Input (string)  | `chore(deps): update copilot skills` | No       | Title of the update PR                                                 |
 | `pr-labels`      | Input (string)  | `dependencies,automation`            | No       | Comma-separated labels for the update PR                               |
 | `commit-message` | Input (string)  | `chore(deps): update copilot skills` | No       | Commit message for the update PR                                       |
+| `dry-run`        | Input (boolean) | `false`                              | No       | Skip update and PR creation (validate workflow interface only)         |
 
 > **Note:** The calling workflow must grant `contents: write` and `pull-requests: write` permissions.
 

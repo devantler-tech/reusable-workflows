@@ -1,6 +1,12 @@
 name: 🎉 Create Release
 on:
   workflow_call:
+    inputs:
+      dry-run:
+        description: "Run semantic-release in dry-run mode (no tags, releases, or publishes)"
+        required: false
+        default: false
+        type: boolean
     secrets:
       APP_PRIVATE_KEY:
         required: true
@@ -32,6 +38,6 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
       - name: 🎉 Release
-        run: npx semantic-release
+        run: npx semantic-release ${{ inputs.dry-run && '--dry-run' || '' }}
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}

@@ -2,6 +2,12 @@ name: 📝 Scan for TODO Comments
 
 on:
   workflow_call:
+    inputs:
+      dry-run:
+        description: "Skip issue creation (validate workflow interface only)"
+        required: false
+        default: false
+        type: boolean
     secrets:
       APP_PRIVATE_KEY:
         required: true
@@ -10,6 +16,7 @@ permissions: {}
 
 jobs:
   todos:
+    if: ${{ !inputs.dry-run }}
     permissions:
       contents: read
       issues: write

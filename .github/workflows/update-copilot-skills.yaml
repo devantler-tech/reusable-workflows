@@ -38,12 +38,18 @@ on:
         required: false
         type: string
         default: "chore(deps): update copilot skills"
+      dry-run:
+        description: "Skip update and PR creation (validate workflow interface only)"
+        required: false
+        default: false
+        type: boolean
 
 permissions: {}
 
 jobs:
   update-copilot-skills:
     name: Update Copilot skills
+    if: ${{ !inputs.dry-run }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
