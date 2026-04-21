@@ -8,6 +8,7 @@ on:
         description: "The private key for the GitHub App"
   ### Required Workflow Triggers ###
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   merge_group:
   ##################################
 
