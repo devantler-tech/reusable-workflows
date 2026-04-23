@@ -165,7 +165,7 @@ jobs:
           steps.generate-token.outcome == 'success'
           && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), github.event.pull_request.user.login)
           && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), inputs.pr-owner)
-        uses: step-security/git-auto-commit-action@905c3cd6e9ed2b67b4d46ff401fdb6d745d0ff9d # v7.1.0
+        uses: step-security/git-auto-commit-action@749bc1cc775376092cc4227ba537137f445ca7c3 # v7.1.1
         with:
           commit_message: "chore: tidy go modules"
           commit_user_name: tidy-bot
@@ -235,7 +235,7 @@ jobs:
           && github.event_name != 'merge_group'
           && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), github.event.pull_request.user.login)
           && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), inputs.pr-owner)
-        uses: step-security/git-auto-commit-action@905c3cd6e9ed2b67b4d46ff401fdb6d745d0ff9d # v7.1.0
+        uses: step-security/git-auto-commit-action@749bc1cc775376092cc4227ba537137f445ca7c3 # v7.1.1
         with:
           commit_message: "chore: apply golangci-lint fixes"
           commit_user_name: golangci-lint-bot
@@ -354,7 +354,7 @@ jobs:
           && github.event_name != 'merge_group'
           && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), github.event.pull_request.user.login)
           && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), inputs.pr-owner)
-        uses: step-security/git-auto-commit-action@905c3cd6e9ed2b67b4d46ff401fdb6d745d0ff9d # v7.1.0
+        uses: step-security/git-auto-commit-action@749bc1cc775376092cc4227ba537137f445ca7c3 # v7.1.1
         with:
           commit_message: "chore: Apply megalinter fixes"
           commit_user_name: megalinter-bot
