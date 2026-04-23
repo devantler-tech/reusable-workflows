@@ -20,7 +20,7 @@ jobs:
       pull-requests: write
       contents: write
     runs-on: ubuntu-latest
-    if: ${{ !github.event.pull_request.draft && contains(fromJSON('["dependabot[bot]","renovate[bot]","botantler[bot]","ksail-bot[bot]","copilot-swe-agent[bot]","devantler"]'), github.event.pull_request.user.login) }}
+    if: ${{ !github.event.pull_request.draft }}
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@6c3c2f2c1c457b00c10c4848d6f5491db3b629df # v2.18.0
