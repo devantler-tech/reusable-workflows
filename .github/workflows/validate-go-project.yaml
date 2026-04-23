@@ -233,8 +233,8 @@ jobs:
         if: |
           steps.generate-token.outcome == 'success'
           && github.event_name != 'merge_group'
-          && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate","copilot-swe-agent[bot]"]'), github.event.pull_request.user.login)
-          && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate","copilot-swe-agent[bot]"]'), inputs.pr-owner)
+          && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), github.event.pull_request.user.login)
+          && !contains(fromJSON('["dependabot[bot]","dependabot","renovate[bot]","renovatebot","renovate"]'), inputs.pr-owner)
         uses: step-security/git-auto-commit-action@749bc1cc775376092cc4227ba537137f445ca7c3 # v7.1.1
         with:
           commit_message: "chore: apply golangci-lint fixes"
