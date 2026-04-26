@@ -62,7 +62,7 @@ jobs:
 
       - name: 🔄 Update installed skills
         id: update
-        uses: devantler-tech/actions/update-copilot-skills@a5339799d371b6952e7d3abdc9ea1ca096a28dfe # v3.1.1
+        uses: devantler-tech/actions/update-copilot-skills@79063198d351a69bbd89369465004417ab01f173 # v3.0.0
         with:
           dir: ${{ inputs.dir }}
           unpin: ${{ inputs.unpin }}
