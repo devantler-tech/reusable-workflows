@@ -27,6 +27,8 @@ This file is the single canonical instructions file for the repository. It is re
     └── validate-go-project.yaml           # Reusable: Go lint, build, test, coverage
 ```
 
+> Dot-prefixed internal workflows (e.g. `.create-release.yaml`, `.sync-labels.yaml`) are this repo's own caller/maintenance workflows, not reusable `workflow_call` workflows, so they are intentionally omitted from the inventory above.
+
 See [README.md](README.md) for the full catalogue of reusable workflows with usage, inputs, secrets, and outputs.
 
 ## Key Configuration Files
@@ -117,7 +119,7 @@ These conventions guide the autonomous **Daily AI Assistant** — and any agenti
 **Validate before any PR:** `actionlint` on every changed workflow/action (else a thorough YAML parse); confirm `uses:` refs resolve and are pinned/aligned; check `inputs`/`outputs`/`shell:` are declared; for reusable workflows keep `on: workflow_call` inputs/secrets backward-compatible. No app build here — YAML correctness + pinning is the gate. Keep actions pinned to full-length commit SHAs where the house style does; never weaken a security control to pass a check.
 
 **Task menu** (1–2 items/run; high care):
-- **Triage** new issues/PRs; one insightful comment on the oldest un-commented item.
+- **Triage** new issues/PRs; one insightful comment on the oldest uncommented item.
 - **Action/version hygiene:** keep third-party actions pinned & aligned; bundle Dependabot `github_actions` PRs; flag majors.
 - **Workflow health & dedup:** consolidate duplicated steps, split overgrown jobs, improve caching, remove dead workflows — backward-compatible, one concern per draft PR, `actionlint`-clean.
 - **Consistency** between actions and reusable-workflows and with how consumer repos call them.
