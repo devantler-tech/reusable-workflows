@@ -361,7 +361,7 @@ The workflow assumes skills were previously installed with [`devantler-tech/acti
 - **Automated Linting**: Runs `golangci-lint` and `mega-linter` to ensure code quality
 - **Auto-fix**: Automatically applies linter fixes and commits them
 - **Copilot Integration**: When linting fails, automatically prompts Copilot on the PR to fix the remaining issues
-- **Code Coverage**: Generates a Cobertura report and uploads it to **GitHub Code Quality** (native PR coverage). When `CODECOV_TOKEN` is supplied it is *also* uploaded to Codecov, during the transition off the external service.
+- **Code Coverage**: Generates a Cobertura report and uploads it to **GitHub Code Quality** (native PR coverage). When `CODECOV_TOKEN` is supplied, it is *also* uploaded to Codecov, during the transition off the external service.
 
 #### Usage
 
