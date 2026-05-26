@@ -75,7 +75,6 @@ jobs:
       packages: read
       code-quality: write # callers must grant this for the coverage upload (GitHub Code Quality)
     secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 
   test-enable-auto-merge:
