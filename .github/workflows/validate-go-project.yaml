@@ -433,13 +433,17 @@ jobs:
         run: |
           go test -race -coverprofile=coverage.txt -covermode=atomic ./...
 
+      # best-effort: coverage reporting is a preview feature and must never block a Go PR. This job
+      # runs on every Go PR org-wide via the required-workflow ruleset (pinned to this repo's main).
       - name: 🔄 Convert coverage to Cobertura
+        continue-on-error: true
         run: |
           go run github.com/boumenot/gocover-cobertura@v1.5.0 < coverage.txt > coverage.cobertura.xml
 
       # Uploads to GitHub Code Quality (native PR coverage) and — while CODECOV_TOKEN is still
       # provided — also to Codecov, during the coexistence period.
       - name: 📊 Upload coverage
+        continue-on-error: true
         uses: devantler-tech/actions/upload-coverage@60d895a7aabe6e3c0247c86a83560656a760ee08 # v3.5.0
         with:
           file: coverage.cobertura.xml
