@@ -211,7 +211,7 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/run-dotnet-tests.yaml](.github/workflows/run-dotnet-tests.yaml) is a workflow used to test .NET solutions or projects across multiple operating systems. Coverage is merged into a single Cobertura report and uploaded to **GitHub Code Quality** (native PR coverage), and — while `CODECOV_TOKEN` is supplied — also to Codecov during the transition off the external service.
+[.github/workflows/run-dotnet-tests.yaml](.github/workflows/run-dotnet-tests.yaml) is a workflow used to test .NET solutions or projects across multiple operating systems. Coverage is merged into a single Cobertura report and uploaded to **GitHub Code Quality** (native PR coverage).
 
 #### Usage
 
@@ -224,18 +224,16 @@ jobs:
       packages: read
       code-quality: write # required for GitHub Code Quality coverage upload
     secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
-> **Note:** The calling workflow must grant `code-quality: write` (otherwise the run fails at startup). Coverage requires the repo's _Settings → Code quality_ to have coverage enabled.
+> **Note:** The calling workflow must grant `code-quality: write` (otherwise the run fails at startup). Coverage requires the repo's **Code Quality** to be enabled (_Settings → Code quality_).
 
 #### Secrets and Inputs
 
-| Key               | Type   | Default | Required | Description                                                                 |
-|-------------------|--------|---------|----------|-----------------------------------------------------------------------------|
-| `CODECOV_TOKEN`   | Secret | -       | No       | Codecov token. Transitional — coverage now also goes to GitHub Code Quality; omit to use Code Quality only |
-| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key                                                      |
+| Key               | Type   | Default | Required | Description            |
+|-------------------|--------|---------|----------|------------------------|
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
 
 </details>
 
@@ -367,7 +365,7 @@ The workflow assumes skills were previously installed with [`devantler-tech/acti
 - **Automated Linting**: Runs `golangci-lint` and `mega-linter` to ensure code quality
 - **Auto-fix**: Automatically applies linter fixes and commits them
 - **Copilot Integration**: When linting fails, automatically prompts Copilot on the PR to fix the remaining issues
-- **Code Coverage**: Generates a Cobertura report and uploads it to **GitHub Code Quality** (native PR coverage). When `CODECOV_TOKEN` is supplied, it is *also* uploaded to Codecov, during the transition off the external service.
+- **Code Coverage**: Generates a Cobertura report and uploads it to **GitHub Code Quality** (native PR coverage).
 
 #### Usage
 
@@ -379,19 +377,17 @@ jobs:
       contents: write
       code-quality: write # required for GitHub Code Quality coverage upload
     secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }} # optional (transitional)
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
     with:
       pr-owner: ${{ github.event.pull_request.user.login }} # optional
 ```
 
-> **Note:** The calling workflow must grant `code-quality: write` so coverage can be uploaded to GitHub Code Quality. Coverage requires the repo's _Settings → Code quality_ to have coverage enabled.
+> **Note:** The calling workflow must grant `code-quality: write` so coverage can be uploaded to GitHub Code Quality. Coverage requires the repo's **Code Quality** to be enabled (_Settings → Code quality_).
 
 #### Secrets and Inputs
 
 | Key               | Type           | Default | Required | Description                                                         |
 |-------------------|----------------|---------|----------|---------------------------------------------------------------------|
-| `CODECOV_TOKEN`   | Secret         | -       | No       | Codecov token. Transitional — coverage now also goes to GitHub Code Quality; omit to use Code Quality only |
 | `APP_PRIVATE_KEY` | Secret         | -       | No       | GitHub App private key for authenticating the workflow              |
 | `pr-owner`        | Input (string) | -       | No       | Pull request author login (used to disable auto-commit for bot PRs) |
 

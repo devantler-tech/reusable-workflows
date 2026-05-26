@@ -5,9 +5,6 @@ permissions: {}
 on:
   workflow_call:
     secrets:
-      # Optional/transitional: when omitted, coverage goes to GitHub Code Quality only.
-      CODECOV_TOKEN:
-        required: false
       APP_PRIVATE_KEY:
         required: true
   ### Required Workflow Triggers ###
@@ -36,9 +33,8 @@ jobs:
           persist-credentials: false
 
       - name: 🧪 Test .NET solution or project
-        uses: devantler-tech/actions/run-dotnet-tests@31d3c2706ca08bb65fc26002d63a8483965b6570 # v3.6.0
+        uses: devantler-tech/actions/run-dotnet-tests@7dbc3c310c46eb51b0f298de2de0e2d9c6552eae # v4.0.0
         with:
           app-id: ${{ vars.APP_ID }}
           app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          codecov-token: ${{ secrets.CODECOV_TOKEN }}
