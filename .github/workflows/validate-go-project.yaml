@@ -319,6 +319,10 @@ jobs:
           APPLY_FIXES: all
           APPLY_FIXES_EVENT: all
           APPLY_FIXES_MODE: commit
+          # actionlint (<=1.7.12, bundled in MegaLinter) doesn't yet know the `code-quality`
+          # permission scope that GitHub Code Quality coverage requires callers to grant, so it
+          # reports a false "unknown permission scope" error. Ignore it until actionlint catches up.
+          ACTION_ACTIONLINT_ARGUMENTS: -ignore code-quality
 
       - name: Commit and push applied linter fixes
         if: |
