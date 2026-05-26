@@ -232,10 +232,10 @@ jobs:
 
 #### Secrets and Inputs
 
-| Key               | Type   | Default | Required | Description            |
-|-------------------|--------|---------|----------|------------------------|
-| `CODECOV_TOKEN`   | Secret | -       | Yes      | Codecov token          |
-| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
+| Key               | Type   | Default | Required | Description                                                                 |
+|-------------------|--------|---------|----------|-----------------------------------------------------------------------------|
+| `CODECOV_TOKEN`   | Secret | -       | No       | Codecov token. Transitional — coverage now also goes to GitHub Code Quality; omit to use Code Quality only |
+| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key                                                      |
 
 </details>
 

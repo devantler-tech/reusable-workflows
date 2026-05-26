@@ -5,8 +5,9 @@ permissions: {}
 on:
   workflow_call:
     secrets:
+      # Optional/transitional: when omitted, coverage goes to GitHub Code Quality only.
       CODECOV_TOKEN:
-        required: true
+        required: false
       APP_PRIVATE_KEY:
         required: true
   ### Required Workflow Triggers ###
@@ -20,7 +21,7 @@ jobs:
       contents: read
       packages: read
       # Required for the GitHub Code Quality coverage upload. Callers of this reusable workflow
-      # must also grant code-quality:write, or the run fails at startup.
+      # must also grant `code-quality: write`, or the run fails at startup.
       code-quality: write
     strategy:
       matrix:
