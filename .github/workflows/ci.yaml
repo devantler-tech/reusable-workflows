@@ -65,6 +65,7 @@ jobs:
       contents: write
       pull-requests: write
       issues: write
+      code-quality: write # callers must grant this for the coverage upload (GitHub Code Quality)
 
   test-run-dotnet-tests:
     name: "[Test] Run .NET Tests"
