@@ -211,7 +211,7 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/run-dotnet-tests.yaml](.github/workflows/run-dotnet-tests.yaml) is a workflow used to test .NET solutions or projects across multiple operating systems.
+[.github/workflows/run-dotnet-tests.yaml](.github/workflows/run-dotnet-tests.yaml) is a workflow used to test .NET solutions or projects across multiple operating systems. Coverage is merged into a single Cobertura report and uploaded to **GitHub Code Quality** (native PR coverage), and — while `CODECOV_TOKEN` is supplied — also to Codecov during the transition off the external service.
 
 #### Usage
 
@@ -219,10 +219,16 @@ jobs:
 jobs:
   dotnet-test:
     uses: devantler-tech/reusable-workflows/.github/workflows/run-dotnet-tests.yaml@{ref} # ref
+    permissions:
+      contents: read
+      packages: read
+      code-quality: write # required for GitHub Code Quality coverage upload
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
+
+> **Note:** The calling workflow must grant `code-quality: write` (otherwise the run fails at startup). Coverage requires the repo's _Settings → Code quality_ to have coverage enabled.
 
 #### Secrets and Inputs
 

@@ -19,6 +19,9 @@ jobs:
     permissions:
       contents: read
       packages: read
+      # Required for the GitHub Code Quality coverage upload. Callers of this reusable workflow
+      # must also grant code-quality:write, or the run fails at startup.
+      code-quality: write
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -32,7 +35,7 @@ jobs:
           persist-credentials: false
 
       - name: 🧪 Test .NET solution or project
-        uses: devantler-tech/actions/run-dotnet-tests@59d3ffbe1a9437fcc39e2794fa2f221abe878310 # v3.3.0
+        uses: devantler-tech/actions/run-dotnet-tests@31d3c2706ca08bb65fc26002d63a8483965b6570 # v3.6.0
         with:
           app-id: ${{ vars.APP_ID }}
           app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
