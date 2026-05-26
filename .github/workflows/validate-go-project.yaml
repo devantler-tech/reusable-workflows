@@ -411,6 +411,9 @@ jobs:
       && needs.changes.outputs.go == 'true'
     permissions:
       contents: write
+      # Required by upload-coverage to post coverage to GitHub Code Quality. The CALLING workflow
+      # must also grant this (a reusable workflow's token is capped by the caller's grant).
+      code-quality: write
     steps:
       - name: 📑 Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -430,7 +433,16 @@ jobs:
         run: |
           go test -race -coverprofile=coverage.txt -covermode=atomic ./...
 
-      - name: 📄 Upload coverage to Codecov
-        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+      - name: 🔄 Convert coverage to Cobertura
+        run: |
+          go run github.com/boumenot/gocover-cobertura@v1.5.0 < coverage.txt > coverage.cobertura.xml
+
+      # Uploads to GitHub Code Quality (native PR coverage) and — while CODECOV_TOKEN is still
+      # provided — also to Codecov, during the coexistence period.
+      - name: 📊 Upload coverage
+        uses: devantler-tech/actions/upload-coverage@60d895a7aabe6e3c0247c86a83560656a760ee08 # v3.5.0
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage.cobertura.xml
+          language: Go
+          label: code-coverage/go
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}

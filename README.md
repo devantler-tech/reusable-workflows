@@ -361,6 +361,7 @@ The workflow assumes skills were previously installed with [`devantler-tech/acti
 - **Automated Linting**: Runs `golangci-lint` and `mega-linter` to ensure code quality
 - **Auto-fix**: Automatically applies linter fixes and commits them
 - **Copilot Integration**: When linting fails, automatically prompts Copilot on the PR to fix the remaining issues
+- **Code Coverage**: Generates a Cobertura report and uploads it to **GitHub Code Quality** (native PR coverage). When `CODECOV_TOKEN` is supplied, it is *also* uploaded to Codecov, during the transition off the external service.
 
 #### Usage
 
@@ -368,18 +369,23 @@ The workflow assumes skills were previously installed with [`devantler-tech/acti
 jobs:
   go-test:
     uses: devantler-tech/reusable-workflows/.github/workflows/validate-go-project.yaml@{ref} # ref
+    permissions:
+      contents: write
+      code-quality: write # required for GitHub Code Quality coverage upload
     secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }} # optional (transitional)
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
     with:
       pr-owner: ${{ github.event.pull_request.user.login }} # optional
 ```
 
+> **Note:** The calling workflow must grant `code-quality: write` so coverage can be uploaded to GitHub Code Quality. Coverage requires the repo's _Settings → Code quality_ to have coverage enabled.
+
 #### Secrets and Inputs
 
 | Key               | Type           | Default | Required | Description                                                         |
 |-------------------|----------------|---------|----------|---------------------------------------------------------------------|
-| `CODECOV_TOKEN`   | Secret         | -       | No       | Codecov token for uploading coverage reports                        |
+| `CODECOV_TOKEN`   | Secret         | -       | No       | Codecov token. Transitional — coverage now also goes to GitHub Code Quality; omit to use Code Quality only |
 | `APP_PRIVATE_KEY` | Secret         | -       | No       | GitHub App private key for authenticating the workflow              |
 | `pr-owner`        | Input (string) | -       | No       | Pull request author login (used to disable auto-commit for bot PRs) |
 
