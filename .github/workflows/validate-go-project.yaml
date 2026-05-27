@@ -132,6 +132,9 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          # Least-privilege token scope: only pushes linter auto-fixes back to the PR
+          # branch (contents); the token is never used for PR/issue API calls.
+          permission-contents: write
 
       - name: 📄 Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -192,6 +195,9 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          # Least-privilege token scope: only pushes linter auto-fixes back to the PR
+          # branch (contents); the token is never used for PR/issue API calls.
+          permission-contents: write
 
       - name: 📄 Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -298,6 +304,10 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          # Least-privilege token scope: only pushes MegaLinter auto-fixes back to the
+          # PR branch (contents). MegaLinter's PR/issue reporting uses the default
+          # GITHUB_TOKEN (job permissions below), not this App token.
+          permission-contents: write
 
       - name: 📄 Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

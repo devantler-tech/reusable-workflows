@@ -29,6 +29,9 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          # Least-privilege token scope: approving and enabling auto-merge on PRs.
+          permission-contents: write
+          permission-pull-requests: write
 
       - name: ✅ Approve PR
         env:
