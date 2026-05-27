@@ -309,12 +309,12 @@ jobs:
 
 </details>
 
-### 🔄 Update Copilot Skills
+### 🔄 Update Agent Skills
 
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/update-copilot-skills.yaml](.github/workflows/update-copilot-skills.yaml) is a workflow used to keep installed Copilot / agent skills up-to-date via [`gh skill update --all`](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/), opening a PR with any changes. Each installed `SKILL.md`'s `metadata.github-*` frontmatter is the source of truth — no lockfile is required. Works with any mix of `gh skill`-compatible upstreams.
+[.github/workflows/update-agent-skills.yaml](.github/workflows/update-agent-skills.yaml) is a workflow used to keep installed agent skills (Copilot, Claude Code, …) up-to-date via [`gh skill update --all`](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/), opening a PR with any changes. Each installed `SKILL.md`'s `metadata.github-*` frontmatter is the source of truth — no lockfile is required. Works with any mix of `gh skill`-compatible upstreams.
 
 #### Usage
 
@@ -325,8 +325,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-copilot-skills:
-    uses: devantler-tech/reusable-workflows/.github/workflows/update-copilot-skills.yaml@{ref} # ref
+  update-agent-skills:
+    uses: devantler-tech/reusable-workflows/.github/workflows/update-agent-skills.yaml@{ref} # ref
     permissions:
       contents: write
       pull-requests: write
@@ -334,7 +334,7 @@ jobs:
       dir: .agents/skills
 ```
 
-The workflow assumes skills were previously installed with [`devantler-tech/actions/setup-copilot-skills`](https://github.com/devantler-tech/actions/tree/main/setup-copilot-skills) (or `gh skill install` directly) — the committed `SKILL.md` files carry the upstream pointers.
+The workflow assumes skills were previously installed with [`devantler-tech/actions/setup-agent-skills`](https://github.com/devantler-tech/actions/tree/main/setup-agent-skills) (or `gh skill install` directly) — the committed `SKILL.md` files carry the upstream pointers.
 
 #### Secrets and Inputs
 
@@ -343,10 +343,10 @@ The workflow assumes skills were previously installed with [`devantler-tech/acti
 | `dir`            | Input (string)  | `.`                                  | No       | Directory to scan for installed skills (passed to `gh skill update --dir`) |
 | `unpin`          | Input (boolean) | `false`                              | No       | When `true`, pass `--unpin` (clear pinned versions)                    |
 | `gh-version`     | Input (string)  | `2.90.0`                             | No       | Minimum required `gh` version (must support `gh skill`)                |
-| `pr-branch`      | Input (string)  | `deps/copilot-skills-update`         | No       | Branch the update PR is opened from                                    |
-| `pr-title`       | Input (string)  | `chore(deps): update copilot skills` | No       | Title of the update PR                                                 |
+| `pr-branch`      | Input (string)  | `deps/agent-skills-update`           | No       | Branch the update PR is opened from                                    |
+| `pr-title`       | Input (string)  | `chore(deps): update agent skills`   | No       | Title of the update PR                                                 |
 | `pr-labels`      | Input (string)  | `dependencies,automation`            | No       | Comma-separated labels for the update PR                               |
-| `commit-message` | Input (string)  | `chore(deps): update copilot skills` | No       | Commit message for the update PR                                       |
+| `commit-message` | Input (string)  | `chore(deps): update agent skills`   | No       | Commit message for the update PR                                       |
 | `dry-run`        | Input (boolean) | `false`                              | No       | Skip update and PR creation (validate workflow interface only)         |
 
 > **Note:** The calling workflow must grant `contents: write` and `pull-requests: write` permissions.

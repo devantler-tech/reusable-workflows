@@ -23,7 +23,7 @@ This file is the single canonical instructions file for the repository. It is re
     ├── scan-for-todo-comments.yaml        # Reusable: scan TODOs and create GitHub issues
     ├── scan-for-workflow-vulnerabilities.yaml # Reusable: Zizmor GitHub Actions security analysis
     ├── sync-cluster-policies.yaml         # Reusable: sync Kyverno policies from upstream
-    ├── update-copilot-skills.yaml         # Reusable: keep installed agent skills up-to-date
+    ├── update-agent-skills.yaml           # Reusable: keep installed agent skills up-to-date
     └── validate-go-project.yaml           # Reusable: Go lint, build, test, coverage
 ```
 

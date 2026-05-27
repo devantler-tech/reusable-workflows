@@ -133,9 +133,9 @@ jobs:
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 
-  test-update-copilot-skills:
-    name: "[Test] Update Copilot Skills - Dry Run"
-    uses: ./.github/workflows/update-copilot-skills.yaml
+  test-update-agent-skills:
+    name: "[Test] Update Agent Skills - Dry Run"
+    uses: ./.github/workflows/update-agent-skills.yaml
     permissions:
       contents: write
       pull-requests: write
@@ -159,7 +159,7 @@ jobs:
         test-publish-dotnet-library,
         test-scan-for-todo-comments,
         test-sync-cluster-policies,
-        test-update-copilot-skills,
+        test-update-agent-skills,
       ]
     permissions: {}
     if: ${{ always() }}
@@ -180,4 +180,4 @@ jobs:
             ${{ needs.test-publish-dotnet-library.result }}
             ${{ needs.test-scan-for-todo-comments.result }}
             ${{ needs.test-sync-cluster-policies.result }}
-            ${{ needs.test-update-copilot-skills.result }}
+            ${{ needs.test-update-agent-skills.result }}
