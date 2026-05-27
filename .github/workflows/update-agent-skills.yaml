@@ -92,10 +92,7 @@ jobs:
 
       - name: 🔄 Update installed skills
         id: update
-        # TODO: repoint to devantler-tech/actions/update-agent-skills once the action
-        # rename (devantler-tech/actions#178) ships in a release. This pinned SHA still
-        # carries the action under its former name, so it keeps working until then.
-        uses: devantler-tech/actions/update-copilot-skills@59d3ffbe1a9437fcc39e2794fa2f221abe878310 # v3.3.0
+        uses: devantler-tech/actions/update-agent-skills@3556694b57702d81bfc5fb1d79a9ee0b4e53aca7 # v5.0.0
         with:
           dir: ${{ inputs.dir }}
           unpin: ${{ inputs.unpin }}
