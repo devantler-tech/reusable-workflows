@@ -31,7 +31,11 @@ jobs:
       - name: ⚙️ Setup .NET
         uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
         with:
-          dotnet-version: 9
+          # Provision both the previous STS (9) and the current LTS (10) so libraries
+          # targeting either TFM publish cleanly. Multiple lines install side-by-side SDKs.
+          dotnet-version: |
+            9
+            10
 
       - name: 🚚 Publish
         shell: bash
