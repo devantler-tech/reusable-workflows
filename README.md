@@ -322,6 +322,51 @@ jobs:
 
 </details>
 
+### 🔄 Template Sync
+
+<details>
+<summary>Click to expand</summary>
+
+[.github/workflows/template-sync.yaml](.github/workflows/template-sync.yaml) keeps a repository in sync with an upstream template repository via [AndreasAugustin/actions-template-sync](https://github.com/AndreasAugustin/actions-template-sync), opening a PR with any incoming template changes. List the files this repository *owns* (and that must never be overwritten by the template) in a `.templatesyncignore` file at the repo root — everything else the template ships is kept in sync.
+
+#### Usage
+
+```yaml
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  template-sync:
+    uses: devantler-tech/reusable-workflows/.github/workflows/template-sync.yaml@{ref} # ref
+    with:
+      source-repo-path: devantler-tech/gitops-tenant-template
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+```
+
+By default the sync PR is opened with a GitHub App token (`use-app-token: true`) so it triggers the caller's CI; this needs the `APP_ID` variable and the `APP_PRIVATE_KEY` secret. Set `use-app-token: false` to fall back to `GITHUB_TOKEN` (the PR then will not trigger `on: pull_request` checks).
+
+#### Secrets and Inputs
+
+| Key                              | Type            | Default                                          | Required | Description                                                                 |
+|----------------------------------|-----------------|--------------------------------------------------|----------|-----------------------------------------------------------------------------|
+| `APP_PRIVATE_KEY`                | Secret          | -                                                | When `use-app-token` | GitHub App private key (paired with the `APP_ID` variable)      |
+| `source-repo-path`               | Input (string)  | -                                                | Yes      | `owner/repo` of the upstream template to sync from                          |
+| `upstream-branch`                | Input (string)  | `main`                                           | No       | Branch of the template repository to sync from                              |
+| `pr-title`                       | Input (string)  | `chore: sync changes from the upstream template` | No       | Title of the sync PR (Conventional-Commit by default)                       |
+| `pr-commit-msg`                  | Input (string)  | `chore: sync changes from the upstream template` | No       | Commit message for the sync PR                                              |
+| `pr-labels`                      | Input (string)  | `dependencies,automation`                        | No       | Comma-separated labels for the sync PR                                      |
+| `pr-branch-name-prefix`          | Input (string)  | `chore/template-sync`                            | No       | Prefix for the branch the sync PR is opened from                            |
+| `template-sync-ignore-file-path` | Input (string)  | `.templatesyncignore`                            | No       | Path to the file listing consumer-owned (non-synced) files                  |
+| `use-app-token`                  | Input (boolean) | `true`                                           | No       | Open the sync PR with a GitHub App token so it triggers the caller's CI     |
+| `dry-run`                        | Input (boolean) | `false`                                          | No       | Skip the sync and PR creation (validate workflow interface only)            |
+
+> **Note:** The calling workflow runs the sync job with `contents: write` and `pull-requests: write` (declared by the reusable workflow).
+
+</details>
+
 ### 🔄 Update Agent Skills
 
 <details>

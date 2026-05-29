@@ -142,6 +142,17 @@ jobs:
     with:
       dry-run: true
 
+  test-template-sync:
+    name: "[Test] Template Sync - Dry Run"
+    uses: ./.github/workflows/template-sync.yaml
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      source-repo-path: devantler-tech/gitops-tenant-template
+      use-app-token: false
+      dry-run: true
+
   ci-required-checks:
     name: "CI - Required Checks"
     runs-on: ubuntu-latest
@@ -160,6 +171,7 @@ jobs:
         test-scan-for-todo-comments,
         test-sync-cluster-policies,
         test-update-agent-skills,
+        test-template-sync,
       ]
     permissions: {}
     if: ${{ always() }}
@@ -181,3 +193,4 @@ jobs:
             ${{ needs.test-scan-for-todo-comments.result }}
             ${{ needs.test-sync-cluster-policies.result }}
             ${{ needs.test-update-agent-skills.result }}
+            ${{ needs.test-template-sync.result }}
