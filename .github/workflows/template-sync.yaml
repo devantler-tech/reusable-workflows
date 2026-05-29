@@ -6,10 +6,11 @@ on:
       source-repo-path:
         description: >-
           The `owner/repo` path of the upstream template repository to sync from
-          (passed to `actions-template-sync` as `source_repo_path`). The source
-          repository must be readable with the token in use — a public template
-          needs no extra access; a private template requires the App token (see
-          `use-app-token`) to be installation-scoped to read it.
+          (passed to `actions-template-sync` as `source_repo_path`). When
+          `use-app-token` is set, the App token is auto-scoped to read this repo
+          as well, so a PRIVATE template under the same owner works out of the
+          box; a cross-owner private template needs a custom token with read
+          access to it.
         required: true
         type: string
       upstream-branch:
@@ -81,6 +82,14 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: 🧮 Resolve template repo name
+        id: template
+        if: ${{ inputs.use-app-token }}
+        shell: bash
+        env:
+          SOURCE_REPO_PATH: ${{ inputs.source-repo-path }}
+        run: echo "name=${SOURCE_REPO_PATH##*/}" >> "$GITHUB_OUTPUT"
+
       - name: 🔑 Generate GitHub App token
         id: app-token
         if: ${{ inputs.use-app-token }}
@@ -88,9 +97,13 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          # Scope the token to least privilege — exactly what the sync needs
-          # (push the sync branch + open the PR) — instead of inheriting the
-          # App installation's blanket permissions.
+          owner: ${{ github.repository_owner }}
+          # Scope the token to exactly the caller repo (push the sync branch +
+          # open the PR) AND the upstream template repo (clone it — required when
+          # the template is PRIVATE, harmless when it is public). Assumes both
+          # live under the same owner; a cross-owner private template needs its
+          # own read-scoped token instead.
+          repositories: ${{ github.event.repository.name }},${{ steps.template.outputs.name }}
           permission-contents: write
           permission-pull-requests: write
 
