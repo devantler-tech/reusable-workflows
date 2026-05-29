@@ -160,7 +160,7 @@ jobs:
 <details>
 <summary>Click to expand</summary>
 
-[.github/workflows/publish-app.yaml](.github/workflows/publish-app.yaml) is a workflow used to build and publish a containerized app and its Kubernetes manifests to GHCR as cosign-signed OCI artifacts. It builds and pushes the container image (tagged `{{version}}`, `sha-<sha>`, and `latest`), pins the built image digest into the deployment manifest's `app-name` container, pushes the manifests directory as a Flux-compatible OCI artifact (`ghcr.io/<repo>/manifests`), and signs both the image and the manifests artifact with keyless cosign (Fulcio/Rekor via GitHub OIDC).
+[.github/workflows/publish-app.yaml](.github/workflows/publish-app.yaml) is a workflow used to build and publish a containerized app and its Kubernetes manifests to GHCR as cosign-signed OCI artifacts. It builds and pushes the container image (tagged with the semantic version derived from the git tag — e.g. `1.2.3` from a `v1.2.3` tag — plus `sha-<sha>` and `latest`), pins the built image digest into the deployment manifest's `app-name` container, pushes the manifests directory as a Flux-compatible OCI artifact (`ghcr.io/<owner>/<repo>/manifests`), and signs both the image and the manifests artifact with keyless cosign (Fulcio/Rekor via GitHub OIDC).
 
 #### Usage
 
