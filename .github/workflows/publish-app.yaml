@@ -11,12 +11,18 @@ on:
         required: false
         default: ./deploy
         type: string
+      dry-run:
+        description: "Skip publish (validate workflow interface only)."
+        required: false
+        default: false
+        type: boolean
 
 permissions: {}
 
 jobs:
   publish:
     name: Publish image & manifests
+    if: ${{ !inputs.dry-run }}
     runs-on: ubuntu-latest
     permissions:
       contents: read # checkout
