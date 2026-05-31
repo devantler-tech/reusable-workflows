@@ -68,16 +68,30 @@ on:
   ##################################
 ```
 
-### Test Workflows
+### Test Jobs
 
-Test workflows exercise reusable workflows with safe parameters (dry-run, fixtures). They must:
+Reusable workflows are exercised as **`[Test]` jobs inside [`ci.yaml`](.github/workflows/ci.yaml)** —
+there are no standalone `test-*.yaml` files. Every reusable workflow gets a job in `ci.yaml` that calls
+it with safe parameters (dry-run, fixtures), and a single aggregation job gates the whole suite. When
+you add or change a reusable workflow, add or update its `[Test]` job in `ci.yaml`. Each job must:
 
-1. Be named `test-<workflow-name>.yaml`.
-2. Trigger on `pull_request` to `main` and `push` to `main`.
-3. Use `concurrency` groups to prevent parallel test runs.
-4. Include a status aggregation job with `if: ${{ !cancelled() }}`.
-5. Use test fixtures from `.github/fixtures/` when applicable.
-6. Never perform destructive operations — use dry-run modes or safe defaults.
+1. Use a job id of `test-<workflow-name>`, adding a scenario suffix when a single workflow is exercised
+   by several jobs (e.g. `test-delete-workflow-runs-all`, `test-delete-workflow-runs-specific`,
+   `test-delete-workflow-runs-minimal`), plus a display name `[Test] <Workflow> - <Scenario>`
+   (e.g. `test-publish-dotnet-library` → `[Test] Publish .NET Library - Dry Run`).
+2. Call the workflow under test with `uses: ./.github/workflows/<workflow-name>.yaml`.
+3. Pass safe parameters — set `dry-run: true` (or the workflow's equivalent) and use fixtures from
+   `.github/fixtures/` when applicable. Never perform destructive operations.
+4. Wire the job into the `ci-required-checks` job (display name `CI - Required Checks`) in **two
+   places**: add it to the `needs:` list **and** add `${{ needs.<job-id>.result }}` to the
+   `job-results` input of that job's `devantler-tech/actions/aggregate-job-checks` step.
+   `ci-required-checks` runs `if: ${{ always() }}` and fails if any listed result is not `success`, so
+   it is the single required status check — a job added to `needs:` but omitted from `job-results`
+   would have its failure silently ignored.
+
+`ci.yaml` itself triggers on `pull_request` and `push`, with a `concurrency` group to prevent parallel
+runs. New reusable workflows that omit a `[Test]` job leave a coverage gap, so the job is part of the
+definition of done.
 
 ## Authentication Patterns
 
