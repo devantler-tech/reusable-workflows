@@ -51,7 +51,7 @@ See [README.md](README.md) for the full catalogue of reusable workflows with usa
 3. **Include `step-security/harden-runner`** as the first step of every job with `egress-policy: audit`.
 4. **Set `permissions: {}` at the workflow top level** — grant specific permissions per-job using job-level `permissions:`.
 5. **Set `persist-credentials: false`** on `actions/checkout` unless the job needs to push commits.
-6. **Use conventional commit messages** — `feat:`, `fix:`, `chore:`, `ci:` prefixes for semantic-release.
+6. **Use conventional commit messages** — semantic-release cuts releases from the commit type: `feat:` → minor; `fix:`, `perf:`, and the workflow-changing types `ci:`/`build:`/`refactor:` → patch (the reusable workflows *are* this repo's product, so changes to them must ship to consumers — see `.releaserc`'s `releaseRules`); `chore:`/`docs:`/`test:`/`style:` do not trigger a release.
 7. **Document secrets and inputs** in `README.md` with usage examples.
 
 ### Required Workflow Triggers
