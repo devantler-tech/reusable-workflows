@@ -329,11 +329,68 @@ jobs:
         run: go install golang.org/x/vuln/cmd/govulncheck@v1.3.0
 
       # govulncheck reports only vulnerabilities your code actually CALLS (call-graph
-      # reachability), so it fails the gate (exit 3) only on genuinely exploitable issues
-      # — imported-but-unreachable vulnerabilities don't block. Fix by bumping the affected
-      # module or stopping the call.
+      # reachability), so the gate trips only on genuinely reachable issues — imported-but-
+      # unreachable advisories never block. Normally you clear a finding by bumping the
+      # affected module or dropping the call. But some reachable advisories have NO upstream
+      # fix (`Fixed in: N/A`) — e.g. server-side symbols a CLI links transitively via
+      # k8s.io/kubernetes or docker/docker. A hard gate would then wedge EVERY Go PR on that
+      # consumer indefinitely, through no fault of the PR. To keep the gate strict by default
+      # yet allow explicit, reviewed, version-controlled risk acceptance, scan in JSON mode
+      # (which exits 0 on findings) and fail only on reachable findings whose advisory ID is
+      # NOT listed in an optional consumer-owned allowlist file.
+      #
+      # .govulncheck-allow.txt (repo root, OPTIONAL): one accepted advisory ID per line, e.g.
+      #   GO-2025-3547  # k8s apiserver race — this is a client CLI, not an apiserver (owner, 2026-06)
+      # blank lines and `#` comments are ignored. No file ⇒ strict (the original behaviour,
+      # unchanged): every reachable advisory blocks.
       - name: 🛡️ Scan for known vulnerabilities
-        run: govulncheck ./...
+        run: |
+          set -euo pipefail
+          # One scan only (expensive on large modules). JSON mode exits 0 even when
+          # vulnerabilities are found, so a non-zero exit here is an OPERATIONAL error
+          # (e.g. packages failed to load) and must fail the gate loudly.
+          rc=0
+          govulncheck -format json ./... > govuln.json || rc=$?
+          if [ "$rc" -ne 0 ]; then
+            echo "::error::govulncheck failed to run (exit $rc) — operational error, not a scan result."
+            exit "$rc"
+          fi
+
+          # Reachable ("called") findings: a finding whose top trace frame is a function
+          # (mirrors govulncheck's own IsCalled: len(Trace)>0 && Trace[0].Function != "").
+          called="$(jq -r 'select(.finding).finding | select(.trace[0].function != null and .trace[0].function != "") | .osv' govuln.json | sort -u)"
+
+          # Optional allowlist of accepted, justified advisory IDs.
+          allow=""
+          if [ -f .govulncheck-allow.txt ]; then
+            allow="$(sed 's/#.*//' .govulncheck-allow.txt | tr -s ' \t' '\n' | grep -E '^GO-[0-9]{4}-[0-9]+$' | sort -u || true)"
+          fi
+
+          # Summarise every reachable advisory and compute the blocking set
+          # (reachable minus allowlisted).
+          blocking=""
+          if [ -n "$called" ]; then
+            echo "Reachable vulnerabilities:"
+            for id in $called; do
+              fixed="$(jq -r --arg id "$id" 'select(.finding).finding | select(.osv==$id) | .fixed_version // empty' govuln.json | grep -v '^$' | head -n1 || true)"
+              [ -z "$fixed" ] && fixed="N/A"
+              if printf '%s\n' "$allow" | grep -qx "$id"; then
+                echo "  - $id (fixed: $fixed) — ALLOWLISTED"
+              else
+                echo "  - $id (fixed: $fixed) — BLOCKING"
+                blocking="$blocking $id"
+              fi
+            done
+          else
+            echo "No reachable vulnerabilities found."
+          fi
+
+          if [ -n "$blocking" ]; then
+            echo "::error::Reachable vulnerabilities not accepted in .govulncheck-allow.txt:$blocking"
+            echo "Either bump the affected module (preferred) or, if no fix exists and the advisory is not exploitable in this project, add it to .govulncheck-allow.txt with a justification."
+            exit 1
+          fi
+          echo "✅ No blocking vulnerabilities (allowlisted advisories, if any, were explicitly accepted)."
 
   lint:
     name: 🧹 Lint - mega-linter
