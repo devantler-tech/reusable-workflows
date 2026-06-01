@@ -24,7 +24,7 @@ This file is the single canonical instructions file for the repository. It is re
     ├── scan-for-workflow-vulnerabilities.yaml # Reusable: Zizmor GitHub Actions security analysis
     ├── sync-cluster-policies.yaml         # Reusable: sync Kyverno policies from upstream
     ├── update-agent-skills.yaml           # Reusable: keep installed agent skills up-to-date
-    └── validate-go-project.yaml           # Reusable: Go lint, build, test, coverage
+    └── validate-go-project.yaml           # Reusable: Go lint, tidy, build, test, coverage, dead-code & vuln scan
 ```
 
 > Dot-prefixed internal workflows (e.g. `.create-release.yaml`, `.sync-labels.yaml`) are this repo's own caller/maintenance workflows, not reusable `workflow_call` workflows, so they are intentionally omitted from the inventory above.
