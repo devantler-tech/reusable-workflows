@@ -300,6 +300,18 @@ jobs:
 
 [.github/workflows/sync-cluster-policies.yaml](.github/workflows/sync-cluster-policies.yaml) is a workflow used to sync upstream Kyverno policies to a target directory.
 
+Which policies are synced is controlled by a `.policyignore` file at the repo root. It uses gitignore-style syntax — ordered glob patterns, one per line, where a leading `!` re-includes a previously excluded path — so you can exclude everything by default and whitelist just the policies you want:
+
+```gitignore
+# Ignore every category…
+other*
+# …except these two policies.
+!other/create-pod-antiaffinity/create-pod-antiaffinity.yaml
+!other/spread-pods-across-topology/spread-pods-across-topology.yaml
+```
+
+Patterns are evaluated per file with last-match-wins, so a `!` re-include still applies even when a broad earlier pattern matched its parent directory.
+
 #### Usage
 
 ```yaml
