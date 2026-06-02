@@ -346,19 +346,38 @@ jobs:
       # reachable finding. (We check out above with persist-credentials:false, so the
       # action's own checkout is disabled via repo-checkout:false.)
       #
-      # `allow-file` lets a consumer risk-accept a reachable advisory that has NO upstream
-      # fix (`Fixed in: N/A`) — e.g. a server-side symbol a CLI links transitively via
-      # k8s.io/kubernetes or docker/docker — with an explicit, version-controlled
-      # justification, instead of wedging EVERY Go PR on that consumer indefinitely. The
-      # gate stays strict by default: a consumer with no `.govulncheck-allow.txt` blocks on
-      # any reachable advisory, exactly as before. See the consumer-repo file format in the
-      # action README.
-      #
-      # The official golang/govulncheck-action has no allowlist input, so this temporarily
-      # uses a devantler fork carrying the `allow-file` feature. Swap back to
-      # golang/govulncheck-action once the upstream change lands (golang/go feature request
-      # filed; fork branch: devantler/govulncheck-action@feat/allow-file).
+      # Most consumers have no `.govulncheck-allow.txt` and keep using the **official**
+      # `golang/govulncheck-action` unchanged (the step below) — a strict gate that blocks on
+      # any reachable advisory. Only a consumer that opts in by committing a
+      # `.govulncheck-allow.txt` takes the fork path, which adds an `allow-file` input so it
+      # can risk-accept a reachable advisory that has NO upstream fix (`Fixed in: N/A`) —
+      # e.g. a server-side symbol a CLI links transitively via k8s.io/kubernetes or
+      # docker/docker — with an explicit, version-controlled justification, instead of
+      # wedging EVERY Go PR on that consumer indefinitely. Splitting on the file's presence
+      # keeps the official action on the path for every repo except opt-in ones, minimising
+      # the fork's blast radius. The official action has no allowlist input, so the opt-in
+      # path uses a thin devantler fork carrying the `allow-file` feature; swap it back to
+      # `golang/govulncheck-action` once the feature is upstreamed (the fork is Gerrit-ready
+      # at devantler/govulncheck-action@feat/allow-file). See the action README for the file
+      # format.
+      - name: 🔎 Detect govulncheck allowlist
+        id: govulncheck-allow
+        run: |
+          if [ -f .govulncheck-allow.txt ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: 🛡️ Scan for known vulnerabilities
+        if: steps.govulncheck-allow.outputs.present == 'false'
+        uses: golang/govulncheck-action@b625fbe08f3bccbe446d94fbf87fcc875a4f50ee # v1.0.4
+        with:
+          repo-checkout: false
+          go-version-file: go.mod
+
+      - name: 🛡️ Scan for known vulnerabilities (with risk-acceptance allowlist)
+        if: steps.govulncheck-allow.outputs.present == 'true'
         uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942 # feat/allow-file (fork; pending upstream)
         with:
           repo-checkout: false

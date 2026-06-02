@@ -423,7 +423,7 @@ The workflow assumes skills were previously installed with [`devantler-tech/acti
 - **Automated Linting**: Runs `golangci-lint` and `mega-linter` to ensure code quality
 - **Auto-fix**: Automatically applies linter fixes and commits them
 - **Copilot Integration**: When linting fails, automatically prompts Copilot on the PR to fix the remaining issues
-- **Supply-chain Scanning**: Runs [`govulncheck`](https://go.dev/blog/govulncheck) via the official [`golang/govulncheck-action`](https://github.com/golang/govulncheck-action) to fail the PR on known vulnerabilities your code actually calls (call-graph reachability, so imported-but-unreachable advisories don't block).
+- **Supply-chain Scanning**: Runs [`govulncheck`](https://go.dev/blog/govulncheck) via the official [`golang/govulncheck-action`](https://github.com/golang/govulncheck-action) to fail the PR on known vulnerabilities your code actually calls (call-graph reachability, so imported-but-unreachable advisories don't block). A consumer can risk-accept a reachable advisory that has no upstream fix (`Fixed in: N/A`) by committing an optional `.govulncheck-allow.txt` at the repo root (one `GO-YYYY-NNNN  # justification` per line; `#` comments and blank lines ignored); the gate stays strict for everything else. Repos with no allowlist file keep using the official action unchanged — only opt-in repos take the allowlist-aware path.
 - **Code Coverage**: Generates a Cobertura report and uploads it to **GitHub Code Quality** (native PR coverage).
 
 #### Usage
