@@ -341,15 +341,29 @@ jobs:
 
       # govulncheck reports only vulnerabilities your code actually CALLS (call-graph
       # reachability), so the gate trips only on genuinely reachable issues —
-      # imported-but-unreachable advisories never block. The official action sets up Go
-      # from go.mod, installs govulncheck, runs `govulncheck ./...`, and fails the job on
-      # any reachable finding. (We check out above with persist-credentials:false, so the
+      # imported-but-unreachable advisories never block. The action sets up Go from
+      # go.mod, installs govulncheck, runs `govulncheck ./...`, and fails the job on any
+      # reachable finding. (We check out above with persist-credentials:false, so the
       # action's own checkout is disabled via repo-checkout:false.)
+      #
+      # `allow-file` lets a consumer risk-accept a reachable advisory that has NO upstream
+      # fix (`Fixed in: N/A`) — e.g. a server-side symbol a CLI links transitively via
+      # k8s.io/kubernetes or docker/docker — with an explicit, version-controlled
+      # justification, instead of wedging EVERY Go PR on that consumer indefinitely. The
+      # gate stays strict by default: a consumer with no `.govulncheck-allow.txt` blocks on
+      # any reachable advisory, exactly as before. See the consumer-repo file format in the
+      # action README.
+      #
+      # The official golang/govulncheck-action has no allowlist input, so this temporarily
+      # uses a devantler fork carrying the `allow-file` feature. Swap back to
+      # golang/govulncheck-action once the upstream change lands (golang/go feature request
+      # filed; fork branch: devantler/govulncheck-action@feat/allow-file).
       - name: 🛡️ Scan for known vulnerabilities
-        uses: golang/govulncheck-action@b625fbe08f3bccbe446d94fbf87fcc875a4f50ee # v1.0.4
+        uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942 # feat/allow-file (fork; pending upstream)
         with:
           repo-checkout: false
           go-version-file: go.mod
+          allow-file: .govulncheck-allow.txt
 
   lint:
     name: 🧹 Lint - mega-linter
