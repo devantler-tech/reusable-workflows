@@ -346,19 +346,25 @@ jobs:
       # reachable finding. (We check out above with persist-credentials:false, so the
       # action's own checkout is disabled via repo-checkout:false.)
       #
-      # Most consumers have no `.govulncheck-allow.txt` and keep using the **official**
-      # `golang/govulncheck-action` unchanged (the step below) — a strict gate that blocks on
-      # any reachable advisory. Only a consumer that opts in by committing a
-      # `.govulncheck-allow.txt` takes the fork path, which adds an `allow-file` input so it
-      # can risk-accept a reachable advisory that has NO upstream fix (`Fixed in: N/A`) —
-      # e.g. a server-side symbol a CLI links transitively via k8s.io/kubernetes or
-      # docker/docker — with an explicit, version-controlled justification, instead of
-      # wedging EVERY Go PR on that consumer indefinitely. Splitting on the file's presence
-      # keeps the official action on the path for every repo except opt-in ones, minimising
-      # the fork's blast radius. The official action has no allowlist input, so the opt-in
-      # path uses a thin devantler fork carrying the `allow-file` feature; swap it back to
-      # `golang/govulncheck-action` once the feature is upstreamed (the fork is Gerrit-ready
-      # at devantler/govulncheck-action@feat/allow-file). See the action README for the file
+      # We always use the thin **devantler/govulncheck-action fork**, never the upstream
+      # `golang/govulncheck-action` — even for repos with no allowlist. Why: the upstream
+      # action's composite `action.yml` pins its own `actions/checkout` / `actions/setup-go`
+      # by TAG (`@v4.1.1`, `@v5.0.0`). Consumers that enforce a "pin every action to a
+      # full-length commit SHA" repository ruleset (e.g. ksail) reject those transitive tag
+      # refs at workflow-prep time — and because GitHub resolves the actions of EVERY `uses:`
+      # in a job regardless of its `if:`, merely *referencing* the upstream action in an
+      # unused branch failed the whole Vulnerability Scan job before it ran, silently wedging
+      # that consumer's entire Go PR lane. The fork SHA-pins its sub-actions, so routing all
+      # repos through it keeps the gate compatible with SHA-pin rulesets (and is strictly
+      # more secure). Behaviour is otherwise unchanged: with no `.govulncheck-allow.txt` the
+      # `allow-file` input is empty and the fork runs strict (byte-equivalent to upstream —
+      # any reachable advisory fails); a consumer that commits a `.govulncheck-allow.txt` can
+      # risk-accept a reachable advisory that has NO upstream fix (`Fixed in: N/A`) — e.g. a
+      # server-side symbol a CLI links transitively via k8s.io/kubernetes or docker/docker —
+      # with an explicit, version-controlled justification, instead of wedging every Go PR.
+      # Swap back to `golang/govulncheck-action` once it BOTH ships the `allow-file` feature
+      # AND SHA-pins its sub-actions (the fork is Gerrit-ready at
+      # devantler/govulncheck-action@feat/allow-file). See the action README for the file
       # format.
       - name: 🔎 Detect govulncheck allowlist
         id: govulncheck-allow
@@ -370,19 +376,13 @@ jobs:
           fi
 
       - name: 🛡️ Scan for known vulnerabilities
-        if: steps.govulncheck-allow.outputs.present == 'false'
-        uses: golang/govulncheck-action@b625fbe08f3bccbe446d94fbf87fcc875a4f50ee # v1.0.4
-        with:
-          repo-checkout: false
-          go-version-file: go.mod
-
-      - name: 🛡️ Scan for known vulnerabilities (with risk-acceptance allowlist)
-        if: steps.govulncheck-allow.outputs.present == 'true'
         uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942 # feat/allow-file (fork; pending upstream)
         with:
           repo-checkout: false
           go-version-file: go.mod
-          allow-file: .govulncheck-allow.txt
+          # Empty ⇒ strict (fail on any reachable advisory, like the upstream action);
+          # set ⇒ JSON-mode allowlist that risk-accepts only the listed advisory IDs.
+          allow-file: ${{ steps.govulncheck-allow.outputs.present == 'true' && '.govulncheck-allow.txt' || '' }}
 
   lint:
     name: 🧹 Lint - mega-linter
