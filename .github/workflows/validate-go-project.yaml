@@ -346,20 +346,25 @@ jobs:
       # reachable finding. (We check out above with persist-credentials:false, so the
       # action's own checkout is disabled via repo-checkout:false.)
       #
-      # Most consumers have no `.govulncheck-allow.txt` and keep using the **official**
-      # `golang/govulncheck-action` unchanged (the step below) — a strict gate that blocks on
-      # any reachable advisory. Only a consumer that opts in by committing a
-      # `.govulncheck-allow.txt` takes the fork path, which adds an `allow-file` input so it
-      # can risk-accept a reachable advisory that has NO upstream fix (`Fixed in: N/A`) —
-      # e.g. a server-side symbol a CLI links transitively via k8s.io/kubernetes or
-      # docker/docker — with an explicit, version-controlled justification, instead of
-      # wedging EVERY Go PR on that consumer indefinitely. Splitting on the file's presence
-      # keeps the official action on the path for every repo except opt-in ones, minimising
-      # the fork's blast radius. The official action has no allowlist input, so the opt-in
-      # path uses a thin devantler fork carrying the `allow-file` feature; swap it back to
-      # `golang/govulncheck-action` once the feature is upstreamed (the fork is Gerrit-ready
-      # at devantler/govulncheck-action@feat/allow-file). See the action README for the file
-      # format.
+      # By default this is a strict gate that blocks on any reachable advisory. A consumer
+      # that opts in by committing a `.govulncheck-allow.txt` (one accepted advisory ID per
+      # line) gets the allowlist path: it can risk-accept a reachable advisory that has NO
+      # upstream fix (`Fixed in: N/A`) — e.g. a server-side symbol a CLI links transitively
+      # via k8s.io/kubernetes or docker/docker — with an explicit, version-controlled
+      # justification, instead of wedging EVERY Go PR on that consumer indefinitely.
+      #
+      # We use the `devantler/govulncheck-action` fork (not the official
+      # `golang/govulncheck-action`) on every path because: (1) it adds the `allow-file`
+      # input the official lacks, and (2) its nested actions are SHA-pinned
+      # (actions/checkout, actions/setup-go), whereas the official action's are tag-pinned
+      # (actions/checkout@v4.1.1, actions/setup-go@v5.0.0). Consumers that enforce "require
+      # actions pinned to a full-length commit SHA" reject those tags at JOB SETUP, and
+      # GitHub validates every `uses:` in the job — even ones behind an unreached `if` — so
+      # merely *referencing* the official action wedged the whole vuln-scan job on such repos.
+      # With no allow-file the fork behaves exactly like the official (strict). Swap back to
+      # `golang/govulncheck-action` once both `allow-file` and SHA-pinned internals land
+      # upstream (the fork is Gerrit-ready at devantler/govulncheck-action@feat/allow-file).
+      # See the action README for the allow-file format.
       - name: 🔎 Detect govulncheck allowlist
         id: govulncheck-allow
         run: |
@@ -370,19 +375,12 @@ jobs:
           fi
 
       - name: 🛡️ Scan for known vulnerabilities
-        if: steps.govulncheck-allow.outputs.present == 'false'
-        uses: golang/govulncheck-action@b625fbe08f3bccbe446d94fbf87fcc875a4f50ee # v1.0.4
-        with:
-          repo-checkout: false
-          go-version-file: go.mod
-
-      - name: 🛡️ Scan for known vulnerabilities (with risk-acceptance allowlist)
-        if: steps.govulncheck-allow.outputs.present == 'true'
         uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942 # feat/allow-file (fork; pending upstream)
         with:
           repo-checkout: false
           go-version-file: go.mod
-          allow-file: .govulncheck-allow.txt
+          # present ⇒ honour the allowlist (JSON mode, risk-accept listed IDs); absent ⇒ '' ⇒ strict.
+          allow-file: ${{ steps.govulncheck-allow.outputs.present == 'true' && '.govulncheck-allow.txt' || '' }}
 
   lint:
     name: 🧹 Lint - mega-linter
