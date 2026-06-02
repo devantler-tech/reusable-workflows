@@ -63,14 +63,18 @@ jobs:
           # excluded the parent — which the find loop could never express).
           matches() {
             # True if path $1 equals glob $2, or sits beneath a directory it matches.
-            # shellcheck disable=SC2254  # $2 is a gitignore-style glob; glob-matching it is intentional.
-            case "$1" in $2 | $2/*) return 0 ;; esac
+            # Strip one trailing "/" so a gitignore-style directory pattern (foo/)
+            # also matches files under it (foo/bar), not just the literal "foo/".
+            glob="${2%/}"
+            # shellcheck disable=SC2254  # $glob is a gitignore-style glob; glob-matching it is intentional.
+            case "$1" in $glob | $glob/*) return 0 ;; esac
             return 1
           }
           policyignore="$PWD/.policyignore"
           patterns=()
           while IFS= read -r line; do
-            patterns+=("$line")
+            # Strip a trailing CR so CRLF .policyignore files don't break matching.
+            patterns+=("${line%$'\r'}")
           done < <(grep -vE '^[[:space:]]*(#|$)' "$policyignore")
           cd "$KYVERNO_POLICIES_TEMP_DIR"
           while IFS= read -r rel; do
