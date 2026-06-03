@@ -378,6 +378,18 @@ jobs:
         uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942 # feat/allow-file (fork; pending upstream)
         with:
           repo-checkout: false
+          # Scan under the SAME Go version the consumer actually ships (its go.mod), so
+          # govulncheck's stdlib analysis matches the produced binary. The fork's setup-go
+          # receives BOTH go-version (default 'stable') and go-version-file, and in
+          # actions/setup-go go-version WINS over go-version-file when both are non-empty —
+          # so without this override the scan always ran under 'stable' (currently 1.26.3)
+          # and IGNORED go.mod. That made the gate unable to clear a stdlib advisory whose
+          # only fix ships in a Go release newer than the runner's 'stable' channel: a
+          # consumer that bumps go.mod past 'stable' got an operational error
+          # ("go.mod requires go >= X; running go <stable>; GOTOOLCHAIN=local") instead of a
+          # passing scan, wedging its entire Go PR lane. Empty go-version-input lets setup-go
+          # honour go-version-file (go.mod), installing the exact shipped version.
+          go-version-input: ''
           go-version-file: go.mod
           # present ⇒ honour the allowlist (JSON mode, risk-accept listed IDs); absent ⇒ '' ⇒ strict.
           allow-file: ${{ steps.govulncheck-allow.outputs.present == 'true' && '.govulncheck-allow.txt' || '' }}
