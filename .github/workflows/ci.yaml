@@ -170,6 +170,120 @@ jobs:
       use-app-token: false
       dry-run: true
 
+  # ── Govulncheck allowlist self-test (regression guard for #282/#283) ──────────
+  # validate-go-project.yaml's vuln-scan gate honors a `.govulncheck-allow.txt`
+  # allowlist so consumers can risk-accept a reachable advisory with no upstream
+  # fix. That contract was silently lost for several releases (v5.4.1–v5.4.4, on
+  # the official action which has no allow-file input) with no test catching it.
+  # These jobs exercise the SAME action the gate uses against a pinned-vulnerable
+  # fixture (tests/govulncheck-allowlist) so the contract is provable and stable:
+  #   • allowlisted ⇒ the scan PASSES,  • strict (no allow-file) ⇒ the scan FAILS.
+  # The govulncheck job in validate-go-project.yaml is skipped on this repo, so it
+  # cannot self-test itself — hence a dedicated, faithful replica here.
+  test-govulncheck-allowlist-honored:
+    name: "[Test] Govulncheck Allowlist - Allowlisted Advisory Passes"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: 🛡️ Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: 📄 Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      # Mirror validate-go-project.yaml's scan step (same action SHA + inputs).
+      # The fixture reachably calls a GO-2021-0113 symbol; with that ID listed in
+      # .govulncheck-allow.txt the scan MUST pass. Keep this `uses:` in lockstep
+      # with validate-go-project.yaml — enforced by test-govulncheck-action-lockstep.
+      - name: 🛡️ Scan fixture with allowlist (must pass)
+        uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942 # feat/allow-file (fork; pending upstream)
+        with:
+          repo-checkout: false
+          work-dir: tests/govulncheck-allowlist
+          go-version-input: ""
+          go-version-file: tests/govulncheck-allowlist/go.mod
+          allow-file: tests/govulncheck-allowlist/.govulncheck-allow.txt
+
+  test-govulncheck-strict-blocks:
+    name: "[Test] Govulncheck Allowlist - Strict Path Blocks"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: 🛡️ Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: 📄 Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      # Same fixture, but with NO allow-file: the strict path must FAIL on the
+      # reachable advisory. continue-on-error lets the run proceed so the next step
+      # can assert the failure, turning "the gate stopped blocking" into a red test.
+      - name: 🛡️ Scan fixture without allowlist (expected to fail)
+        id: scan
+        continue-on-error: true
+        uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942 # feat/allow-file (fork; pending upstream)
+        with:
+          repo-checkout: false
+          work-dir: tests/govulncheck-allowlist
+          go-version-input: ""
+          go-version-file: tests/govulncheck-allowlist/go.mod
+          allow-file: ""
+
+      - name: ✅ Assert the strict scan blocked
+        shell: bash
+        env:
+          OUTCOME: ${{ steps.scan.outcome }}
+        run: |
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "::error::Strict govulncheck scan should FAIL on the reachable GO-2021-0113 fixture, but its outcome was '$OUTCOME'. The strict gate is no longer blocking reachable advisories."
+            exit 1
+          fi
+          echo "Strict scan correctly blocked the reachable advisory ✅"
+
+  test-govulncheck-action-lockstep:
+    name: "[Test] Govulncheck Allowlist - Gate Pins Self-Tested Action"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: 🛡️ Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: 📄 Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      # `uses:` cannot be parametrized, so the two scan jobs above hard-code the
+      # govulncheck action SHA. This guard asserts validate-go-project.yaml pins
+      # that SAME SHA, so the self-test always exercises the real gate. If the gate
+      # is ever swapped to an action without allow-file support, this check goes red
+      # and forces the self-test to be updated — at which point the allowlisted case
+      # fails too. That is what makes this suite catch the v5.4.1–v5.4.4 regression.
+      - name: 🔒 Assert the gate pins the self-tested action SHA
+        shell: bash
+        env:
+          EXPECTED: "devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942"
+        run: |
+          set -euo pipefail
+          if ! grep -qF "$EXPECTED" .github/workflows/validate-go-project.yaml; then
+            echo "::error::validate-go-project.yaml no longer pins '$EXPECTED'. If the govulncheck action was changed intentionally, update both scan jobs in ci.yaml (test-govulncheck-allowlist-honored / test-govulncheck-strict-blocks) and this EXPECTED value so the allowlist self-test keeps exercising the real gate."
+            exit 1
+          fi
+          echo "validate-go-project.yaml pins the self-tested govulncheck action ✅"
+
   ci-required-checks:
     name: "CI - Required Checks"
     runs-on: ubuntu-latest
@@ -191,6 +305,9 @@ jobs:
         test-sync-cluster-policies,
         test-update-agent-skills,
         test-template-sync,
+        test-govulncheck-allowlist-honored,
+        test-govulncheck-strict-blocks,
+        test-govulncheck-action-lockstep,
       ]
     permissions: {}
     if: ${{ always() }}
@@ -220,3 +337,6 @@ jobs:
             ${{ needs.test-sync-cluster-policies.result }}
             ${{ needs.test-update-agent-skills.result }}
             ${{ needs.test-template-sync.result }}
+            ${{ needs.test-govulncheck-allowlist-honored.result }}
+            ${{ needs.test-govulncheck-strict-blocks.result }}
+            ${{ needs.test-govulncheck-action-lockstep.result }}
