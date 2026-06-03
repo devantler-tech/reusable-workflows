@@ -23,6 +23,12 @@ jobs:
       contents: read
       actions: read
 
+  test-dependency-review:
+    name: "[Test] Dependency Review - Default Settings"
+    uses: ./.github/workflows/dependency-review.yaml
+    permissions:
+      contents: read
+
   test-delete-workflow-runs-all:
     name: "[Test] Delete Workflow Runs - All Workflows"
     uses: ./.github/workflows/delete-workflow-runs.yaml
@@ -170,6 +176,7 @@ jobs:
     needs:
       [
         test-zizmor,
+        test-dependency-review,
         test-delete-workflow-runs-all,
         test-delete-workflow-runs-specific,
         test-delete-workflow-runs-minimal,
@@ -198,6 +205,7 @@ jobs:
         with:
           job-results: >-
             ${{ needs.test-zizmor.result }}
+            ${{ needs.test-dependency-review.result }}
             ${{ needs.test-delete-workflow-runs-all.result }}
             ${{ needs.test-delete-workflow-runs-specific.result }}
             ${{ needs.test-delete-workflow-runs-minimal.result }}
