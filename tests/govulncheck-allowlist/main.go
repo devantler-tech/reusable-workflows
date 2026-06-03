@@ -1,5 +1,5 @@
 // Package main is a self-contained fixture for the govulncheck allowlist
-// self-test (.github/workflows/test-govulncheck-allowlist.yaml). It REACHABLY
+// self-test (the test-govulncheck-* jobs in .github/workflows/ci.yaml). It REACHABLY
 // calls a function in a pinned-vulnerable dependency so govulncheck reports a
 // known advisory, letting CI prove that validate-go-project.yaml's
 // `.govulncheck-allow.txt` allowlist is honored (allowlisted ⇒ pass) and that
