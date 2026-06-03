@@ -377,6 +377,29 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: 🧹 Free disk space
+        # Reclaim ~11+ GB by removing large preinstalled toolchains a Go
+        # build/test never uses (Android SDK, .NET, GHC, …). A large consumer
+        # module's `go build`/`go test ./...` build cache (and the coverage
+        # job's `-race` binaries) can otherwise exhaust the runner disk —
+        # observed as a hard "No space left on device" failure. Targeted
+        # `rm -rf` only (avoids the slow apt-remove path); best-effort.
+        run: |
+          set -euo pipefail
+          before=$(df --output=avail -BG / | tail -1 | tr -dc '0-9')
+          sudo rm -rf \
+            /usr/local/lib/android \
+            /usr/share/dotnet \
+            /opt/ghc \
+            /usr/local/share/boost \
+            /usr/share/swift \
+            /opt/hostedtoolcache/CodeQL \
+            /opt/hostedtoolcache/PyPy \
+            /usr/local/share/powershell \
+            /usr/share/miniconda || true
+          after=$(df --output=avail -BG / | tail -1 | tr -dc '0-9')
+          echo "Free disk on /: ${before}G -> ${after}G (gained $((after - before))G)"
+
       - name: ⚙️ Setup Go
         uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
         with:
@@ -401,6 +424,29 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+
+      - name: 🧹 Free disk space
+        # Reclaim ~11+ GB by removing large preinstalled toolchains a Go
+        # build/test never uses (Android SDK, .NET, GHC, …). A large consumer
+        # module's `go build`/`go test ./...` build cache (and the coverage
+        # job's `-race` binaries) can otherwise exhaust the runner disk —
+        # observed as a hard "No space left on device" failure. Targeted
+        # `rm -rf` only (avoids the slow apt-remove path); best-effort.
+        run: |
+          set -euo pipefail
+          before=$(df --output=avail -BG / | tail -1 | tr -dc '0-9')
+          sudo rm -rf \
+            /usr/local/lib/android \
+            /usr/share/dotnet \
+            /opt/ghc \
+            /usr/local/share/boost \
+            /usr/share/swift \
+            /opt/hostedtoolcache/CodeQL \
+            /opt/hostedtoolcache/PyPy \
+            /usr/local/share/powershell \
+            /usr/share/miniconda || true
+          after=$(df --output=avail -BG / | tail -1 | tr -dc '0-9')
+          echo "Free disk on /: ${before}G -> ${after}G (gained $((after - before))G)"
 
       - name: ⚙️ Setup Go
         uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
@@ -430,6 +476,29 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+
+      - name: 🧹 Free disk space
+        # Reclaim ~11+ GB by removing large preinstalled toolchains a Go
+        # build/test never uses (Android SDK, .NET, GHC, …). A large consumer
+        # module's `go build`/`go test ./...` build cache (and the coverage
+        # job's `-race` binaries) can otherwise exhaust the runner disk —
+        # observed as a hard "No space left on device" failure. Targeted
+        # `rm -rf` only (avoids the slow apt-remove path); best-effort.
+        run: |
+          set -euo pipefail
+          before=$(df --output=avail -BG / | tail -1 | tr -dc '0-9')
+          sudo rm -rf \
+            /usr/local/lib/android \
+            /usr/share/dotnet \
+            /opt/ghc \
+            /usr/local/share/boost \
+            /usr/share/swift \
+            /opt/hostedtoolcache/CodeQL \
+            /opt/hostedtoolcache/PyPy \
+            /usr/local/share/powershell \
+            /usr/share/miniconda || true
+          after=$(df --output=avail -BG / | tail -1 | tr -dc '0-9')
+          echo "Free disk on /: ${before}G -> ${after}G (gained $((after - before))G)"
 
       - name: ⚙️ Setup Go
         uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
