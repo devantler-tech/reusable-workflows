@@ -55,7 +55,12 @@ on:
 jobs:
   dependency-review:
     runs-on: ubuntu-latest
-    if: github.event_name != 'merge_group'
+    # Dependency Review needs a PR diff (base..head is auto-resolved only on pull_request /
+    # pull_request_target). On any other caller event — push, merge_group, schedule, … — the
+    # underlying action has no diff to inspect and errors out, so guard with an allow-list of the
+    # supported events and let the job no-op (skipped → green) everywhere else. This keeps the
+    # reusable workflow safe to wire into a push-triggered CI without breaking it.
+    if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
     permissions:
       contents: read # read the dependency graph / diff base..head
     steps:
