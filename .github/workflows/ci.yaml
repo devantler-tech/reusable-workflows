@@ -228,6 +228,10 @@ jobs:
       # Same fixture, but with NO allow-file: the strict path must FAIL on the
       # reachable advisory. continue-on-error lets the run proceed so the next step
       # can assert the failure, turning "the gate stopped blocking" into a red test.
+      # output-file captures the scan output so the assertion can confirm the run
+      # actually detected the advisory — distinguishing a real block from an
+      # operational error (e.g. toolchain/install failure) that would otherwise make
+      # a bare "the step failed" check pass for the wrong reason.
       - name: 🛡️ Scan fixture without allowlist (expected to fail)
         id: scan
         continue-on-error: true
@@ -238,17 +242,24 @@ jobs:
           go-version-input: ""
           go-version-file: tests/govulncheck-allowlist/go.mod
           allow-file: ""
+          output-file: govulncheck-strict.txt
 
-      - name: ✅ Assert the strict scan blocked
+      - name: ✅ Assert the strict scan blocked on the advisory
         shell: bash
         env:
           OUTCOME: ${{ steps.scan.outcome }}
         run: |
+          set -euo pipefail
           if [ "$OUTCOME" != "failure" ]; then
             echo "::error::Strict govulncheck scan should FAIL on the reachable GO-2021-0113 fixture, but its outcome was '$OUTCOME'. The strict gate is no longer blocking reachable advisories."
             exit 1
           fi
-          echo "Strict scan correctly blocked the reachable advisory ✅"
+          if ! grep -q "GO-2021-0113" govulncheck-strict.txt; then
+            echo "::error::Strict scan failed, but its output did not report GO-2021-0113 — the failure was operational (e.g. toolchain/install), not a real vulnerability block. Output:"
+            cat govulncheck-strict.txt || echo "(no output captured)"
+            exit 1
+          fi
+          echo "Strict scan correctly blocked on the reachable advisory ✅"
 
   test-govulncheck-action-lockstep:
     name: "[Test] Govulncheck Allowlist - Gate Pins Self-Tested Action"

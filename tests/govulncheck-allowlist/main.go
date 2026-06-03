@@ -11,6 +11,12 @@
 // or advisory GO-2021-0113 ever stops being reported by govulncheck, repoint
 // this module (and the ID in .govulncheck-allow.txt) at another pinned
 // dependency version with a known reachable advisory and re-tidy.
+//
+// The `go` directive in go.mod must satisfy govulncheck@latest's minimum Go
+// version (the action installs it with GOTOOLCHAIN=local, so it cannot upgrade
+// the toolchain). It is kept at the portfolio's current Go line; bump it if a
+// newer govulncheck raises that floor (the allowlisted-passes case goes red and
+// surfaces the requirement if it falls behind).
 package main
 
 import (
