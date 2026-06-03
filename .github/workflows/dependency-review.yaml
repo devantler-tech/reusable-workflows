@@ -1,0 +1,80 @@
+name: 🛡️ Dependency Review
+
+permissions: {}
+
+on:
+  workflow_call:
+    inputs:
+      fail-on-severity:
+        description: >-
+          Block PRs on vulnerabilities of this severity or higher (`low`, `moderate`, `high`,
+          `critical`). Only applies when `warn-only` is false. Defaults to `critical`.
+        type: string
+        required: false
+        default: critical
+      fail-on-scopes:
+        description: >-
+          Comma-separated dependency scopes to block on (`runtime`, `development`, `unknown`).
+          Defaults to `runtime` so dev-only vulnerabilities don't block.
+        type: string
+        required: false
+        default: runtime
+      allow-licenses:
+        description: >-
+          Comma-separated allow-list of SPDX licenses. Empty means no allow-list is enforced.
+          Mutually exclusive with `deny-licenses`.
+        type: string
+        required: false
+        default: ""
+      deny-licenses:
+        description: >-
+          Comma-separated deny-list of SPDX licenses. Empty means no deny-list is enforced.
+          Mutually exclusive with `allow-licenses`.
+        type: string
+        required: false
+        default: ""
+      comment-summary-in-pr:
+        description: >-
+          Post the review summary as a PR comment (`always`, `on-failure`, `never`). Anything but
+          `never` requires the calling job to grant `pull-requests: write`. Defaults to `never`.
+        type: string
+        required: false
+        default: never
+      warn-only:
+        description: >-
+          When `true`, the action always succeeds (non-blocking), overriding `fail-on-severity`.
+          Defaults to `true` for safe org-wide rollout; set to `false` to enforce.
+        type: boolean
+        required: false
+        default: true
+  ### Required Workflow Triggers ###
+  pull_request:
+  merge_group:
+  ##################################
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'merge_group'
+    permissions:
+      contents: read # read the dependency graph / diff base..head
+    steps:
+      - name: 🛡️ Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: 📑 Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: 🛡️ Dependency Review
+        uses: devantler-tech/actions/dependency-review@521bc2e2bc4f24aae8ffa44a9365baece6f29b13 # unreleased — repin to the dependency-review composite's first release SHA before promotion
+        with:
+          fail-on-severity: ${{ inputs.fail-on-severity }}
+          fail-on-scopes: ${{ inputs.fail-on-scopes }}
+          allow-licenses: ${{ inputs.allow-licenses }}
+          deny-licenses: ${{ inputs.deny-licenses }}
+          comment-summary-in-pr: ${{ inputs.comment-summary-in-pr }}
+          warn-only: ${{ inputs.warn-only }}

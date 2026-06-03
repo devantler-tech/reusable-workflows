@@ -92,6 +92,36 @@ jobs:
 
 </details>
 
+### 🛡️ Dependency Review
+
+<details>
+<summary>Click to expand</summary>
+
+[.github/workflows/dependency-review.yaml](.github/workflows/dependency-review.yaml) scans a pull request's dependency changes for known-vulnerable packages and disallowed licenses using [GitHub Dependency Review](https://github.com/actions/dependency-review-action). It is designed to run as an organization **Required Workflow** as well as via `workflow_call`.
+
+It is **non-blocking by default** (`warn-only: true`, `fail-on-severity: critical`) so it can be required org-wide without blocking existing PRs; set `warn-only: false` to enforce. With `comment-summary-in-pr: never` (the default) the job needs only `contents: read`.
+
+#### Usage
+
+```yaml
+jobs:
+  dependency-review:
+    uses: devantler-tech/reusable-workflows/.github/workflows/dependency-review.yaml@{ref} # ref
+```
+
+#### Inputs
+
+| Name | Description | Default |
+|------|-------------|---------|
+| `fail-on-severity` | Block on vulnerabilities of this severity or higher (`low`, `moderate`, `high`, `critical`); only when `warn-only` is false. | `critical` |
+| `fail-on-scopes` | Comma-separated scopes to block on (`runtime`, `development`, `unknown`). | `runtime` |
+| `allow-licenses` | Comma-separated SPDX allow-list (empty = not enforced). Mutually exclusive with `deny-licenses`. | `""` |
+| `deny-licenses` | Comma-separated SPDX deny-list (empty = not enforced). Mutually exclusive with `allow-licenses`. | `""` |
+| `comment-summary-in-pr` | Post the summary as a PR comment (`always`, `on-failure`, `never`); anything but `never` needs `pull-requests: write`. | `never` |
+| `warn-only` | Report findings as warnings and always succeed (non-blocking); set `false` to enforce. | `true` |
+
+</details>
+
 ### 🚀 Deploy GitHub Pages
 
 <details>
