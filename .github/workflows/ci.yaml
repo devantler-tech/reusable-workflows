@@ -286,7 +286,11 @@ jobs:
       - name: 🔒 Assert the gate pins the self-tested action SHA
         shell: bash
         env:
-          EXPECTED: "devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942"
+          # Match the full `uses:` line fragment, not the bare action ref — the ref
+          # also appears in surrounding comments in validate-go-project.yaml, so a
+          # bare-ref grep would false-pass if the real `uses:` SHA were changed while
+          # a comment still mentioned the old ref.
+          EXPECTED: "uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942"
         run: |
           set -euo pipefail
           if ! grep -qF "$EXPECTED" .github/workflows/validate-go-project.yaml; then
