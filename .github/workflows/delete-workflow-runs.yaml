@@ -58,14 +58,204 @@ jobs:
         with:
           egress-policy: audit
 
+      # Inline reimplementation of the run-cleanup logic with bounded
+      # retry/backoff on transient GitHub API errors (5xx + secondary rate
+      # limits). The previous third-party `Mattraks/delete-workflow-runs` step
+      # failed fast on a single transient 5xx during enumeration, repeatedly
+      # flaking this required check and blocking otherwise-green PRs (#292). A
+      # `uses:` step cannot be wrapped by a shell-level retry, so the logic is
+      # inlined here. Behaviour is preserved for every documented input.
+      # Inputs are passed via `env:` (never interpolated into the script body)
+      # to keep the step free of template-injection (zizmor-clean).
       - name: 🗑️ Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@b3018382ca039b53d238908238bd35d1fb14f8ee # v2.1.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ inputs.repository || github.repository }}
-          retain_days: ${{ inputs.days }}
-          keep_minimum_runs: ${{ inputs.minimum-runs }}
-          delete_workflow_pattern: ${{ inputs.delete-workflow-pattern }}
-          delete_workflow_by_state_pattern: ${{ inputs.delete-workflow-by-state-pattern }}
-          delete_run_by_conclusion_pattern: ${{ inputs.delete-run-by-conclusion-pattern }}
-          dry_run: ${{ inputs.dry-run }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ inputs.repository || github.repository }}
+          RETAIN_DAYS: ${{ inputs.days }}
+          MINIMUM_RUNS: ${{ inputs.minimum-runs }}
+          WORKFLOW_PATTERN: ${{ inputs.delete-workflow-pattern }}
+          STATE_PATTERN: ${{ inputs.delete-workflow-by-state-pattern }}
+          CONCLUSION_PATTERN: ${{ inputs.delete-run-by-conclusion-pattern }}
+          DRY_RUN: ${{ inputs.dry-run }}
+        run: |
+          python3 - <<'PY'
+          """Delete old workflow runs with bounded retry on transient API errors.
+
+          Faithful reimplementation of Mattraks/delete-workflow-runs@v2.1.0 for the
+          inputs this reusable workflow exposes (no daily-retention / branch / PR
+          checks). Adds retry + exponential backoff on 5xx and secondary rate
+          limits so a transient server error no longer fails this required check.
+          """
+          import json, os, re, sys, time, urllib.error, urllib.request
+          from urllib.parse import urlencode
+
+          API = "https://api.github.com"
+          TOKEN = os.environ["GH_TOKEN"]
+          OWNER, _, REPO = os.environ["REPOSITORY"].partition("/")
+          RETAIN_DAYS = int(os.environ.get("RETAIN_DAYS") or "30")
+          MIN_RUNS = int(os.environ.get("MINIMUM_RUNS") or "6")
+          WF_PATTERN = (os.environ.get("WORKFLOW_PATTERN") or "").strip()
+          STATE_PATTERN = (os.environ.get("STATE_PATTERN") or "ALL").strip()
+          CONCLUSION_PATTERN = (os.environ.get("CONCLUSION_PATTERN") or "ALL").strip()
+          DRY_RUN = (os.environ.get("DRY_RUN") or "false").strip().lower() not in ("", "0", "no", "n", "false")
+
+          MAX_ATTEMPTS = 5      # 1 initial + 4 retries
+          BASE_DELAY = 2.0      # seconds; exponential: 2, 4, 8, 16 (capped)
+          MAX_DELAY = 30.0
+
+          if not OWNER or not REPO:
+              print(f"❌ Invalid repository: '{os.environ['REPOSITORY']}' (expected 'owner/repo')")
+              sys.exit(1)
+
+          def _split(pattern):
+              return [s.strip().lower() for s in re.split(r"[,|]", pattern) if s.strip()]
+
+          def api(method, url):
+              """One request with bounded retry/backoff on transient errors.
+
+              Returns (headers, body-bytes). Raises on non-transient errors or once
+              attempts are exhausted, so genuine failures still fail the job.
+              """
+              if not url.startswith("http"):
+                  url = API + url
+              headers = {
+                  "Authorization": f"Bearer {TOKEN}",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+                  "User-Agent": "devantler-tech-delete-workflow-runs",
+              }
+              for attempt in range(1, MAX_ATTEMPTS + 1):
+                  try:
+                      with urllib.request.urlopen(urllib.request.Request(url, method=method, headers=headers)) as resp:
+                          return dict(resp.headers), resp.read()
+                  except urllib.error.HTTPError as e:
+                      body = ""
+                      try:
+                          body = e.read().decode("utf-8", "replace")
+                      except Exception:
+                          pass
+                      retry_after = e.headers.get("Retry-After") if e.headers else None
+                      remaining = e.headers.get("X-RateLimit-Remaining") if e.headers else None
+                      is_rate_limit = e.code in (403, 429) and (
+                          retry_after is not None or remaining == "0" or "secondary rate limit" in body.lower()
+                      )
+                      transient = e.code >= 500 or is_rate_limit
+                      if transient and attempt < MAX_ATTEMPTS:
+                          delay = float(retry_after) if retry_after else min(MAX_DELAY, BASE_DELAY * (2 ** (attempt - 1)))
+                          print(f"⏳ Transient HTTP {e.code} on {method} {url} — retry {attempt}/{MAX_ATTEMPTS - 1} in {delay:.0f}s", flush=True)
+                          time.sleep(delay)
+                          continue
+                      raise RuntimeError(f"HTTP {e.code} on {method} {url}: {body[:200]}")
+                  except urllib.error.URLError as e:
+                      if attempt < MAX_ATTEMPTS:
+                          delay = min(MAX_DELAY, BASE_DELAY * (2 ** (attempt - 1)))
+                          print(f"⏳ Network error on {method} {url} ({e.reason}) — retry {attempt}/{MAX_ATTEMPTS - 1} in {delay:.0f}s", flush=True)
+                          time.sleep(delay)
+                          continue
+                      raise
+
+          def _next_link(link_header):
+              if not link_header:
+                  return None
+              for part in link_header.split(","):
+                  m = re.search(r'<([^>]+)>;\s*rel="next"', part)
+                  if m:
+                      return m.group(1)
+              return None
+
+          def paginate(path, key=None):
+              items, url = [], API + path + ("&" if "?" in path else "?") + urlencode({"per_page": 100})
+              while url:
+                  hdrs, body = api("GET", url)
+                  data = json.loads(body)
+                  if isinstance(data, list):
+                      items.extend(data)
+                  elif key and key in data:
+                      items.extend(data[key])
+                  url = _next_link(hdrs.get("Link"))
+              return items
+
+          def delete_runs(runs, context):
+              if not runs:
+                  return
+              deleted = skipped = failed = 0
+              for r in runs:
+                  rid = r["id"]
+                  if DRY_RUN:
+                      print(f"[dry-run] 🚀 Simulate deletion: Run {rid} ({context})")
+                      skipped += 1
+                      continue
+                  try:
+                      api("DELETE", f"/repos/{OWNER}/{REPO}/actions/runs/{rid}")
+                      deleted += 1
+                  except Exception as e:  # per-run failure must not abort the job
+                      print(f"❌ Failed to delete Run {rid} ({context}): {e}")
+                      failed += 1
+              print(f"🗑️ Summary for {context}: deleted={deleted}, skipped={skipped}, failed={failed}")
+
+          def should_delete(run, allowed, now):
+              if run.get("status") != "completed":
+                  return False
+              if allowed and str(run.get("conclusion") or "").lower() not in allowed:
+                  return False
+              if RETAIN_DAYS > 0:
+                  created = run.get("created_at")
+                  if not created:
+                      return False
+                  age_days = (now - time.mktime(time.strptime(created, "%Y-%m-%dT%H:%M:%SZ"))) / 86400.0
+                  if age_days < RETAIN_DAYS:
+                      return False
+              return True
+
+          # 1. Workflows + the set of known workflow ids (for orphan detection).
+          workflows = paginate(f"/repos/{OWNER}/{REPO}/actions/workflows", key="workflows")
+          workflow_ids = {w["id"] for w in workflows}
+
+          # 2. Filter workflows by name/filename pattern and by state.
+          filtered = workflows
+          if WF_PATTERN:
+              pats = _split(WF_PATTERN)
+              if pats:
+                  print(f"🔍 Filtering by patterns: {', '.join(pats)}")
+                  def _match(w):
+                      name = (w.get("name") or "").lower()
+                      filename = re.sub(r"^\.github/workflows/", "", w.get("path") or "").lower()
+                      return any(p in name or p in filename for p in pats)
+                  filtered = [w for w in filtered if _match(w)]
+          if STATE_PATTERN.upper() != "ALL":
+              states = _split(STATE_PATTERN)
+              print(f"🔍 Filtering by state: {', '.join(states)}")
+              filtered = [w for w in filtered if (w.get("state") or "").lower() in states]
+          print(f"Processing {len(filtered)} workflow(s)")
+
+          # 3. Orphan runs (runs whose workflow no longer exists) are removed outright.
+          orphans = [r for r in paginate(f"/repos/{OWNER}/{REPO}/actions/runs", key="workflow_runs")
+                     if r.get("workflow_id") not in workflow_ids]
+          if orphans:
+              print(f"👻 Found {len(orphans)} orphan run(s)")
+              delete_runs(orphans, "orphan runs")
+
+          # 4. Per workflow: keep runs newer than RETAIN_DAYS, always retain the
+          #    newest MIN_RUNS of the deletable (old, matching-conclusion) runs.
+          allowed = [] if CONCLUSION_PATTERN.upper() == "ALL" else _split(CONCLUSION_PATTERN)
+          now = time.time()
+          for w in filtered:
+              print(f"::group::Processing: {w.get('name')} (ID: {w['id']})")
+              runs = paginate(f"/repos/{OWNER}/{REPO}/actions/workflows/{w['id']}/runs", key="workflow_runs")
+              candidates = [r for r in runs if should_delete(r, allowed, now)]
+              candidates.sort(key=lambda r: r.get("created_at") or "")  # oldest first
+              if MIN_RUNS > 0:
+                  retain = candidates[-MIN_RUNS:] if MIN_RUNS <= len(candidates) else candidates
+                  to_delete = candidates[: len(candidates) - len(retain)]
+              else:
+                  to_delete = candidates
+              if to_delete:
+                  print(f"🚀 Deleting {len(to_delete)} run(s)")
+                  delete_runs(to_delete, w.get("name") or str(w["id"]))
+              else:
+                  print("💬 No runs to delete")
+              print("::endgroup::")
+
+          print("✅ Cleanup completed successfully!")
+          PY
