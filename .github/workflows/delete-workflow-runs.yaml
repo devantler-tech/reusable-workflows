@@ -87,7 +87,7 @@ jobs:
           checks). Adds retry + exponential backoff on 5xx and secondary rate
           limits so a transient server error no longer fails this required check.
           """
-          import json, os, re, sys, time, urllib.error, urllib.request
+          import calendar, json, os, re, sys, time, urllib.error, urllib.request
           from urllib.parse import urlencode
 
           API = "https://api.github.com"
@@ -100,9 +100,11 @@ jobs:
           CONCLUSION_PATTERN = (os.environ.get("CONCLUSION_PATTERN") or "ALL").strip()
           DRY_RUN = (os.environ.get("DRY_RUN") or "false").strip().lower() not in ("", "0", "no", "n", "false")
 
-          MAX_ATTEMPTS = 5      # 1 initial + 4 retries
-          BASE_DELAY = 2.0      # seconds; exponential: 2, 4, 8, 16 (capped)
-          MAX_DELAY = 30.0
+          MAX_ATTEMPTS = 5         # 1 initial + 4 retries
+          BASE_DELAY = 2.0         # seconds; exponential: 2, 4, 8, 16 (capped)
+          MAX_DELAY = 30.0         # cap on the backoff between retries
+          RETRY_AFTER_MAX = 60.0   # cap on a server-supplied Retry-After (bounds the wait)
+          REQUEST_TIMEOUT = 30     # seconds; bounds a stalled connection so it stays retryable
 
           if not OWNER or not REPO:
               print(f"❌ Invalid repository: '{os.environ['REPOSITORY']}' (expected 'owner/repo')")
@@ -110,6 +112,19 @@ jobs:
 
           def _split(pattern):
               return [s.strip().lower() for s in re.split(r"[,|]", pattern) if s.strip()]
+
+          def _retry_after_delay(retry_after):
+              """Bounded delay from a Retry-After header, or None to fall back to backoff.
+
+              GitHub sends Retry-After in seconds for (secondary) rate limits. Honor it
+              so a retry doesn't immediately re-trip the same limit, but cap it at
+              RETRY_AFTER_MAX so a pathological value can't hang the job. A non-numeric
+              (HTTP-date) value returns None so the caller uses its exponential backoff.
+              """
+              try:
+                  return min(RETRY_AFTER_MAX, max(0.0, float(retry_after)))
+              except (TypeError, ValueError):
+                  return None
 
           def api(method, url):
               """One request with bounded retry/backoff on transient errors.
@@ -127,7 +142,8 @@ jobs:
               }
               for attempt in range(1, MAX_ATTEMPTS + 1):
                   try:
-                      with urllib.request.urlopen(urllib.request.Request(url, method=method, headers=headers)) as resp:
+                      req = urllib.request.Request(url, method=method, headers=headers)
+                      with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as resp:
                           return dict(resp.headers), resp.read()
                   except urllib.error.HTTPError as e:
                       body = ""
@@ -142,7 +158,9 @@ jobs:
                       )
                       transient = e.code >= 500 or is_rate_limit
                       if transient and attempt < MAX_ATTEMPTS:
-                          delay = float(retry_after) if retry_after else min(MAX_DELAY, BASE_DELAY * (2 ** (attempt - 1)))
+                          delay = _retry_after_delay(retry_after)
+                          if delay is None:
+                              delay = min(MAX_DELAY, BASE_DELAY * (2 ** (attempt - 1)))
                           print(f"⏳ Transient HTTP {e.code} on {method} {url} — retry {attempt}/{MAX_ATTEMPTS - 1} in {delay:.0f}s", flush=True)
                           time.sleep(delay)
                           continue
@@ -203,7 +221,10 @@ jobs:
                   created = run.get("created_at")
                   if not created:
                       return False
-                  age_days = (now - time.mktime(time.strptime(created, "%Y-%m-%dT%H:%M:%SZ"))) / 86400.0
+                  # created_at is UTC; calendar.timegm treats the struct as UTC (time.mktime
+                  # would interpret it as local time and skew the age by the runner's offset).
+                  created_utc = calendar.timegm(time.strptime(created, "%Y-%m-%dT%H:%M:%SZ"))
+                  age_days = (now - created_utc) / 86400.0
                   if age_days < RETAIN_DAYS:
                       return False
               return True
