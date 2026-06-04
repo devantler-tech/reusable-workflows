@@ -121,7 +121,7 @@ jobs:
           fi
 
       - name: 🛡️ Dependency Review
-        uses: devantler-tech/actions/dependency-review@3556694b57702d81bfc5fb1d79a9ee0b4e53aca7 # unreleased — repin to the dependency-review composite's first release SHA before promotion
+        uses: devantler-tech/actions/dependency-review@521bc2e2bc4f24aae8ffa44a9365baece6f29b13 # unreleased — repin to the dependency-review composite's first release SHA before promotion
         with:
           fail-on-severity: ${{ steps.cfg.outputs.fail-on-severity }}
           fail-on-scopes: ${{ steps.cfg.outputs.fail-on-scopes }}
