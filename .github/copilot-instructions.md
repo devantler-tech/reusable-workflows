@@ -8,12 +8,12 @@ violations of the rules below.
 
 ## Always (every PR)
 
-- **Conventional-Commit PR title** (`feat:`/`fix:`/`docs:`/`ci:`/`build:`/`chore:`/`refactor:`/`test:`).
+- **Conventional-Commit PR title** (`feat:`/`fix:`/`perf:`/`revert:`/`docs:`/`style:`/`ci:`/`build:`/`chore:`/`refactor:`/`test:`).
   semantic-release cuts releases from the squash-merge title, so a non-conventional or bracket-prefixed
-  title is a defect. The workflows **are** this repo's product: `ci:`/`build:`/`refactor:` ship to
-  consumers as a **patch**, `feat:` as minor, a `!` or `BREAKING CHANGE:` as **major** — flag a title
-  whose type understates the actual change (e.g. a behaviour change typed `chore:`/`docs:`, which would
-  ship no release).
+  title is a defect. The workflows **are** this repo's product: `fix:`/`perf:`/`revert:`/`ci:`/`build:`/`refactor:`
+  ship to consumers as a **patch**, `feat:` as minor, a `!` or `BREAKING CHANGE:` as **major**, while
+  `chore:`/`docs:`/`test:`/`style:` ship no release — flag a title whose type understates the actual
+  change (e.g. a behaviour change typed `chore:`/`docs:`).
 - **Root-cause fixes only.** Flag anything that masks a failure: `continue-on-error` or a deleted
   `[Test]` job to dodge red CI, weakened assertions, `--no-verify`, a silenced/skipped `zizmor` or
   linter check.
@@ -50,5 +50,5 @@ violations of the rules below.
 - Never weaken a security control (harden-runner, SHA pin, `persist-credentials: false`, `permissions`)
   to make a check pass.
 
-Copilot code review reads this file + `.github/instructions/**/*.instructions.md` at **≤4000 chars**
-and does **not** read `AGENTS.md` — when unsure, defer to [`AGENTS.md`](../AGENTS.md).
+Copilot code review reads this file + `.github/instructions/**/*.instructions.md` (capped at **≤4000
+chars**), so keep it concise; for the full conventions defer to [`AGENTS.md`](../AGENTS.md).
