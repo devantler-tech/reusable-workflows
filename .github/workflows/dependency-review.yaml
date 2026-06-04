@@ -74,12 +74,58 @@ jobs:
         with:
           persist-credentials: false
 
+      # On the direct self-trigger (the `### Required Workflow Triggers ###`
+      # pull_request event) the `inputs` context is empty, so the `workflow_call`
+      # input defaults — including `warn-only: true` — do NOT apply. Passing those
+      # empty strings straight to the composite overrides ITS defaults too, flipping
+      # the self-trigger into enforce mode and hard-blocking this repo's own PRs (e.g.
+      # an intentionally-vulnerable test fixture). Resolve the effective values here
+      # instead, mirroring this workflow's documented defaults. The discriminator is
+      # bash-side (not a `${{ }}` expression, which would mis-coerce the boolean
+      # `warn-only: false` case): `github.event_name` is inherited from the caller on
+      # workflow_call so it can't tell the two apart, but the boolean `warn-only` input
+      # has `default: true` and is therefore never empty on a real workflow_call — only
+      # an empty value means "direct self-trigger". See #288.
+      - name: ⚙️ Resolve effective inputs
+        id: cfg
+        shell: bash
+        env:
+          IN_FAIL_ON_SEVERITY: ${{ inputs.fail-on-severity }}
+          IN_FAIL_ON_SCOPES: ${{ inputs.fail-on-scopes }}
+          IN_ALLOW_LICENSES: ${{ inputs.allow-licenses }}
+          IN_DENY_LICENSES: ${{ inputs.deny-licenses }}
+          IN_COMMENT_SUMMARY: ${{ inputs.comment-summary-in-pr }}
+          IN_WARN_ONLY: ${{ inputs.warn-only }}
+        run: |
+          set -euo pipefail
+          if [ -z "$IN_WARN_ONLY" ]; then
+            # Direct self-trigger: no workflow_call inputs → use documented defaults.
+            {
+              echo "fail-on-severity=critical"
+              echo "fail-on-scopes=runtime"
+              echo "allow-licenses="
+              echo "deny-licenses="
+              echo "comment-summary-in-pr=never"
+              echo "warn-only=true"
+            } >> "$GITHUB_OUTPUT"
+          else
+            # Called via workflow_call: input defaults applied → pass values through.
+            {
+              echo "fail-on-severity=$IN_FAIL_ON_SEVERITY"
+              echo "fail-on-scopes=$IN_FAIL_ON_SCOPES"
+              echo "allow-licenses=$IN_ALLOW_LICENSES"
+              echo "deny-licenses=$IN_DENY_LICENSES"
+              echo "comment-summary-in-pr=$IN_COMMENT_SUMMARY"
+              echo "warn-only=$IN_WARN_ONLY"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
       - name: 🛡️ Dependency Review
         uses: devantler-tech/actions/dependency-review@521bc2e2bc4f24aae8ffa44a9365baece6f29b13 # unreleased — repin to the dependency-review composite's first release SHA before promotion
         with:
-          fail-on-severity: ${{ inputs.fail-on-severity }}
-          fail-on-scopes: ${{ inputs.fail-on-scopes }}
-          allow-licenses: ${{ inputs.allow-licenses }}
-          deny-licenses: ${{ inputs.deny-licenses }}
-          comment-summary-in-pr: ${{ inputs.comment-summary-in-pr }}
-          warn-only: ${{ inputs.warn-only }}
+          fail-on-severity: ${{ steps.cfg.outputs.fail-on-severity }}
+          fail-on-scopes: ${{ steps.cfg.outputs.fail-on-scopes }}
+          allow-licenses: ${{ steps.cfg.outputs.allow-licenses }}
+          deny-licenses: ${{ steps.cfg.outputs.deny-licenses }}
+          comment-summary-in-pr: ${{ steps.cfg.outputs.comment-summary-in-pr }}
+          warn-only: ${{ steps.cfg.outputs.warn-only }}
