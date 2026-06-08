@@ -10,7 +10,6 @@ This file is the single canonical instructions file for the repository. It is re
 .github/
 ├── dependabot.yaml                        # Dependabot configuration (GitHub Actions)
 ├── fixtures/                              # Test fixtures consumed by test workflows
-├── labels.yaml                            # GitHub issue label definitions
 └── workflows/
     ├── ci.yaml                            # Reusable: continuous integration
     ├── create-release.yaml                # Reusable: semantic-release automation
