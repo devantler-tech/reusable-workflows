@@ -33,7 +33,7 @@ jobs:
           persist-credentials: false
 
       - name: 📝 Create issues from TODOs
-        uses: devantler-tech/actions/create-issues-from-todos@6916c45ed8dc22e62cb12f021480e29732d03575 # v5.1.0
+        uses: devantler-tech/actions/create-issues-from-todos@b31ec7baa4d7e9ca5b113f56cc928fe708872431 # v5.4.2
         with:
           app-id: ${{ vars.APP_ID }}
           app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
