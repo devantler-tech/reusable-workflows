@@ -232,6 +232,11 @@ jobs:
         with:
           version: v2.11.4
           args: --fix
+          # Skip the action's `config verify` step: it fetches the golangci-lint
+          # JSONSchema over the network (golangci-lint.run), which intermittently
+          # times out ("context deadline exceeded") and fails the lint job. The
+          # config is still validated at runtime by `golangci-lint run`.
+          verify: false
 
       - name: 💾 Commit and push applied linter fixes
         if: |
