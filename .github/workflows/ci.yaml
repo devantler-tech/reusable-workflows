@@ -299,6 +299,106 @@ jobs:
           fi
           echo "validate-go-project.yaml pins the self-tested govulncheck action ✅"
 
+  # ── Zizmor gate failure-mode self-test (generalizes the govulncheck guard; #313) ──
+  # scan-for-workflow-vulnerabilities.yaml is a SECURITY GATE: its job is to FAIL a PR
+  # when a workflow has a finding. The happy-path test-zizmor job only proves the gate
+  # runs *clean* on this repo's own (clean) workflows — it can NOT prove the gate still
+  # BITES. This job points the SAME zizmor-action the gate uses at a deliberately-
+  # vulnerable fixture and asserts the scan FAILS and reports the finding, turning "the
+  # gate silently stopped blocking" into a red test (the exact #282/#283 failure mode,
+  # mirroring test-govulncheck-strict-blocks).
+  # The fixture (tests/zizmor-fixture/template-injection.yml) lives OUTSIDE
+  # .github/workflows/ so zizmor's repo-wide canonical discovery — the real gate and the
+  # test-zizmor self-test — never sees it; only this job, pointing zizmor at the exact
+  # path, audits it. Keep the action SHA in lockstep with the gate
+  # (enforced by test-zizmor-action-lockstep).
+  test-zizmor-blocks:
+    name: "[Test] Zizmor - Blocks On Vulnerable Fixture"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: 🛡️ Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: 📄 Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      # Same action SHA as scan-for-workflow-vulnerabilities.yaml, pointed at the
+      # fixture. advanced-security:false keeps the fixture's deliberate finding OUT of
+      # the Security tab (and needs no security-events permission); continue-on-error
+      # lets the run proceed so the next step can assert the failure. The action tees
+      # zizmor's output to "${RUNNER_TEMP}/zizmor" regardless of format, which the
+      # assertion reads to confirm the finding was actually reported — distinguishing a
+      # real block from an operational error (e.g. image pull) that would otherwise make
+      # a bare "the step failed" check pass for the wrong reason.
+      - name: 🌈 Scan vulnerable fixture (expected to fail)
+        id: scan
+        continue-on-error: true
+        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+        with:
+          inputs: tests/zizmor-fixture/template-injection.yml
+          advanced-security: false
+          annotations: false
+          color: false
+
+      - name: ✅ Assert the gate blocked on the vulnerable fixture
+        shell: bash
+        env:
+          OUTCOME: ${{ steps.scan.outcome }}
+        run: |
+          set -euo pipefail
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "::error::Zizmor scan of the deliberately-vulnerable fixture should FAIL, but its outcome was '$OUTCOME'. The scan-for-workflow-vulnerabilities gate is no longer blocking workflow findings."
+            exit 1
+          fi
+          report="${RUNNER_TEMP}/zizmor"
+          if ! grep -q "template-injection" "$report" 2>/dev/null; then
+            echo "::error::Zizmor scan failed, but its output did not report the expected template-injection finding — the failure was operational (e.g. image pull), not a real workflow-vulnerability block. Output:"
+            cat "$report" 2>/dev/null || echo "(no output captured)"
+            exit 1
+          fi
+          echo "Zizmor gate correctly blocked on the vulnerable fixture ✅"
+
+  test-zizmor-action-lockstep:
+    name: "[Test] Zizmor - Gate Pins Self-Tested Action"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: 🛡️ Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: 📄 Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      # `uses:` cannot be parametrized, so test-zizmor-blocks hard-codes the zizmor-action
+      # SHA. This guard asserts the gate pins that SAME SHA, so the self-test always
+      # exercises the real gate. If the gate's action is bumped without updating the
+      # self-test, this check goes red and forces both to move in lockstep.
+      - name: 🔒 Assert the gate pins the self-tested zizmor-action SHA
+        shell: bash
+        env:
+          # Match the full `uses:` line, not the bare ref — the ref also appears in
+          # comments, so a bare-ref grep could false-pass if the real `uses:` SHA changed
+          # while a comment still mentioned the old ref.
+          EXPECTED: "uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d"
+        run: |
+          set -euo pipefail
+          if ! grep -qF "$EXPECTED" .github/workflows/scan-for-workflow-vulnerabilities.yaml; then
+            echo "::error::scan-for-workflow-vulnerabilities.yaml no longer pins '$EXPECTED'. If the zizmor action was changed intentionally, update test-zizmor-blocks and this EXPECTED value so the failure-mode self-test keeps exercising the real gate."
+            exit 1
+          fi
+          echo "scan-for-workflow-vulnerabilities.yaml pins the self-tested zizmor action ✅"
+
   ci-required-checks:
     name: "CI - Required Checks"
     runs-on: ubuntu-latest
@@ -323,6 +423,8 @@ jobs:
         test-govulncheck-allowlist-honored,
         test-govulncheck-strict-blocks,
         test-govulncheck-action-lockstep,
+        test-zizmor-blocks,
+        test-zizmor-action-lockstep,
       ]
     permissions: {}
     if: ${{ always() }}
@@ -355,3 +457,5 @@ jobs:
             ${{ needs.test-govulncheck-allowlist-honored.result }}
             ${{ needs.test-govulncheck-strict-blocks.result }}
             ${{ needs.test-govulncheck-action-lockstep.result }}
+            ${{ needs.test-zizmor-blocks.result }}
+            ${{ needs.test-zizmor-action-lockstep.result }}
