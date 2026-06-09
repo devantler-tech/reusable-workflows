@@ -399,6 +399,166 @@ jobs:
           fi
           echo "scan-for-workflow-vulnerabilities.yaml pins the self-tested zizmor action ✅"
 
+  # ── validate-go-project quality-gate failure-mode self-tests (#316) ───────────
+  # The govulncheck/zizmor guards above prove the security-scan gates fail closed;
+  # these extend the same pattern to validate-go-project.yaml's remaining quality
+  # gates — golangci-lint and `go test`. Each runs the gate's real tool against a
+  # deliberately-broken fixture under continue-on-error and asserts it FAILED on a
+  # real finding (not an operational error such as a failed tool install), turning
+  # "the gate silently stopped blocking" into a red check. test-validate-go-gate-lockstep
+  # keeps the tool pins hard-coded here in step with the gate.
+  test-validate-go-lint-blocks:
+    name: "[Test] Validate Go Project - Lint Gate Blocks"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: 🛡️ Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: 📄 Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: ⚙️ Setup Go
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
+        with:
+          go-version-file: tests/golangci-lint-fixture/go.mod
+
+      # Mirror validate-go-project.yaml's lint step (same action SHA + version + --fix
+      # args). The fixture has a deliberate, NON-auto-fixable errcheck violation, so
+      # golangci-lint exits non-zero — exactly the gate's "lint fails the build" block
+      # path. --output.text.path captures the findings so the next step can confirm a
+      # real lint block rather than an operational failure. Keep this `uses:` + version
+      # in lockstep with the gate (enforced by test-validate-go-gate-lockstep).
+      - name: 🧹 Lint broken fixture (expected to fail)
+        id: lint
+        continue-on-error: true
+        uses: golangci/golangci-lint-action@82606bf257cbaff209d206a39f5134f0cfbfd2ee # v9.2.1
+        with:
+          version: v2.11.4
+          args: --fix --output.text.path=golangci-report.txt
+          working-directory: tests/golangci-lint-fixture
+          verify: false
+
+      - name: ✅ Assert the lint gate blocked on the violation
+        shell: bash
+        env:
+          OUTCOME: ${{ steps.lint.outcome }}
+        run: |
+          set -euo pipefail
+          REPORT=tests/golangci-lint-fixture/golangci-report.txt
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "::error::golangci-lint should FAIL on the deliberate errcheck violation in tests/golangci-lint-fixture, but its outcome was '$OUTCOME'. validate-go-project.yaml's lint gate is no longer blocking on lint violations."
+            exit 1
+          fi
+          if ! grep -q "errcheck" "$REPORT" 2>/dev/null; then
+            echo "::error::golangci-lint failed, but its report did not contain the expected errcheck finding — the failure was operational (e.g. a failed tool install), not a real lint block. Report:"
+            cat "$REPORT" 2>/dev/null || echo "(no report captured)"
+            exit 1
+          fi
+          echo "Lint gate correctly blocked on the errcheck violation ✅"
+
+  test-validate-go-test-blocks:
+    name: "[Test] Validate Go Project - Test Gate Blocks"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: 🛡️ Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: 📄 Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: ⚙️ Setup Go
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
+        with:
+          go-version-file: tests/go-test-fixture/go.mod
+
+      # Mirror validate-go-project.yaml's test step (`go test ./...`) against a fixture
+      # whose only test fails on purpose, so the run exits non-zero — exactly the gate's
+      # "a failing test fails the build" block path. The output is captured so the next
+      # step can confirm a real test failure rather than a build/operational error. The
+      # command is kept in lockstep with the gate by test-validate-go-gate-lockstep.
+      - name: 🧪 Test broken fixture (expected to fail)
+        id: gotest
+        continue-on-error: true
+        working-directory: tests/go-test-fixture
+        shell: bash
+        run: |
+          set -uo pipefail
+          go test ./... 2>&1 | tee go-test-output.txt
+          exit "${PIPESTATUS[0]}"
+
+      - name: ✅ Assert the test gate blocked on the failing test
+        shell: bash
+        env:
+          OUTCOME: ${{ steps.gotest.outcome }}
+        run: |
+          set -euo pipefail
+          OUT=tests/go-test-fixture/go-test-output.txt
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "::error::go test should FAIL on the deliberately failing test in tests/go-test-fixture, but its outcome was '$OUTCOME'. validate-go-project.yaml's test gate is no longer blocking on failing tests."
+            exit 1
+          fi
+          if ! grep -q "^--- FAIL: TestDeliberatelyFails" "$OUT" 2>/dev/null; then
+            echo "::error::go test failed, but its output did not show '--- FAIL: TestDeliberatelyFails' — the failure was operational (e.g. a build error), not a real test failure. Output:"
+            cat "$OUT" 2>/dev/null || echo "(no output captured)"
+            exit 1
+          fi
+          echo "Test gate correctly blocked on the failing test ✅"
+
+  test-validate-go-gate-lockstep:
+    name: "[Test] Validate Go Project - Gate Lockstep"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: 🛡️ Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: 📄 Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      # The two jobs above hard-code the lint action SHA + version and the `go test`
+      # command. This guard asserts validate-go-project.yaml still pins the SAME ones, so
+      # the self-tests always exercise the real gate. If a gate is changed without
+      # updating the self-test, this check goes red and forces them to move in lockstep.
+      - name: 🔒 Assert the gate pins the self-tested lint action + test command
+        shell: bash
+        env:
+          GATE: .github/workflows/validate-go-project.yaml
+          # Match full lines, not bare refs — refs/commands also appear in comments, so a
+          # looser grep could false-pass if the real value changed while a comment did not.
+          EXPECTED_LINT_ACTION: "uses: golangci/golangci-lint-action@82606bf257cbaff209d206a39f5134f0cfbfd2ee"
+          EXPECTED_LINT_VERSION: "version: v2.11.4"
+          EXPECTED_TEST_CMD: "go test ./..."
+        run: |
+          set -euo pipefail
+          status=0
+          for expected in "$EXPECTED_LINT_ACTION" "$EXPECTED_LINT_VERSION" "$EXPECTED_TEST_CMD"; do
+            if ! grep -qF "$expected" "$GATE"; then
+              echo "::error::$GATE no longer contains '$expected'. If the lint action/version or test command changed intentionally, update test-validate-go-lint-blocks / test-validate-go-test-blocks and these EXPECTED values so the self-tests keep exercising the real gate."
+              status=1
+            fi
+          done
+          if [ "$status" -ne 0 ]; then
+            exit 1
+          fi
+          echo "validate-go-project.yaml pins the self-tested lint action + test command ✅"
+
   ci-required-checks:
     name: "CI - Required Checks"
     runs-on: ubuntu-latest
@@ -425,6 +585,9 @@ jobs:
         test-govulncheck-action-lockstep,
         test-zizmor-blocks,
         test-zizmor-action-lockstep,
+        test-validate-go-lint-blocks,
+        test-validate-go-test-blocks,
+        test-validate-go-gate-lockstep,
       ]
     permissions: {}
     if: ${{ always() }}
@@ -459,3 +622,6 @@ jobs:
             ${{ needs.test-govulncheck-action-lockstep.result }}
             ${{ needs.test-zizmor-blocks.result }}
             ${{ needs.test-zizmor-action-lockstep.result }}
+            ${{ needs.test-validate-go-lint-blocks.result }}
+            ${{ needs.test-validate-go-test-blocks.result }}
+            ${{ needs.test-validate-go-gate-lockstep.result }}
