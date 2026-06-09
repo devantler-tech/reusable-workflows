@@ -101,13 +101,13 @@ This repository uses **GitHub App tokens** (not `GITHUB_TOKEN`) for operations t
   uses: actions/create-github-app-token@<sha> # <version>
   id: generate-token
   with:
-    app-id: ${{ vars.APP_ID }}
+    client-id: ${{ vars.APP_CLIENT_ID }}
     private-key: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
 The app credentials are:
 
-- `APP_ID` — stored as a repository/org variable
+- `APP_CLIENT_ID` — stored as a repository/org variable
 - `APP_PRIVATE_KEY` — stored as a repository/org secret
 
 ## Validation Commands
