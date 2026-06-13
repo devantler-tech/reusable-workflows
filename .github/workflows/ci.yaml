@@ -130,6 +130,16 @@ jobs:
       app-name: app
       dry-run: true
 
+  test-publish-manifests:
+    name: "[Test] Publish Manifests - Dry Run"
+    uses: ./.github/workflows/publish-manifests.yaml
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    with:
+      dry-run: true
+
   test-scan-for-todo-comments:
     name: "[Test] Scan for TODO Comments - Dry Run"
     uses: ./.github/workflows/scan-for-todo-comments.yaml
@@ -576,6 +586,7 @@ jobs:
         test-deploy-github-pages,
         test-publish-dotnet-library,
         test-publish-app,
+        test-publish-manifests,
         test-scan-for-todo-comments,
         test-sync-cluster-policies,
         test-update-agent-skills,
@@ -613,6 +624,7 @@ jobs:
             ${{ needs.test-deploy-github-pages.result }}
             ${{ needs.test-publish-dotnet-library.result }}
             ${{ needs.test-publish-app.result }}
+            ${{ needs.test-publish-manifests.result }}
             ${{ needs.test-scan-for-todo-comments.result }}
             ${{ needs.test-sync-cluster-policies.result }}
             ${{ needs.test-update-agent-skills.result }}

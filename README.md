@@ -226,6 +226,46 @@ jobs:
 
 </details>
 
+### 📦 Publish Manifests
+
+<details>
+<summary>Click to expand</summary>
+
+[.github/workflows/publish-manifests.yaml](.github/workflows/publish-manifests.yaml) is a workflow used to publish a Kubernetes manifests directory to GHCR as a cosign-signed OCI artifact — **with no container image build**. Use it for repos that ship only manifests (e.g. GitOps/Crossplane desired-state) rather than an application: it pushes the manifests directory as a Flux-compatible OCI artifact (`ghcr.io/<owner>/<repo>/manifests`, tagged with the semantic version derived from the git tag — e.g. `1.2.3` from a `v1.2.3` tag — plus `latest`), then signs the artifact by digest with keyless cosign (Fulcio/Rekor via GitHub OIDC). It is the manifests-only sibling of `publish-app.yaml` (which additionally builds and signs a container image).
+
+Because the signing happens inside this reusable workflow, the cosign certificate identity (OIDC `subject`) is this workflow's path — `https://github.com/devantler-tech/reusable-workflows/.github/workflows/publish-manifests.yaml@<ref>` — not the caller's. Verifiers (e.g. a Flux `OCIRepository` `verify.matchOIDCIdentity`) must match that.
+
+#### Usage
+
+```yaml
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish-manifests:
+    uses: devantler-tech/reusable-workflows/.github/workflows/publish-manifests.yaml@{ref} # ref
+    permissions:
+      contents: read # checkout
+      packages: write # push manifests OCI artifact
+      id-token: write # keyless cosign signing
+    with:
+      oci-name: devantler-tech/github-config # optional override; defaults to github.repository
+      deploy-path: ./deploy # optional
+```
+
+> **Note:** Must be invoked from a semver tag (`vX.Y.Z`) — Flux `OCIRepository` semver selection depends on it. The calling job must grant `packages: write` and `id-token: write` (and `contents: read` for checkout); no secrets are required (auth uses the GHCR-scoped `GITHUB_TOKEN`). Override `oci-name` when the repo name is an invalid OCI path component (e.g. `.github` → `devantler-tech/github-config`).
+
+#### Secrets and Inputs
+
+| Key           | Type           | Default              | Required | Description                                                                                                                            |
+|---------------|----------------|----------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `oci-name`    | Input (string) | `${{ github.repository }}` | No       | OCI repository name (`<owner>/<name>`) the artifact is published under, without the registry prefix or trailing `/manifests`. Override for invalid OCI path components |
+| `deploy-path` | Input (string) | `./deploy`           | No       | Path to the Kubernetes manifests directory packaged as the OCI artifact                                                              |
+
+</details>
+
 ### 📦 Publish .NET Library
 
 <details>
