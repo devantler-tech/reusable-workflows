@@ -38,7 +38,7 @@ jobs:
           persist-credentials: false
 
       - name: 🧪 Test .NET solution or project
-        uses: devantler-tech/actions/run-dotnet-tests@0e1232924bf8b07a40b1b24e13e200744fbabcfa # v6.0.0
+        uses: devantler-tech/actions/run-dotnet-tests@9d98cb8be059537ec1e82f71c90d75ecba321713 # v6.1.0
         with:
           app-id: ${{ vars.APP_ID }}
           app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
