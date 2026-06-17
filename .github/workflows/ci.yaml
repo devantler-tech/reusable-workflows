@@ -209,7 +209,7 @@ jobs:
       # .govulncheck-allow.txt the scan MUST pass. Keep this `uses:` in lockstep
       # with validate-go-project.yaml — enforced by test-govulncheck-action-lockstep.
       - name: 🛡️ Scan fixture with allowlist (must pass)
-        uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942 # feat/allow-file (fork; pending upstream)
+        uses: devantler/govulncheck-action@e92df19a112e291ce95619a05f03d9bb1339e2e5 # feat/allow-file (fork; pending upstream)
         with:
           repo-checkout: false
           work-dir: tests/govulncheck-allowlist
@@ -243,7 +243,7 @@ jobs:
       - name: 🛡️ Scan fixture without allowlist (expected to fail)
         id: scan
         continue-on-error: true
-        uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942 # feat/allow-file (fork; pending upstream)
+        uses: devantler/govulncheck-action@e92df19a112e291ce95619a05f03d9bb1339e2e5 # feat/allow-file (fork; pending upstream)
         with:
           repo-checkout: false
           work-dir: tests/govulncheck-allowlist
@@ -298,7 +298,7 @@ jobs:
           # also appears in surrounding comments in validate-go-project.yaml, so a
           # bare-ref grep would false-pass if the real `uses:` SHA were changed while
           # a comment still mentioned the old ref.
-          EXPECTED: "uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942"
+          EXPECTED: "uses: devantler/govulncheck-action@e92df19a112e291ce95619a05f03d9bb1339e2e5"
         run: |
           set -euo pipefail
           if ! grep -qF "$EXPECTED" .github/workflows/validate-go-project.yaml; then
