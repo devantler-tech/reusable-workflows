@@ -381,7 +381,7 @@ jobs:
           fi
 
       - name: 🛡️ Scan for known vulnerabilities
-        uses: devantler/govulncheck-action@a7e51f717da0ebf10c4dfc8a31d4d45b9736a942 # feat/allow-file (fork; pending upstream)
+        uses: devantler/govulncheck-action@e92df19a112e291ce95619a05f03d9bb1339e2e5 # feat/allow-file (fork; pending upstream)
         with:
           repo-checkout: false
           # Scan under the SAME Go version the consumer actually ships (its go.mod), so
