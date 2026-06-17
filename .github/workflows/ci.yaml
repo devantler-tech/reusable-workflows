@@ -80,8 +80,6 @@ jobs:
       contents: read
       packages: read
       code-quality: write # callers must grant this for the coverage upload (GitHub Code Quality)
-    secrets:
-      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 
   test-enable-auto-merge:
     name: "[Test] Enable Auto-Merge"

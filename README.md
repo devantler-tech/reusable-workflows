@@ -309,17 +309,13 @@ jobs:
       contents: read
       packages: read
       code-quality: write # required for GitHub Code Quality coverage upload
-    secrets:
-      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
 > **Note:** The calling workflow must grant `code-quality: write` (otherwise the run fails at startup). Coverage requires the repo's **Code Quality** to be enabled (_Settings → Code quality_).
 
 #### Secrets and Inputs
 
-| Key               | Type   | Default | Required | Description            |
-|-------------------|--------|---------|----------|------------------------|
-| `APP_PRIVATE_KEY` | Secret | -       | Yes      | GitHub App private key |
+This workflow needs no caller-provided secrets or inputs — it authenticates to the GHCR NuGet feed with the automatic `GITHUB_TOKEN` (requires the `packages: read` permission shown above).
 
 </details>
 
@@ -344,7 +340,8 @@ jobs:
 
 | Key               | Type            | Default | Required | Description                                                |
 |-------------------|-----------------|---------|----------|------------------------------------------------------------|
-| `APP_PRIVATE_KEY` | Secret          | -       | Yes      | GitHub App private key                                     |
+| `APP_CLIENT_ID`   | Variable        | -       | Yes      | GitHub App client ID used to mint the issue-creation token |
+| `APP_PRIVATE_KEY` | Secret          | -       | Yes      | GitHub App private key (paired with the `APP_CLIENT_ID` variable) |
 | `dry-run`         | Input (boolean) | `false` | No       | Skip issue creation (validate workflow interface only)     |
 
 </details>

@@ -4,9 +4,6 @@ permissions: {}
 
 on:
   workflow_call:
-    secrets:
-      APP_PRIVATE_KEY:
-        required: true
   ### Required Workflow Triggers ###
   pull_request:
   merge_group:
@@ -40,6 +37,4 @@ jobs:
       - name: 🧪 Test .NET solution or project
         uses: devantler-tech/actions/run-dotnet-tests@9d98cb8be059537ec1e82f71c90d75ecba321713 # v6.1.0
         with:
-          app-id: ${{ vars.APP_ID }}
-          app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
