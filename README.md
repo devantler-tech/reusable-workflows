@@ -428,13 +428,13 @@ jobs:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
-By default the sync PR is opened with a GitHub App token (`use-app-token: true`) so it triggers the caller's CI; this needs the `APP_ID` variable and the `APP_PRIVATE_KEY` secret. Set `use-app-token: false` to fall back to `GITHUB_TOKEN` (the PR then will not trigger `on: pull_request` checks).
+By default the sync PR is opened with a GitHub App token (`use-app-token: true`) so it triggers the caller's CI; this needs the `APP_CLIENT_ID` variable and the `APP_PRIVATE_KEY` secret. Set `use-app-token: false` to fall back to `GITHUB_TOKEN` (the PR then will not trigger `on: pull_request` checks).
 
 #### Secrets and Inputs
 
 | Key                              | Type            | Default                                          | Required | Description                                                                 |
 |----------------------------------|-----------------|--------------------------------------------------|----------|-----------------------------------------------------------------------------|
-| `APP_PRIVATE_KEY`                | Secret          | -                                                | When `use-app-token` | GitHub App private key (paired with the `APP_ID` variable)      |
+| `APP_PRIVATE_KEY`                | Secret          | -                                                | When `use-app-token` | GitHub App private key (paired with the `APP_CLIENT_ID` variable) |
 | `source-repo-path`               | Input (string)  | -                                                | Yes      | `owner/repo` of the upstream template to sync from                          |
 | `upstream-branch`                | Input (string)  | `main`                                           | No       | Branch of the template repository to sync from                              |
 | `pr-title`                       | Input (string)  | `chore: sync changes from the upstream template` | No       | Title of the sync PR (Conventional-Commit by default)                       |

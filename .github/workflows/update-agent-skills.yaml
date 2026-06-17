@@ -45,7 +45,7 @@ on:
         type: boolean
       use-app-token:
         description: >-
-          When `true`, create the update PR with a GitHub App token (minted from the `APP_ID`
+          When `true`, create the update PR with a GitHub App token (minted from the `APP_CLIENT_ID`
           variable and the `APP_PRIVATE_KEY` secret) instead of the default `GITHUB_TOKEN`. A PR
           opened with `GITHUB_TOKEN` does NOT trigger the caller's `on: pull_request`/`push` CI runs,
           so its required checks never report and it stays blocked; an App token avoids this.
@@ -57,7 +57,7 @@ on:
       APP_PRIVATE_KEY:
         description: >-
           GitHub App private key, required only when `use-app-token` is `true`. Paired with the
-          `APP_ID` repository/organization variable to mint an App token for PR creation.
+          `APP_CLIENT_ID` repository/organization variable to mint an App token for PR creation.
         required: false
 
 permissions: {}

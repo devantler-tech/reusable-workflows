@@ -55,7 +55,7 @@ on:
       use-app-token:
         description: >-
           When `true` (the default), open the sync PR with a GitHub App token
-          (minted from the `APP_ID` variable and the `APP_PRIVATE_KEY` secret)
+          (minted from the `APP_CLIENT_ID` variable and the `APP_PRIVATE_KEY` secret)
           instead of the default `GITHUB_TOKEN`. A PR opened with `GITHUB_TOKEN`
           does NOT trigger the caller's `on: pull_request`/`push` CI runs, so its
           required checks never report and it stays blocked; an App token avoids
@@ -67,7 +67,7 @@ on:
       APP_PRIVATE_KEY:
         description: >-
           GitHub App private key, required when `use-app-token` is `true` (the
-          default). Paired with the `APP_ID` repository/organization variable to
+          default). Paired with the `APP_CLIENT_ID` repository/organization variable to
           mint an App token for opening the sync PR.
         required: false
 
