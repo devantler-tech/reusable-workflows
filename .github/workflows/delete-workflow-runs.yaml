@@ -59,7 +59,11 @@ jobs:
           egress-policy: audit
 
       - name: 🗑️ Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@b3018382ca039b53d238908238bd35d1fb14f8ee # v2.1.0
+        # Pinned past v2.1.0 to commit 0cf693b, which adds bounded retry/backoff on
+        # transient GitHub API 5xx + network errors via @octokit/plugin-retry (upstream
+        # PR Mattraks/delete-workflow-runs#39, merged 2026-06-05 but not yet tagged).
+        # Repin to the next tagged release once cut. Fixes the flaky required-check 5xx.
+        uses: Mattraks/delete-workflow-runs@0cf693bc9909e5e867ee8f27b813224ba862939c # v2.1.0+retry (#39)
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ inputs.repository || github.repository }}
