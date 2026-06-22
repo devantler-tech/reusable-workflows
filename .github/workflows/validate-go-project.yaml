@@ -307,7 +307,21 @@ jobs:
           cache: true
 
       - name: 📥 Install deadcode
-        run: go install golang.org/x/tools/cmd/deadcode@v0.43.0
+        # Bounded retry so a transient module-proxy 5xx / network blip on this
+        # required-check path can't red the gate (reliability invariant — #305).
+        # go install is idempotent, so re-running it is always safe.
+        run: |
+          for attempt in 1 2 3; do
+            if go install golang.org/x/tools/cmd/deadcode@v0.43.0; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "::warning::deadcode install failed (attempt ${attempt}/3); retrying in $((attempt * 5))s..."
+              sleep "$((attempt * 5))"
+            fi
+          done
+          echo "::error::Failed to install deadcode after 3 attempts."
+          exit 1
 
       - name: 🔍 Check for dead code
         run: |
