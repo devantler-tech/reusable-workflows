@@ -607,7 +607,7 @@ jobs:
           egress-policy: audit
 
       - name: 📊 Require all CI checks to pass
-        uses: devantler-tech/actions/aggregate-job-checks@c25eb0ee49afe8b5879d227cafa53edb3744476b # v9.0.1
+        uses: devantler-tech/actions/aggregate-job-checks@b69839ba2debe04a46321b7698b6daf57667d4e7 # v9.0.2
         with:
           job-results: >-
             ${{ needs.test-zizmor.result }}
