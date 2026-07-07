@@ -121,7 +121,7 @@ jobs:
           fi
 
       - name: 🛡️ Dependency Review
-        uses: devantler-tech/actions/dependency-review@c25eb0ee49afe8b5879d227cafa53edb3744476b # v9.0.1
+        uses: devantler-tech/actions/dependency-review@b69839ba2debe04a46321b7698b6daf57667d4e7 # v9.0.2
         with:
           fail-on-severity: ${{ steps.cfg.outputs.fail-on-severity }}
           fail-on-scopes: ${{ steps.cfg.outputs.fail-on-scopes }}
